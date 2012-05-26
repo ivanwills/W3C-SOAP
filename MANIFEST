@@ -6,7 +6,14 @@ MANIFEST.SKIP
 META.yml
 Makefile.PL
 README
-lib/W3C/SOAP/Parse/XSD.pm
+bin/xsd-parser
+lib/W3C/SOAP/XSD.pm
+lib/W3C/SOAP/XSD/Document.pm
+lib/W3C/SOAP/XSD/Document/ComplexType.pm
+lib/W3C/SOAP/XSD/Document/Element.pm
+lib/W3C/SOAP/XSD/Document/Node.pm
+lib/W3C/SOAP/XSD/Document/SimpleType.pm
+lib/W3C/SOAP/XSD/Traits.pm
 t/00-load.t
 t/boilerplate.t
 t/critic.t
@@ -15,3 +22,7 @@ t/pod-coverage.t
 t/pod.t
 t/perlcriticrc
 t/spelling.t
+templates/xsd.pm.tt
+templates/xsd_base.pm.tt
+templates/xsd_element.pm.tt
+META.json

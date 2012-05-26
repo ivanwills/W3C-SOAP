@@ -6,7 +6,7 @@ use Test::More tests => 1 + 1;
 use Test::NoWarnings;
 
 BEGIN {
-	use_ok( 'W3C::SOAP::Parse::XSD' );
+	use_ok( 'W3C::SOAP::XSD' );
 }
 
-diag( "Testing W3C::SOAP::Parse::XSD $W3C::SOAP::Parse::XSD::VERSION, Perl $], $^X" );
+diag( "Testing W3C::SOAP::XSD $W3C::SOAP::XSD::VERSION, Perl $], $^X" );

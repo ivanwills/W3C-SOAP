@@ -52,5 +52,5 @@ TODO: {
 
 }
 
-module_boilerplate_ok('lib/W3C-SOAP-Parse-XSD/t/boilerplate.t.pm');
+module_boilerplate_ok('lib/W3C-SOAP-XSD/t/boilerplate.t.pm');
 

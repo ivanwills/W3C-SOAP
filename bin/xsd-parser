@@ -18,7 +18,9 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use FindBin qw/$Bin/;
 use Path::Class;
+use Template;
 use W3C::SOAP::XSD::Document;
+use File::ShareDir qw/dist_dir/;
 
 our $VERSION = version->new('0.0.1');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
@@ -49,7 +51,6 @@ sub main {
         'help',
         'VERSION!',
     ) or pod2usage(2);
-    #my $file = join ' ', @ARGV;
 
     if ( $option{'VERSION'} ) {
         print "$name Version = $VERSION\n";
@@ -65,9 +66,26 @@ sub main {
     # do stuff here
     my $file = shift @ARGV;
     my @xsd = (W3C::SOAP::XSD::Document->new( location => $file, ns_module_map => $option{ns} ));
+    my $template = Template->new(
+        INCLUDE_PATH => dist_dir('W3C-SOAP-XSD'),
+        INTERPOLATE  => 0,
+        EVAL_PERL    => 1,
+    );
 
     while ( my $xsd = shift @xsd ) {
         print "Namespace = " . $xsd->target_namespace . "\n";
+        my $file = $xsd->get_module_base($xsd->target_namespace);
+        $file =~ s{::}{/}g;
+        $file = file $file;
+        my $parent = $file->parent;
+        my @missing;
+        while ( !-d $parent ) {
+            push @missing, $parent;
+            $parent = $parent->parent;
+        }
+        mkdir $_ for reverse @missing;
+
+        $template->process('xsd.pm.tt', {xsd => $xsd}, "$file.pm");
         print "Imports:\n";
         for my $type ( @{ $xsd->imports } ) {
             print "\t", $type->target_namespace, "\n";
