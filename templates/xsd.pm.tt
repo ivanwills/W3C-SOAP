@@ -1,0 +1,90 @@
+package [% module %];
+
+# Created on: [% date %] [% time %]
+# Create by:  [% user %]
+# $Id$
+# $Revision$, $HeadURL$, $Date$
+# $Revision$, $Source$, $Date$
+
+use Moose;
+use version;
+use Moose::Util::TypeConstraints;
+[% FOREACH module IN modules -%]
+use [% module %];
+[%- END %]
+extends 'NScreens::SDPx::XSD';
+
+our $VERSION     = version->new('0.0.1');
+our @EXPORT_OK   = qw//;
+our %EXPORT_TAGS = ();
+
+has '+xsd_ns' => (
+    default => '[% ns %]',
+);
+has '+xsd_ns_name' => (
+    default => '[% ns_name %]',
+);
+[% FOREACH subtype IN subtypes %]
+[%- NEXT UNLESS subtype.value.ns == ns -%]
+[% IF subtype.value.values %]my %[% subtype.value.name %] = map {$_=>1} ('[% subtype.value.values.join("', '") %]');[% END %]
+subtype [% subtype.value.name %] =>
+    as      '[% subtype.value.as %]',
+    where   { $[% subtype.value.name %]{$_} },
+    message {'[% subtype.value.name %] must be one of [% subtype.value.values.join(', ') %]'};
+
+[%- END %]
+
+1;
+
+__END__
+
+=head1 NAME
+
+[% module %] - Talks to the [% end_point %] on the ESB
+
+=head1 VERSION
+
+This documentation refers to [% module %] version 0.1.
+
+=head1 SYNOPSIS
+
+   use [% module %];
+
+   # Brief but working code example(s) here showing the most common usage(s)
+   # This section will be as far as many users bother reading, so make it as
+   # educational and exemplary as possible.
+
+=head1 DESCRIPTION
+
+=head1 SUBROUTINES/METHODS
+
+=over 4
+
+=back
+
+=head1 DIAGNOSTICS
+
+=head1 CONFIGURATION AND ENVIRONMENT
+
+=head1 DEPENDENCIES
+
+=head1 INCOMPATIBILITIES
+
+=head1 BUGS AND LIMITATIONS
+
+There are no known bugs in this module.
+
+Please report problems to [% user %] ([% user %]@optus.com.au).
+
+Patches are welcome.
+
+=head1 AUTHOR
+
+[% user %] - ([% user %]@optus.com.au)
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (c) 2012 Optus (1 Lyon Park Rd, Macquarie Park, NSW, Australia).
+All rights reserved.
+
+=cut

@@ -1,0 +1,125 @@
+package [% module %];
+
+# Created on: [% date %] [% time %]
+# Create by:  [% user %]
+# $Id$
+# $Revision$, $HeadURL$, $Date$
+# $Revision$, $Source$, $Date$
+
+use strict;
+use warnings;
+use Moose;
+use version;
+use Data::Dumper qw/Dumper/;
+use NScreens::SDPx::Exception;
+[%
+found = {};
+FOREACH use_module IN modules;
+    use_module = subtypes.$use_module ? subtypes.$use_module.module : use_module;
+    NEXT IF found.$use_module;
+    found.$use_module = 1; -%]
+use [% use_module %];
+[% END %]
+[% FOREACH attribute IN attributes;
+    type = attribute.type;
+    type = subtypes.$type ? subtypes.$type.name : attribute.type; %]
+use Moose::Util::TypeConstraints;
+[%- END %]
+extends '[% parent %]';
+
+our $VERSION     = version->new('0.0.1');
+our @EXPORT_OK   = qw//;
+our %EXPORT_TAGS = ();
+[%- IF element_map.$module %]
+
+has '+xsd_element' => (
+    default => '[% element_map.$module %]',
+);
+[%- END -%]
+[% FOREACH attribute IN attributes;
+    type = attribute.type;
+    type = subtypes.$type ? subtypes.$type.name : attribute.type;
+    is_array = attribute.max == 'unbounded' || ( attribute.max && attribute.max > 1 ) || ( attribute.min && attribute.min > 1 ); %]
+
+subtype '[% module %]:[% attribute.name %]_type' =>
+    as '[% IF is_array %]ArrayRef[[% type %]][% ELSE %][% type %][% END %]';
+coerce '[% module %]:[% attribute.name %]_type' =>
+    from 'xml_node' =>
+    via { __PACKAGE__->_from_xml('[% attribute.xml %]', '[% type %]') };
+[%- IF is_array; %]
+coerce '[% module %]:[% attribute.name %]_type' =>
+    from '[% type %]',
+    via {[$_]};
+coerce '[% module %]:[% attribute.name %]_type' =>
+    from 'ArrayRef[xml_node]' =>
+    via { [ map {__PACKAGE__->_from_xml('[% attribute.xml %]', '[% type %]')} @$_ ] };
+[%- END %]
+has [% attribute.name %] => (
+    is        => 'rw',
+    isa       => '[% module %]:[% attribute.name %]_type',
+    traits    => [qw{ XSD }],
+    predicate => 'has_[% attribute.name %]',
+[%- IF attribute.undef == 'false' %]
+    required  => 1,
+[%- END %]
+    position  => [% attribute.position %],
+    xml_name  => '[% attribute.xml %]',
+    is_xml    => 1,
+    coerce    => 1,
+);
+[%- END %]
+
+1;
+
+__END__
+
+=head1 NAME
+
+[% module %] - Talks to the [% end_point %] on the ESB
+
+=head1 VERSION
+
+This documentation refers to [% module %] version 0.1.
+
+=head1 SYNOPSIS
+
+   use [% module %];
+
+   # Brief but working code example(s) here showing the most common usage(s)
+   # This section will be as far as many users bother reading, so make it as
+   # educational and exemplary as possible.
+
+=head1 DESCRIPTION
+
+=head1 SUBROUTINES/METHODS
+
+=over 4
+
+=back
+
+=head1 DIAGNOSTICS
+
+=head1 CONFIGURATION AND ENVIRONMENT
+
+=head1 DEPENDENCIES
+
+=head1 INCOMPATIBILITIES
+
+=head1 BUGS AND LIMITATIONS
+
+There are no known bugs in this module.
+
+Please report problems to [% user %] ([% user %]@optus.com.au).
+
+Patches are welcome.
+
+=head1 AUTHOR
+
+[% user %] - ([% user %]@optus.com.au)
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (c) 2012 Optus (1 Lyon Park Rd, Macquarie Park, NSW, Australia).
+All rights reserved.
+
+=cut
