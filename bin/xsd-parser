@@ -27,6 +27,7 @@ my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
     ns      => {},
+    lib     => 'lib',
     verbose => 0,
     man     => 0,
     help    => 0,
@@ -46,6 +47,7 @@ sub main {
     GetOptions(
         \%option,
         'ns|namespace-map|n=s%',
+        'lib|l=s',
         'verbose|v+',
         'man',
         'help',
@@ -74,7 +76,7 @@ sub main {
 
     while ( my $xsd = shift @xsd ) {
         print "Namespace = " . $xsd->target_namespace . "\n";
-        my $file = $xsd->get_module_base($xsd->target_namespace);
+        my $file = "$option{lib}/" . $xsd->get_module_base($xsd->target_namespace);
         $file =~ s{::}{/}g;
         $file = file $file;
         my $parent = $file->parent;
