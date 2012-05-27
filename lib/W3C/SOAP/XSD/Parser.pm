@@ -1,93 +1,75 @@
-#!/usr/bin/perl
+package W3C::SOAP::XSD::Parser;
 
-# Created on: 2012-05-26 19:20:50
+# Created on: 2012-05-28 08:11:37
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use strict;
-use warnings;
+use Moose;
 use version;
+use Carp;
 use Scalar::Util;
 use List::Util;
 #use List::MoreUtils;
-use Getopt::Long;
-use Pod::Usage;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use FindBin qw/$Bin/;
 use Path::Class;
-use Template;
-use W3C::SOAP::XSD::Parser;
+use W3C::SOAP::XSD::Document;
 use File::ShareDir qw/dist_dir/;
 
-our $VERSION = version->new('0.0.1');
-my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
-my %option = (
-    ns_module_map => {},
-    lib           => 'lib',
-    verbose       => 0,
-    man           => 0,
-    help          => 0,
-    VERSION       => 0,
+our $VERSION     = version->new('0.0.1');
+our @EXPORT_OK   = qw//;
+our %EXPORT_TAGS = ();
+#our @EXPORT      = qw//;
+
+has document => (
+    is       => 'rw',
+    isa      => 'W3C::SOAP::XSD::Document',
+    required => 1,
+);
+has template => (
+    is       => 'rw',
+    isa      => 'Template',
+    required => 1,
+);
+has ns_module_map => (
+    is       => 'rw',
+    isa      => 'HashRef[Str]',
+    required => 1,
+);
+has lib => (
+    is       => 'rw',
+    isa      => 'Str',
+    required => 1,
 );
 
-if ( !@ARGV ) {
-    pod2usage( -verbose => 1 );
-}
+around BUILDARGS => sub {
+    my ($orig, $class, @args) = @_;
+    my $args
+        = !@args     ? {}
+        : @args == 1 ? $args[0]
+        :              {@args};
 
-main();
-exit 0;
-
-sub main {
-
-    Getopt::Long::Configure('bundling');
-    GetOptions(
-        \%option,
-        'ns_module_map|ns|namespace-map|n=s%',
-        'lib|l=s',
-        'show|s',
-        'verbose|v+',
-        'man',
-        'help',
-        'VERSION!',
-    ) or pod2usage(2);
-
-    if ( $option{'VERSION'} ) {
-        print "$name Version = $VERSION\n";
-        exit 1;
-    }
-    elsif ( $option{'man'} ) {
-        pod2usage( -verbose => 2 );
-    }
-    elsif ( $option{'help'} ) {
-        pod2usage( -verbose => 1 );
+    for my $arg ( keys %$args ) {
+        if ( $arg eq 'location' || $arg eq 'strign' ) {
+            $args->{document} = W3C::SOAP::XSD::Document->new($args);
+        }
     }
 
-    # do stuff here
-    my $file = shift @ARGV;
-    my $template = Template->new(
-        INCLUDE_PATH => dist_dir('W3C-SOAP-XSD'),
-        INTERPOLATE  => 0,
-        EVAL_PERL    => 1,
-    );
-    my $parser = W3C::SOAP::XSD::Parser->new( location => $file, template => $template, %option );
+    return $class->$orig($args);
+};
 
-    return show($parser) if $option{show};
-
-    return $parser->write_modules;
-}
-
-sub show {
-    my ($parser) = @_;
-    my @xsd = ($parser->document);
+sub write_modules {
+    my ($self) = @_;
+    my @xsd = ($self->document);
+    my $template = $self->template;
+    my @parents;
 
     while ( my $xsd = shift @xsd ) {
-        print "Namespace = " . $xsd->target_namespace . "\n";
         my $module = $xsd->get_module_base($xsd->target_namespace);
-        my $file   = "$option{lib}/" . $module;
+        my $file   = $self->lib . '/' . $module;
         $file =~ s{::}{/}g;
         $file = file $file;
         my $parent = $file->parent;
@@ -98,67 +80,54 @@ sub show {
         }
         mkdir $_ for reverse @missing;
 
-        print "Imports:\n";
-        my @parents;
         for my $type ( @{ $xsd->imports } ) {
-            print "\t", $type->target_namespace, "\n";
             push @xsd, $type;
-            push @parents, $xsd->get_module_base($type->target_namespace);
         }
-        print "Simple Types:\n";
-        for my $type ( @{ $xsd->simple_types } ) {
-            print "\t", $type->name, ' : ', $type->type, '(' . @{ $type->enumeration } . ')', "\n";
-        }
-        print "Complex Types:\n";
+
         for my $type ( @{ $xsd->complex_types } ) {
-            print "\t", $type->name, '(' . @{ $type->sequence } . ')', "\n";
-            print "\tElements:\n";
-            for my $type ( @{ $type->sequence } ) {
-                print "\t\t", $type->name, ' : ', $type->package, "\n";
-            }
             my $type_module = $module . '::' . $type->name;
             push @parents, $type_module;
-            my $type_file = "$option{lib}/" . $type_module;
+            my $type_file = $self->lib . '/' . $type_module;
             $type_file =~ s{::}{/}g;
             $type_file = file $type_file;
             mkdir $type_file->parent if !-d $type_file->parent;
 
+            $template->process('xsd_complex_type.pm.tt', {xsd => $xsd, module => $type_module, node => $type}, "$type_file.pm");
+            die "Error in creating $type_file.pm (xsd_complex_type.pm.tt): ". $template->error."\n"
+                if $template->error;
         }
-        print "Elements:\n";
-        for my $type ( @{ $xsd->elements } ) {
-            print "\t", $type->name, ' : ', $type->package, "\n";
-        }
+
+        $template->process('xsd_base.pm.tt', {xsd => $xsd}, "$file/Base.pm");
+        die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+            if $template->error;
+
+        $template->process('xsd.pm.tt', {xsd => $xsd, parents => \@parents}, "$file.pm");
+        die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+            if $template->error;
 
     }
-    $Data::Dumper::Sortkeys = 1;
-    $Data::Dumper::Indent   = 1;
-    #print Dumper $xsd;
-
-    return;
 }
 
-__DATA__
+1;
+
+__END__
 
 =head1 NAME
 
-<Name> - <One-line description of commands purpose>
+W3C::SOAP::XSD::Parser - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to <Name> version 0.1.
+This documentation refers to W3C::SOAP::XSD::Parser version 0.1.
+
 
 =head1 SYNOPSIS
 
-   <Name> [option]
+   use W3C::SOAP::XSD::Parser;
 
- OPTIONS:
-  -o --other         other option
-
-  -v --verbose       Show more detailed option
-     --version       Prints the version information
-     --help          Prints this help information
-     --man           Prints the full documentation for <Name>
-
+   # Brief but working code example(s) here showing the most common usage(s)
+   # This section will be as far as many users bother reading, so make it as
+   # educational and exemplary as possible.
 
 
 =head1 DESCRIPTION
@@ -181,6 +150,9 @@ Name the section accordingly.
 In an object-oriented module, this section should begin with a sentence (of the
 form "An object of this class represents ...") to give the reader a high-level
 context to help them understand the methods that are subsequently described.
+
+
+
 
 =head1 DIAGNOSTICS
 
@@ -230,6 +202,7 @@ Patches are welcome.
 =head1 AUTHOR
 
 Ivan Wills - (ivan.wills@gmail.com)
+<Author name(s)>  (<contact address>)
 
 =head1 LICENSE AND COPYRIGHT
 
