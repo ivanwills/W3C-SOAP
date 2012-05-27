@@ -14,6 +14,10 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use Path::Class;
+use W3C::SOAP::XSD::Parser;
+use W3C::SOAP::WSDL::Document;
+use File::ShareDir qw/dist_dir/;
 
 
 our $VERSION     = version->new('0.0.1');
@@ -21,7 +25,53 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has document => (
+    is       => 'rw',
+    isa      => 'W3C::SOAP::WSDL::Document',
+    required => 1,
+);
+has template => (
+    is       => 'rw',
+    isa      => 'Template',
+    required => 1,
+);
+has ns_module_map => (
+    is       => 'rw',
+    isa      => 'HashRef[Str]',
+    required => 1,
+);
+has lib => (
+    is       => 'rw',
+    isa      => 'Str',
+    required => 1,
+);
 
+around BUILDARGS => sub {
+    my ($orig, $class, @args) = @_;
+    my $args
+        = !@args     ? {}
+        : @args == 1 ? $args[0]
+        :              {@args};
+
+    for my $arg ( keys %$args ) {
+        if ( $arg eq 'location' || $arg eq 'strign' ) {
+            $args->{document} = W3C::SOAP::WSDL::Document->new($args);
+        }
+    }
+
+    return $class->$orig($args);
+};
+
+sub write_modules {
+    my ($self) = @_;
+    my @wsdl = ($self->document);
+    my $template = $self->template;
+
+    $template->process('wsdl.pm.tt', {wsdl => $wsdl, parents => \@parents}, "$file.pm");
+    die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+        if $template->error;
+
+}
 
 1;
 
