@@ -18,5 +18,5 @@ nytprof*
 tmp*
 *~
 vim.sh
-temp*
+temp/*
 errors.err
