@@ -1,4 +1,4 @@
-W3C-SOAP-XSD
+W3C-SOAP
 
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
@@ -30,19 +30,19 @@ perldoc command.
 You can also look for information at:
 
     RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=W3C-SOAP-XSD
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=W3C-SOAP
 
     AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/W3C-SOAP-XSD
+        http://annocpan.org/dist/W3C-SOAP
 
     CPAN Ratings
-        http://cpanratings.perl.org/d/W3C-SOAP-XSD
+        http://cpanratings.perl.org/d/W3C-SOAP
 
     Search CPAN
-        http://search.cpan.org/dist/W3C-SOAP-XSD/
+        http://search.cpan.org/dist/W3C-SOAP/
 
     Source Code
-        git://github.com/ivanwills/W3C-SOAP-XSD.git
+        git://github.com/ivanwills/W3C-SOAP.git
 
 COPYRIGHT AND LICENCE
 

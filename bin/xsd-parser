@@ -69,7 +69,7 @@ sub main {
     # do stuff here
     my $file = shift @ARGV;
     my $template = Template->new(
-        INCLUDE_PATH => dist_dir('W3C-SOAP-XSD'),
+        INCLUDE_PATH => dist_dir('W3C-SOAP'),
         INTERPOLATE  => 0,
         EVAL_PERL    => 1,
     );

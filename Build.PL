@@ -21,12 +21,12 @@ my $builder = Module::Build->new(
             'templates',
         ],
     },
-    add_to_cleanup     => [ 'W3C-SOAP-XSD-*' ],
+    add_to_cleanup     => [ 'W3C-SOAP-*' ],
     create_makefile_pl => 'traditional',
     create_license     => 1,
     meta_merge => {
         resources => {
-            repository => 'git://github.com/ivanwills/W3C-SOAP-XSD.git',
+            repository => 'git://github.com/ivanwills/W3C-SOAP.git',
             bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=W3C::SOAP::XSD',
         },
     },

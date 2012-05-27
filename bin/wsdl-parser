@@ -18,7 +18,8 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use FindBin qw/$Bin/;
 use Path::Class;
-use W3C::SOAP::WSDL::Document;
+use W3C::SOAP::WSDL::Parser;
+use Template;
 
 our $VERSION = version->new('0.0.1');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
@@ -43,7 +44,9 @@ sub main {
     Getopt::Long::Configure('bundling');
     GetOptions(
         \%option,
-        'out|o=s',
+        'ns_module_map|ns|namespace-map|n=s%',
+        'lib|l=s',
+        'show|s',
         'verbose|v+',
         'man',
         'help',
@@ -61,6 +64,26 @@ sub main {
         pod2usage( -verbose => 1 );
     }
 
+    return show() if $option{show};
+
+    my $template = Template->new(
+        INCLUDE_PATH => dist_dir('W3C-SOAP'),
+        INTERPOLATE  => 0,
+        EVAL_PERL    => 1,
+    );
+
+    for my $wsdl (@ARGV) {
+        $wsdl = W3C::SOAP::WSDL::Parser->new(
+            location => $wsdl,
+            template => $template,
+            %option,
+        );
+    }
+
+    return;
+}
+
+sub show {
     # do stuff here
     for my $wsdl (@ARGV) {
         $wsdl = W3C::SOAP::WSDL::Document->new( location => $wsdl );

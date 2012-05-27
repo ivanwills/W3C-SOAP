@@ -60,6 +60,6 @@ Debian_CPANTS.txt
 \bnytprof*
 
 # Avoid archives of this distribution
-\bW3C-SOAP-XSD-[\d\.\_]+
+\bW3C-SOAP-[\d\.\_]+
 errors.err
 tags
