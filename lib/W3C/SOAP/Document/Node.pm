@@ -1,4 +1,4 @@
-package W3C::SOAP::XSD::Document::Node;
+package W3C::SOAP::Document::Node;
 
 # Created on: 2012-05-26 19:04:19
 # Create by:  Ivan Wills
@@ -8,34 +8,65 @@ package W3C::SOAP::XSD::Document::Node;
 
 use Moose;
 use version;
+use Carp;
+use Scalar::Util;
+use List::Util;
+#use List::MoreUtils;
+use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-extends 'W3C::SOAP::Document::Node';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-has '+parent' => (
-    isa    => 'W3C::SOAP::XSD::Document',
+has node => (
+    is     => 'rw',
+    isa    => 'XML::LibXML::Node',
+    required => 1,
 );
+has parent => (
+    is     => 'rw',
+    isa    => 'W3C::SOAP::Document',
+    required => 1,
+    weak_ref => 1,
+);
+has name => (
+    is     => 'rw',
+    isa    => 'Str',
+    builder => '_name',
+    lazy_build => 1,
+);
+
+sub _name {
+    my ($self) = shift;
+    return $self->node->getAttribute('name');
+}
+
+sub perl_name {
+    my ($self) = @_;
+    my $name = $self->name;
+    $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
+    return lc $name;
+}
+
 1;
 
 __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Document::Node - <One-line description of module's purpose>
+W3C::SOAP::Document::Node - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::Node version 0.1.
+This documentation refers to W3C::SOAP::Document::Node version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::XSD::Document::Node;
+   use W3C::SOAP::Document::Node;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

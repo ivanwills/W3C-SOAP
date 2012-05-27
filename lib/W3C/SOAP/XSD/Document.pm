@@ -21,28 +21,13 @@ use W3C::SOAP::XSD::Document::Element;
 use W3C::SOAP::XSD::Document::ComplexType;
 use W3C::SOAP::XSD::Document::SimpleType;
 
+extends 'W3C::SOAP::Document';
+
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-has xml => (
-    is       => 'ro',
-    isa      => 'XML::LibXML::Document',
-    required => 1,
-);
-has xc => (
-    is         => 'ro',
-    isa        => 'XML::LibXML::XPathContext',
-    builder    => '_xc',
-    lazy_build => 1,
-);
-has target_namespace => (
-    is         => 'rw',
-    isa        => 'Str',
-    builder    => '_target_namespace',
-    lazy_build => 1,
-);
 has imports => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
@@ -78,38 +63,6 @@ has ns_module_map => (
     default   => sub {{}},
     predicate => 'has_ns_module_map',
 );
-
-around BUILDARGS => sub {
-    my ($orig, $class, @args) = @_;
-    my $args
-        = !@args     ? {}
-        : @args == 1 ? $args[0]
-        :              {@args};
-
-    if ( $args->{string} ) {
-        $args->{xml} = XML::LibXML->load_xml(string => $args->{string});
-    }
-    elsif ( $args->{location} ) {
-        $args->{xml} = XML::LibXML->load_xml(location => $args->{location});
-    }
-
-    return $class->$orig($args);
-};
-
-sub _xc {
-    my ($self) = @_;
-    return XML::LibXML::XPathContext->new($self->xml);
-}
-
-sub _target_namespace {
-    my ($self) = @_;
-    my $ns  = $self->xml->firstChild->getAttribute('targetNamespace');
-    my $xc  = $self->xc;
-    $xc->registerNs('ns', $ns);
-    $xc->registerNs('xsd', 'http://www.w3.org/2001/XMLSchema');
-
-    return $ns;
-}
 
 sub _imports {
     my ($self) = @_;

@@ -1,6 +1,6 @@
-package W3C::SOAP::XSD::Document::Node;
+package W3C::SOAP::Document;
 
-# Created on: 2012-05-26 19:04:19
+# Created on: 2012-05-27 19:26:43
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -8,34 +8,88 @@ package W3C::SOAP::XSD::Document::Node;
 
 use Moose;
 use version;
+use Carp;
+use Scalar::Util;
+use List::Util;
+#use List::MoreUtils;
+use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-extends 'W3C::SOAP::Document::Node';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-has '+parent' => (
-    isa    => 'W3C::SOAP::XSD::Document',
+has xml => (
+    is       => 'ro',
+    isa      => 'XML::LibXML::Document',
+    required => 1,
 );
+has xc => (
+    is         => 'ro',
+    isa        => 'XML::LibXML::XPathContext',
+    builder    => '_xc',
+    lazy_build => 1,
+);
+has target_namespace => (
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_target_namespace',
+    lazy_build => 1,
+);
+
+around BUILDARGS => sub {
+    my ($orig, $class, @args) = @_;
+    my $args
+        = !@args     ? {}
+        : @args == 1 ? $args[0]
+        :              {@args};
+
+    if ( $args->{string} ) {
+        $args->{xml} = XML::LibXML->load_xml(string => $args->{string});
+    }
+    elsif ( $args->{location} ) {
+        $args->{xml} = XML::LibXML->load_xml(location => $args->{location});
+    }
+
+    return $class->$orig($args);
+};
+
+sub _xc {
+    my ($self) = @_;
+    return XML::LibXML::XPathContext->new($self->xml);
+}
+
+sub _target_namespace {
+    my ($self) = @_;
+    my $ns  = $self->xml->firstChild->getAttribute('targetNamespace');
+    my $xc  = $self->xc;
+    $xc->registerNs(ns   => $ns);
+    $xc->registerNs(xsd  => 'http://www.w3.org/2001/XMLSchema');
+    $xc->registerNs(wsdl => 'http://schemas.xmlsoap.org/wsdl/');
+    $xc->registerNs(wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy');
+    $xc->registerNs(soap => 'http://schemas.xmlsoap.org/wsdl/soap/');
+
+    return $ns;
+}
+
 1;
 
 __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Document::Node - <One-line description of module's purpose>
+W3C::SOAP::Document - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::Node version 0.1.
+This documentation refers to W3C::SOAP::Document version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::XSD::Document::Node;
+   use W3C::SOAP::Document;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
