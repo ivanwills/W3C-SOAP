@@ -3,7 +3,7 @@ use warnings;
 use Module::Build;
 
 my $builder = Module::Build->new(
-    module_name       => 'W3C::SOAP::XSD',
+    module_name       => 'W3C::SOAP',
     license           => 'perl',
     dist_author       => 'Ivan Wills <ivan.wills@gmail.com>',
     dist_version_from => 'lib/W3C/SOAP/XSD.pm',
@@ -27,7 +27,7 @@ my $builder = Module::Build->new(
     meta_merge => {
         resources => {
             repository => 'git://github.com/ivanwills/W3C-SOAP.git',
-            bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=W3C::SOAP::XSD',
+            bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=W3C::SOAP',
         },
     },
 );
