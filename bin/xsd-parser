@@ -76,7 +76,8 @@ sub main {
 
     while ( my $xsd = shift @xsd ) {
         print "Namespace = " . $xsd->target_namespace . "\n";
-        my $file = "$option{lib}/" . $xsd->get_module_base($xsd->target_namespace);
+        my $module = $xsd->get_module_base($xsd->target_namespace);
+        my $file   = "$option{lib}/" . $module;
         $file =~ s{::}{/}g;
         $file = file $file;
         my $parent = $file->parent;
@@ -87,11 +88,12 @@ sub main {
         }
         mkdir $_ for reverse @missing;
 
-        $template->process('xsd.pm.tt', {xsd => $xsd}, "$file.pm");
         print "Imports:\n";
+        my @parents;
         for my $type ( @{ $xsd->imports } ) {
             print "\t", $type->target_namespace, "\n";
             push @xsd, $type;
+            push @parents, $xsd->get_module_base($type->target_namespace);
         }
         print "Simple Types:\n";
         for my $type ( @{ $xsd->simple_types } ) {
@@ -104,11 +106,30 @@ sub main {
             for my $type ( @{ $type->sequence } ) {
                 print "\t\t", $type->name, ' : ', $type->package, "\n";
             }
+            my $type_module = $module . '::' . $type->name;
+            push @parents, $type_module;
+            my $type_file = "$option{lib}/" . $type_module;
+            $type_file =~ s{::}{/}g;
+            $type_file = file $type_file;
+            mkdir $type_file->parent if !-d $type_file->parent;
+
+            $template->process('xsd_complex_type.pm.tt', {xsd => $xsd, module => $type_module, node => $type}, "$type_file.pm");
+            die "Error in creating $type_file.pm (xsd_complex_type.pm.tt): ". $template->error."\n"
+                if $template->error;
         }
         print "Elements:\n";
         for my $type ( @{ $xsd->elements } ) {
             print "\t", $type->name, ' : ', $type->package, "\n";
         }
+
+        $template->process('xsd_base.pm.tt', {xsd => $xsd}, "$file/Base.pm");
+        die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+            if $template->error;
+
+        $template->process('xsd.pm.tt', {xsd => $xsd, parents => \@parents}, "$file.pm");
+        die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+            if $template->error;
+
     }
     $Data::Dumper::Sortkeys = 1;
     $Data::Dumper::Indent   = 1;
