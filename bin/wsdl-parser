@@ -72,10 +72,12 @@ sub main {
         EVAL_PERL    => 1,
     );
 
-    for my $wsdl (@ARGV) {
+    my %map = @ARGV;
+    for my $module (keys %map) {
         $wsdl = W3C::SOAP::WSDL::Parser->new(
-            location => $wsdl,
+            location => $map{$module},
             template => $template,
+            module   => $module,
             %option,
         );
     }

@@ -40,6 +40,11 @@ has ns_module_map => (
     isa      => 'HashRef[Str]',
     required => 1,
 );
+has module => (
+    is       => 'rw',
+    isa      => 'Str',
+    required => 1,
+);
 has lib => (
     is       => 'rw',
     isa      => 'Str',
@@ -64,10 +69,20 @@ around BUILDARGS => sub {
 
 sub write_modules {
     my ($self) = @_;
-    my @wsdl = ($self->document);
+    my $wsdl = $self->document;
     my $template = $self->template;
+    my $file     = $self->lib . '/' . $self->module . '.pm';
+    $file =~ s{::}{/}g;
+    $file = file $file;
+    my $parent = $file->parent;
+    my @missing;
+    while ( !-d $parent ) {
+        push @missing, $parent;
+        $parent = $parent->parent;
+    }
+    mkdir $_ for reverse @missing;
 
-    $template->process('wsdl.pm.tt', {wsdl => $wsdl, parents => \@parents}, "$file.pm");
+    $template->process('wsdl.pm.tt', {wsdl => $wsdl, module => $self->module}, "$file");
     die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
         if $template->error;
 
