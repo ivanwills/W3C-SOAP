@@ -20,6 +20,7 @@ our %EXPORT_TAGS = ();
 
 Moose::Util::meta_attribute_alias('W3C::SOAP::XSD');
 
+subtype 'xml_node' => as 'XML::LibXML::Node';
 subtype 'PositiveInt',
     as 'Int',
     where { $_ >= 0 },

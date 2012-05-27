@@ -13,6 +13,7 @@ use Moose;
 use version;
 use Data::Dumper qw/Dumper/;
 use Moose::Util::TypeConstraints;
+use W3C::SOAP::XSD::Traits;
 [%
 found = {};
 FOREACH use_module IN modules;

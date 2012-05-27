@@ -22,7 +22,16 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-
+has xsd_ns => (
+    is  => 'rw',
+    isa => 'Str',
+    required => 1,
+);
+has xsd_ns_name => (
+    is  => 'rw',
+    isa => 'Str',
+    required => 1,
+);
 
 1;
 

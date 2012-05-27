@@ -10,6 +10,7 @@ package [% module %];
 use Moose;
 use version;
 use Moose::Util::TypeConstraints;
+use W3C::SOAP::XSD::Traits;
 [%- FOREACH module IN parents %]
 use [% module %];
 [%- END %]
