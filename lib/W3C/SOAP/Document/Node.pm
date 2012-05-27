@@ -22,23 +22,34 @@ our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
 has node => (
-    is     => 'rw',
-    isa    => 'XML::LibXML::Node',
+    is       => 'rw',
+    isa      => 'XML::LibXML::Node',
     required => 1,
 );
 has parent => (
-    is     => 'rw',
-    isa    => 'W3C::SOAP::Document',
-    required => 1,
+    is       => 'rw',
+    isa      => 'W3C::SOAP::Document::Node',
     weak_ref => 1,
 );
+has document => (
+    is         => 'rw',
+    isa        => 'W3C::SOAP::Document',
+    required   => 1,
+    builder    => '_document',
+    lazy_build => 1,
+    weak_ref   => 1,
+);
 has name => (
-    is     => 'rw',
-    isa    => 'Str',
-    builder => '_name',
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_name',
     lazy_build => 1,
 );
 
+sub _document {
+    my ($self) = shift;
+    return $self->parent->document;
+}
 sub _name {
     my ($self) = shift;
     return $self->node->getAttribute('name');
