@@ -89,7 +89,14 @@ sub _nillble {
     return $self->node->getAttribute('nillble') || 0;
 }
 
+sub type_module {
+    my ($self) = @_;
+    my ($ns, $type) = split /:/, $self->type, 2;
+    my $ns_uri = $self->parent->get_ns_uri($ns);
 
+    return $self->type if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
+    return $self->parent->get_module_base( $ns_uri ) . '::' . $type;
+}
 
 1;
 

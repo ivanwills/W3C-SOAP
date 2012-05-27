@@ -44,6 +44,13 @@ sub _name {
     return $self->node->getAttribute('name');
 }
 
+sub perl_name {
+    my ($self) = @_;
+    my $name = $self->name;
+    $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
+    return lc $name;
+}
+
 1;
 
 __END__
