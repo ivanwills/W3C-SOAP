@@ -14,6 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::WSDL::Document::Port;
 
 extends 'W3C::SOAP::Document::Node';
 
@@ -31,6 +32,17 @@ has ports => (
 
 sub _ports {
     my ($self) = @_;
+    my @complex_types;
+    my @nodes = $self->parent->xc->findnodes('wsdl:port', $self->node);
+
+    for my $node (@nodes) {
+        push @complex_types, W3C::SOAP::WSDL::Document::Port->new(
+            parent => $self->parent,
+            node   => $node,
+        );
+    }
+
+    return \@complex_types;
 }
 
 1;

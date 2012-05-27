@@ -80,6 +80,9 @@ sub main {
         print "Servicess :\n";
         for my $node (@{ $wsdl->services }) {
             print "\t", $node->name, "\n";
+            for my $port (@{ $node->ports }) {
+                print "\t\t", $port->binding->name, "\n";
+            }
         }
     }
 

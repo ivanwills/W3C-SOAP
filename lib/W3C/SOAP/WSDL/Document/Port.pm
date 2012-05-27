@@ -22,7 +22,22 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has binding => (
+    is         => 'rw',
+    isa        => 'W3C::SOAP::WSDL::Document::Binding',
+    builder    => '_binding',
+    lazy_build => 1,
+    weak_ref   => 1,
+);
 
+sub _binding {
+    my ($self) = @_;
+    my ($ns, $name) = split /:/, $self->node->getAttribute('binding'), 2;
+
+    for my $binding (@{ $self->parent->bindings }) {
+        return $binding if $binding->name eq $name;
+    }
+}
 
 1;
 
