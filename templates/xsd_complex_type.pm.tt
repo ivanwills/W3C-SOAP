@@ -1,4 +1,4 @@
-[%- module = xsd.get_module_base(xsd.target_namespace) _ '::Base' -%]
+[%- base = xsd.get_module_base(xsd.target_namespace) -%]
 package [% module %];
 
 # Created on: [% date %] [% time %]
@@ -7,22 +7,38 @@ package [% module %];
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
+use strict;
+use warnings;
 use Moose;
 use version;
+use Data::Dumper qw/Dumper/;
 use Moose::Util::TypeConstraints;
-extends 'W3C::SOAP::XSD';
+[%
+found = {};
+FOREACH use_module IN modules;
+    use_module = subtypes.$use_module ? subtypes.$use_module.module : use_module;
+    NEXT IF found.$use_module;
+    found.$use_module = 1; -%]
+use [% use_module %];
+[% END %]
+[% FOREACH attribute IN attributes;
+    type = attribute.type;
+    type = subtypes.$type ? subtypes.$type.name : attribute.type; %]
+use Moose::Util::TypeConstraints;
+[%- END %]
+extends '[% base %]::Base';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
+[%- IF element_map.$module %]
 
-[% FOREACH subtype IN xsd.simple_types %]
-[% IF subtype.enumeration %]my %[% subtype.name %] = map {$_=>1} ('[% subtype.enumeration.join("', '") %]');[% END %]
-subtype [% subtype.perl_name %] =>
-    as      '[% subtype.as %]',
-    where   { $[% subtype.name %]{$_} },
-    message {'[% subtype.name %] must be one of [% subtype.enumeration.join(', ') %]'};
-
+has '+xsd_element' => (
+    default => '[% element_map.$module %]',
+);
+[%- END -%]
+[% FOREACH element IN node.sequence %]
+[% INCLUDE xsd_element.pm.tt %]
 [%- END %]
 
 1;

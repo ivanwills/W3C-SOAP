@@ -1,3 +1,4 @@
+[%- module = xsd.get_module_base(xsd.target_namespace) -%]
 package [% module %];
 
 # Created on: [% date %] [% time %]
@@ -9,17 +10,17 @@ package [% module %];
 use Moose;
 use version;
 use Moose::Util::TypeConstraints;
-[% FOREACH module IN modules -%]
+[%- FOREACH module IN parents %]
 use [% module %];
 [%- END %]
-extends 'NScreens::SDPx::XSD';
+extends 'W3C::SOAP::XSD';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 
 has '+xsd_ns' => (
-    default => '[% ns %]',
+    default => '[% xsd.target_namespace %]',
 );
 has '+xsd_ns_name' => (
     default => '[% ns_name %]',
