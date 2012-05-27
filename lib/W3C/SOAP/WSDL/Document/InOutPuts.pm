@@ -1,6 +1,6 @@
-package W3C::SOAP::WSDL::Document::Service;
+package W3C::SOAP::WSDL::Document::InOutPuts;
 
-# Created on: 2012-05-27 19:25:41
+# Created on: 2012-05-28 07:30:02
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -14,7 +14,6 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use W3C::SOAP::WSDL::Document::Port;
 
 extends 'W3C::SOAP::Document::Node';
 
@@ -23,27 +22,30 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-has ports => (
+has message => (
     is         => 'rw',
-    isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Port]',
-    builder    => '_ports',
+    isa        => 'Maybe[Str]',
+    builder    => '_message',
+    lazy_build => 1,
+);
+has policy => (
+    is         => 'rw',
+    isa        => 'Maybe[Str]',
+    builder    => '_policy',
+    lazy_build => 1,
+);
+has body => (
+    is         => 'rw',
+    isa        => 'Maybe[Str]',
+    builder    => '_body',
     lazy_build => 1,
 );
 
-sub _ports {
+sub _message {
     my ($self) = @_;
-    my @complex_types;
-    my @nodes = $self->document->xc->findnodes('wsdl:port', $self->node);
-
-    for my $node (@nodes) {
-        push @complex_types, W3C::SOAP::WSDL::Document::Port->new(
-            parent   => $self,
-            node     => $node,
-        );
-    }
-
-    return \@complex_types;
+    return $self->node->getAttribute('message');
 }
+
 
 1;
 
@@ -51,16 +53,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Document::Service - <One-line description of module's purpose>
+W3C::SOAP::WSDL::Document::InOutPuts - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Service version 0.1.
+This documentation refers to W3C::SOAP::WSDL::Document::InOutPuts version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Document::Service;
+   use W3C::SOAP::WSDL::Document::InOutPuts;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

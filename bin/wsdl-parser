@@ -82,6 +82,11 @@ sub main {
             print "\t", $node->name, "\n";
             for my $port (@{ $node->ports }) {
                 print "\t\t", $port->binding->name, "\n";
+                for my $operation (@{ $port->binding->operations }) {
+                    print "\t\t\t", $operation->name,
+                        ': in ', $operation->port_type->inputs->[0]->message,
+                        ': out ', $operation->port_type->outputs->[0]->message, "\n";
+                }
             }
         }
     }

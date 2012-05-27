@@ -34,7 +34,7 @@ sub _binding {
     my ($self) = @_;
     my ($ns, $name) = split /:/, $self->node->getAttribute('binding'), 2;
 
-    for my $binding (@{ $self->parent->bindings }) {
+    for my $binding (@{ $self->document->bindings }) {
         return $binding if $binding->name eq $name;
     }
 }

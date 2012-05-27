@@ -22,7 +22,27 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has operations => (
+    is         => 'rw',
+    isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Operation]',
+    builder    => '_operations',
+    lazy_build => 1,
+);
 
+sub _operations {
+    my ($self) = @_;
+    my @operations;
+    my @nodes = $self->document->xc->findnodes('wsdl:operation', $self->node);
+
+    for my $node (@nodes) {
+        push @operations, W3C::SOAP::WSDL::Document::Operation->new(
+            parent   => $self,
+            node     => $node,
+        );
+    }
+
+    return \@operations;
+}
 
 1;
 

@@ -1,6 +1,6 @@
-package W3C::SOAP::WSDL::Document::Service;
+package W3C::SOAP::WSDL::Document::Operation;
 
-# Created on: 2012-05-27 19:25:41
+# Created on: 2012-05-28 07:03:06
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -14,7 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use W3C::SOAP::WSDL::Document::Port;
+use W3C::SOAP::WSDL::Document::InOutPuts;
 
 extends 'W3C::SOAP::Document::Node';
 
@@ -23,26 +23,77 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-has ports => (
+has style => (
     is         => 'rw',
-    isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Port]',
-    builder    => '_ports',
+    isa        => 'Str',
+    builder    => '_style',
+    lazy_build => 1,
+);
+has action => (
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_action',
+    lazy_build => 1,
+);
+has inputs => (
+    is         => 'rw',
+    isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
+    builder    => '_inputs',
+    lazy_build => 1,
+);
+has outputs => (
+    is         => 'rw',
+    isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
+    builder    => '_outputs',
+    lazy_build => 1,
+);
+has port_type => (
+    is         => 'rw',
+    isa        => 'W3C::SOAP::WSDL::Document::Operation',
+    builder    => '_port_type',
     lazy_build => 1,
 );
 
-sub _ports {
+sub _style {
     my ($self) = @_;
-    my @complex_types;
-    my @nodes = $self->document->xc->findnodes('wsdl:port', $self->node);
+    my $style = $self->node->getAttribute('style');
+    return $style if $style;
+    my ($child) = $self->document->xc->findnode('soap:binding'. $self->node);
+    return $child->getAttribute('style');
+}
+
+sub _action {
+    my ($self) = @_;
+    my $action = $self->node->getAttribute('soapAction');
+    return $action if $action;
+    my ($child) = $self->document->xc->findnode('soap:binding'. $self->node);
+    return $child->getAttribute('soapAction');
+}
+
+sub _inputs  { return $_[0]->_in_out_puts('input');  }
+sub _outputs { return $_[0]->_in_out_puts('output'); }
+sub _in_out_puts {
+    my ($self, $dir) = @_;
+    my @puts;
+    my @nodes = $self->document->xc->findnodes("wsdl:$dir", $self->node);
 
     for my $node (@nodes) {
-        push @complex_types, W3C::SOAP::WSDL::Document::Port->new(
+        push @puts, W3C::SOAP::WSDL::Document::InOutPuts->new(
             parent   => $self,
             node     => $node,
         );
     }
 
-    return \@complex_types;
+    return \@puts;
+}
+
+sub _port_type {
+    my ($self) = @_;
+    for my $port_type (@{ $self->document->port_types }) {
+        for my $operation (@{ $port_type->operations }) {
+            return $operation if $operation->name eq $self->name;
+        }
+    }
 }
 
 1;
@@ -51,16 +102,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Document::Service - <One-line description of module's purpose>
+W3C::SOAP::WSDL::Document::Operation - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Service version 0.1.
+This documentation refers to W3C::SOAP::WSDL::Document::Operation version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Document::Service;
+   use W3C::SOAP::WSDL::Document::Operation;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

@@ -66,7 +66,7 @@ sub _message {
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Message->new(
-            parent => $self,
+            document => $self,
             node   => $node,
         );
     }
@@ -81,7 +81,7 @@ sub _port_type {
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::PortType->new(
-            parent => $self,
+            document => $self,
             node   => $node,
         );
     }
@@ -96,7 +96,7 @@ sub _binding {
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Binding->new(
-            parent => $self,
+            document => $self,
             node   => $node,
         );
     }
@@ -111,7 +111,7 @@ sub _service {
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Service->new(
-            parent => $self,
+            document => $self,
             node   => $node,
         );
     }
