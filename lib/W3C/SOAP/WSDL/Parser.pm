@@ -100,7 +100,13 @@ sub write_modules {
         push @modules, $parse->write_modules;
     }
 
-    $template->process('wsdl.pm.tt', {wsdl => $wsdl, module => $self->module}, "$file");
+    my $data = {
+        wsdl    => $wsdl,
+        module  => $self->module,
+        xsd     => shift @modules,
+        modules => \@modules,
+    };
+    $template->process('wsdl.pm.tt', $data, "$file");
     die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
         if $template->error;
 

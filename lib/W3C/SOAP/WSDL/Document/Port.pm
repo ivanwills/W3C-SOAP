@@ -29,6 +29,12 @@ has binding => (
     lazy_build => 1,
     weak_ref   => 1,
 );
+has address => (
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_address',
+    lazy_build => 1,
+);
 
 sub _binding {
     my ($self) = @_;
@@ -37,6 +43,12 @@ sub _binding {
     for my $binding (@{ $self->document->bindings }) {
         return $binding if $binding->name eq $name;
     }
+}
+
+sub _address {
+    my ($self) = @_;
+    my ($address) = $self->document->xpc->findnodes('soap:address', $self->node);
+    return $address->getAttribute('location');
 }
 
 1;
