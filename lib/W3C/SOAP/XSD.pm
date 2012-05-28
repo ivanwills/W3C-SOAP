@@ -14,6 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use Moose::Util::TypeConstraints;
 use MooseX::Types::XMLSchema;
 use W3C::SOAP::XSD::Traits;
 
@@ -32,6 +33,76 @@ has xsd_ns_name => (
     isa => 'Str',
     required => 1,
 );
+
+sub to_xml {
+    my ($self, $xml) = @_;
+    my $child;
+    my $meta = $self->meta;
+
+    my @attributes = sort {
+            $meta->get_attribute($a)->insertion_position <=> $meta->get_attribute($b)->insertion_position
+        }
+        grep {
+            $meta->get_attribute($_)->does('W3C::SOAP::XSD::Traits')
+        }
+        $meta->get_attributes;
+
+    warn 'XSD object: ', Dumper \@attributes;
+
+    my $wrapper = $xml->createElement( $self->xsd_ns_name . ':' . $name );
+    $wrapper->setAttribute( 'xmlns:' . $self->xsd_ns_name, $self->xsd_ns );
+
+    for my $name (@attributes) {
+        my $att = $meta->get_attribute($name);
+
+        # skip attributes that are not XSD attributes
+        next if !$att->does('NScreens::SDPx::XSD::Traits');
+        my $has = "has_$name";
+
+        # skip sttributes that are not set
+        next if !$self->$has;
+
+        my $xml_name = $att->does('NScreens::SDPx::XSD::Traits') && $att->has_xml_name ? $att->xml_name : $name;
+        warn $att->type_constraint;
+        my $tag = $xml->createElement($self->xsd_ns_name . ':' . $xml_name);
+
+        my $value = $self->$name;
+
+        if ( blessed($value) && $value->can('to_xml') ) {
+            $tag->appendChild($value->to_xml($xml));
+        }
+        else {
+            $tag->appendChild( $xml->createTextNode("$value") );
+        }
+
+        $wrapper->appendChild($tag);
+    }
+
+    return $wrapper;
+}
+
+sub to_data {
+}
+
+sub xsd_subtype {
+    my ($self, $type, %args) = @_;
+
+    my $subtype = subtype as $args{list} ? "ArrayRef[$type]" : $type;
+    coerce $subtype =>
+        from 'xml_node' =>
+        via { eval { $type->new($_) } || $_->toString };
+
+    if ( $args{list} ) {
+        coerce $subtype =>
+            from 'MyApp::XSD::TpsCommonTypes::ProductFamilyType',
+            via {[$_]};
+        coerce $subtype =>
+            from 'ArrayRef[xml_node]' =>
+            via { [ map { eval { $type->new($_) } || $_->toString } @$_ ] };
+    }
+
+    return $subtype;
+}
 
 1;
 

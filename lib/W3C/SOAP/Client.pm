@@ -30,9 +30,10 @@ has location => (
     required => 1,
 );
 has header => (
-    is       => 'rw',
-    isa      => 'W3C::SOAP::Header',
+    is        => 'rw',
+    isa       => 'W3C::SOAP::Header',
     predicate => 'has_header',
+    builder   => '_header',
 );
 has mech => (
     is      => 'rw',
@@ -42,6 +43,7 @@ has mech => (
 
 sub request {
     my ($self, $action, $body) = @_;
+    warn Dumper $body, "\n";
     my $xml = XML::LibXML->load_xml(string => <<'XML');
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -56,13 +58,14 @@ XML
         $soap_body->appendChild( $xml->createTextNode($body) );
     }
     elsif ( $body->can('to_xml') ) {
-        $soap_body->appencChild( $body->to_xml($xml) );
+        $soap_body->appendChild( $body->to_xml($xml) );
     }
 
     if ( $self->has_header ) {
-        my $node = $self->header($xml);
-        $xml->insertBefore($node, $xml->firstChild);
+        my $node = $self->header->to_xml($xml);
+        $xml->firstChild->insertBefore($node, $xml->firstChild->firstChild);
     }
+    warn $xml->toString, "\n";
 
     my $url = $self->location;
 
@@ -85,6 +88,10 @@ XML
     };
 
     return XML::LibXML->new( string => $self->mech->content );
+}
+
+sub _header {
+    confess "This builder should be overridden in " . ref $_[0];
 }
 
 1;

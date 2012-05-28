@@ -41,12 +41,12 @@ has xs_max_occurs => (
 has xs_name => (
     is        => 'rw',
     isa       => 'Str',
-    predicate => 'has_name',
+    predicate => 'has_xs_name',
 );
 has xs_type => (
     is        => 'rw',
     isa       => 'Str',
-    predicate => 'has_type',
+    predicate => 'has_xs_type',
 );
 
 1;
