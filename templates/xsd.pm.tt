@@ -26,14 +26,8 @@ has '+xsd_ns' => (
 has '+xsd_ns_name' => (
     default => '[% ns_name %]',
 );
-[% FOREACH subtype IN subtypes %]
-[%- NEXT UNLESS subtype.value.ns == ns -%]
-[% IF subtype.value.values %]my %[% subtype.value.name %] = map {$_=>1} ('[% subtype.value.values.join("', '") %]');[% END %]
-subtype [% subtype.value.name %] =>
-    as      '[% subtype.value.as %]',
-    where   { $[% subtype.value.name %]{$_} },
-    message {'[% subtype.value.name %] must be one of [% subtype.value.values.join(', ') %]'};
-
+[% FOREACH element IN xsd.elements %]
+[% INCLUDE xsd_element.pm.tt %]
 [%- END %]
 
 1;
