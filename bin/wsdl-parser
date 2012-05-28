@@ -110,7 +110,7 @@ sub show {
         for my $node (@{ $wsdl->services }) {
             print "\t", $node->name, "\n";
             for my $port (@{ $node->ports }) {
-                print "\t\t", $port->binding->name, "\n";
+                print "\t\t", $port->binding->name, ' : ', $port->address, "\n";
                 for my $operation (@{ $port->binding->operations }) {
                     print "\t\t\t", $operation->name,
                         ': in ', $operation->port_type->inputs->[0]->message,
