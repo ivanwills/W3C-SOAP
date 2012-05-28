@@ -20,6 +20,8 @@ my $builder = Module::Build->new(
         'Template'                     => 2.2,
         'WWW::Mechanize'               => 1.6,
         'XML::LibXML'                  => 1.7,
+        'Exception::Class'             => 1.2,
+        'TryCatch'                     => 1.0,
     },
     build_requires => {
         'Test::More'       => 0,
