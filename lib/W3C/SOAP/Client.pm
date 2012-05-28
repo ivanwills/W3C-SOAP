@@ -1,6 +1,6 @@
-package W3C::SOAP::WSDL;
+package W3C::SOAP::Client;
 
-# Created on: 2012-05-27 18:57:16
+# Created on: 2012-05-28 07:40:20
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -15,7 +15,6 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-extends 'W3C::SOAP::Client';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
@@ -30,16 +29,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL - <One-line description of module's purpose>
+W3C::SOAP::Client - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL version 0.1.
+This documentation refers to W3C::SOAP::Client version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL;
+   use W3C::SOAP::Client;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
