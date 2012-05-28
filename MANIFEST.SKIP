@@ -63,3 +63,6 @@ Debian_CPANTS.txt
 \bW3C-SOAP-[\d\.\_]+
 errors.err
 tags
+test
+cmds
+t/xsd
