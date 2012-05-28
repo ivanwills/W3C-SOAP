@@ -16,6 +16,8 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use WWW::Mechanize;
 use TryCatch;
+use XML::LibXML;
+use W3C::SOAP::Exception;
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;

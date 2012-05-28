@@ -15,7 +15,7 @@ use [% xsd %];
 [%- FOR module IN modules %]
 use [% module %];
 [%- END %]
-extends 'W3C::SOPA::WSDL';
+extends 'W3C::SOAP::WSDL';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
@@ -32,7 +32,7 @@ sub [% operation.perl_name %] {
     my $xsd = [% xsd %]->new(
         [% operation.perl_name %] => {@_}
     );
-    my $resp = $self->request($xsd);
+    my $resp = $self->request( [% operation.name %] => $xsd );
 
     return [% xsd %]->new($resp);
 }
