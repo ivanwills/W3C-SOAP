@@ -82,6 +82,24 @@ sub write_modules {
     }
     mkdir $_ for reverse @missing;
 
+    warn Dumper $self->ns_module_map;
+    my @modules;
+    for my $xsd (@{ $self->document->schemas }) {
+        my $parse = W3C::SOAP::XSD::Parser->new(
+            document => $xsd,
+            template => $self->template,
+            lib      => $self->lib     ,
+            ns_module_map => $self->ns_module_map,
+        );
+        $xsd->ns_module_map($self->ns_module_map);
+        $xsd->clear_xpc;
+
+        $parse->document->target_namespace($self->document->target_namespace)
+            if !$parse->document->has_target_namespace;
+
+        push @modules, $parse->write_modules;
+    }
+
     $template->process('wsdl.pm.tt', {wsdl => $wsdl, module => $self->module}, "$file");
     die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
         if $template->error;

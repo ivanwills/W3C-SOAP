@@ -8,7 +8,7 @@ package W3C::SOAP::Document;
 
 use Moose;
 use version;
-use Carp;
+use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
 #use List::MoreUtils;
@@ -26,16 +26,19 @@ has xml => (
     isa      => 'XML::LibXML::Document',
     required => 1,
 );
-has xc => (
+has xpc => (
     is         => 'ro',
     isa        => 'XML::LibXML::XPathContext',
-    builder    => '_xc',
+    builder    => '_xpc',
+    clearer    => 'clear_xpc',
+    predicate  => 'has_xpc',
     lazy_build => 1,
 );
 has target_namespace => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_target_namespace',
+    predicate  => 'has_target_namespace',
     lazy_build => 1,
 );
 
@@ -56,20 +59,22 @@ around BUILDARGS => sub {
     return $class->$orig($args);
 };
 
-sub _xc {
+sub _xpc {
     my ($self) = @_;
-    return XML::LibXML::XPathContext->new($self->xml);
+    my $xpc = XML::LibXML::XPathContext->new($self->xml);
+    $xpc->registerNs(xsd  => 'http://www.w3.org/2001/XMLSchema');
+    $xpc->registerNs(wsdl => 'http://schemas.xmlsoap.org/wsdl/');
+    $xpc->registerNs(wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy');
+    $xpc->registerNs(soap => 'http://schemas.xmlsoap.org/wsdl/soap/');
+
+    return $xpc;
 }
 
 sub _target_namespace {
     my ($self) = @_;
     my $ns  = $self->xml->firstChild->getAttribute('targetNamespace');
-    my $xc  = $self->xc;
-    $xc->registerNs(ns   => $ns);
-    $xc->registerNs(xsd  => 'http://www.w3.org/2001/XMLSchema');
-    $xc->registerNs(wsdl => 'http://schemas.xmlsoap.org/wsdl/');
-    $xc->registerNs(wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy');
-    $xc->registerNs(soap => 'http://schemas.xmlsoap.org/wsdl/soap/');
+    my $xpc  = $self->xpc;
+    $xpc->registerNs(ns   => $ns) if $ns;
 
     return $ns;
 }

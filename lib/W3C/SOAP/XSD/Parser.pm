@@ -65,10 +65,12 @@ sub write_modules {
     my ($self) = @_;
     my @xsd = ($self->document);
     my $template = $self->template;
+    my $self_module;
     my @parents;
 
     while ( my $xsd = shift @xsd ) {
         my $module = $xsd->get_module_base($xsd->target_namespace);
+        $self_module ||= $module;
         my $file   = $self->lib . '/' . $module;
         $file =~ s{::}{/}g;
         $file = file $file;
@@ -106,6 +108,8 @@ sub write_modules {
             if $template->error;
 
     }
+
+    return $self_module;
 }
 
 1;

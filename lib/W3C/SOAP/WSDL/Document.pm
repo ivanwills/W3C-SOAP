@@ -16,6 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Path::Class;
 use XML::LibXML;
+use W3C::SOAP::XSD::Document;
 use W3C::SOAP::WSDL::Document::Binding;
 use W3C::SOAP::WSDL::Document::Message;
 use W3C::SOAP::WSDL::Document::PortType;
@@ -52,17 +53,17 @@ has services => (
     builder    => '_service',
     lazy_build => 1,
 );
-#has schemas => (
-#    is         => 'rw',
-#    isa        => 'Str',
-#    builder    => '_schemas',
-#    lazy_build => 1,
-#);
+has schemas => (
+    is         => 'rw',
+    isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
+    builder    => '_schemas',
+    lazy_build => 1,
+);
 
 sub _message {
     my ($self) = @_;
     my @complex_types;
-    my @nodes = $self->xc->findnodes('//wsdl:message');
+    my @nodes = $self->xpc->findnodes('//wsdl:message');
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Message->new(
@@ -77,7 +78,7 @@ sub _message {
 sub _port_type {
     my ($self) = @_;
     my @complex_types;
-    my @nodes = $self->xc->findnodes('//wsdl:portType');
+    my @nodes = $self->xpc->findnodes('//wsdl:portType');
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::PortType->new(
@@ -92,7 +93,7 @@ sub _port_type {
 sub _binding {
     my ($self) = @_;
     my @complex_types;
-    my @nodes = $self->xc->findnodes('//wsdl:binding');
+    my @nodes = $self->xpc->findnodes('//wsdl:binding');
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Binding->new(
@@ -107,7 +108,7 @@ sub _binding {
 sub _service {
     my ($self) = @_;
     my @complex_types;
-    my @nodes = $self->xc->findnodes('//wsdl:service');
+    my @nodes = $self->xpc->findnodes('//wsdl:service');
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Service->new(
@@ -119,6 +120,21 @@ sub _service {
     return \@complex_types;
 }
 
+sub _schemas {
+    my ($self) = @_;
+    my @complex_types;
+    my @nodes = $self->xpc->findnodes('//wsdl:types/*');
+    warn ''.@nodes, "\n";
+
+    for my $node (@nodes) {
+        warn $node->toString, "\n";
+        push @complex_types, W3C::SOAP::XSD::Document->new(
+            string => $node->toString,
+        );
+    }
+
+    return \@complex_types;
+}
 
 
 1;

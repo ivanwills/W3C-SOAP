@@ -31,7 +31,7 @@ has sequence => (
 
 sub _sequence {
     my ($self) = @_;
-    my @nodes = $self->parent->xc->findnodes('xsd:sequence/xsd:element', $self->node);
+    my @nodes = $self->parent->xpc->findnodes('xsd:sequence/xsd:element', $self->node);
     my @sequence;
 
     for my $node (@nodes) {

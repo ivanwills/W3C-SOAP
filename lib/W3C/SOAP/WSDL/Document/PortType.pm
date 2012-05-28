@@ -32,7 +32,7 @@ has operations => (
 sub _operations {
     my ($self) = @_;
     my @operations;
-    my @nodes = $self->document->xc->findnodes('wsdl:operation', $self->node);
+    my @nodes = $self->document->xpc->findnodes('wsdl:operation', $self->node);
 
     for my $node (@nodes) {
         push @operations, W3C::SOAP::WSDL::Document::Operation->new(

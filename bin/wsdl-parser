@@ -19,6 +19,7 @@ use English qw/ -no_match_vars /;
 use FindBin qw/$Bin/;
 use Path::Class;
 use W3C::SOAP::WSDL::Parser;
+use File::ShareDir qw/dist_dir/;
 use Template;
 
 our $VERSION = version->new('0.0.1');
@@ -72,14 +73,16 @@ sub main {
         EVAL_PERL    => 1,
     );
 
+    die Dumper \@ARGV if @ARGV % 2;
     my %map = @ARGV;
     for my $module (keys %map) {
-        $wsdl = W3C::SOAP::WSDL::Parser->new(
+        my $wsdl = W3C::SOAP::WSDL::Parser->new(
             location => $map{$module},
             template => $template,
             module   => $module,
             %option,
         );
+        $wsdl->write_modules;
     }
 
     return;

@@ -67,7 +67,7 @@ has ns_module_map => (
 sub _imports {
     my ($self) = @_;
     my @imports;
-    my @nodes = $self->xc->findnodes('//xsd:import');
+    my @nodes = $self->xpc->findnodes('//xsd:import');
 
     for my $import (@nodes) {
         my $location = $import->getAttribute('schemaLocation');
@@ -80,7 +80,7 @@ sub _imports {
 sub _simple_types {
     my ($self) = @_;
     my @simple_types;
-    my @nodes = $self->xc->findnodes('//xsd:simpleType');
+    my @nodes = $self->xpc->findnodes('//xsd:simpleType');
 
     for my $node (@nodes) {
         push @simple_types, W3C::SOAP::XSD::Document::SimpleType->new(
@@ -95,7 +95,7 @@ sub _simple_types {
 sub _complex_types {
     my ($self) = @_;
     my @complex_types;
-    my @nodes = $self->xc->findnodes('//xsd:complexType');
+    my @nodes = $self->xpc->findnodes('//xsd:complexType');
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::XSD::Document::ComplexType->new(
@@ -110,7 +110,7 @@ sub _complex_types {
 sub _elements {
     my ($self) = @_;
     my @elements;
-    my @nodes = $self->xc->findnodes('/*/xsd:element');
+    my @nodes = $self->xpc->findnodes('/*/xsd:element');
 
     for my $node (@nodes) {
         push @elements, W3C::SOAP::XSD::Document::Element->new(

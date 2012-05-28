@@ -46,7 +46,7 @@ sub _style {
     my ($self) = @_;
     my $style = $self->node->getAttribute('style');
     return $style if $style;
-    my ($child) = $self->document->xc->findnode('soap:binding'. $self->node);
+    my ($child) = $self->document->xpc->findnode('soap:binding'. $self->node);
     return $child->getAttribute('style');
 }
 
@@ -54,14 +54,14 @@ sub _transport {
     my ($self) = @_;
     my $transport = $self->node->getAttribute('transport');
     return $transport if $transport;
-    my ($child) = $self->document->xc->findnode('soap:binding'. $self->node);
+    my ($child) = $self->document->xpc->findnode('soap:binding'. $self->node);
     return $child->getAttribute('transport');
 }
 
 sub _operations {
     my ($self) = @_;
     my @operations;
-    my @nodes = $self->document->xc->findnodes('wsdl:operation', $self->node);
+    my @nodes = $self->document->xpc->findnodes('wsdl:operation', $self->node);
 
     for my $node (@nodes) {
         push @operations, W3C::SOAP::WSDL::Document::Operation->new(

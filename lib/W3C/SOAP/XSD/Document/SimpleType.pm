@@ -37,14 +37,14 @@ has enumeration => (
 
 sub _type {
     my ($self) = @_;
-    my ($restriction) = $self->parent->xc->findnodes('xsd:restriction', $self->node);
+    my ($restriction) = $self->parent->xpc->findnodes('xsd:restriction', $self->node);
 
     return $restriction->getAttribute('base');
 }
 
 sub _enumeration {
     my ($self) = @_;
-    my @nodes = $self->parent->xc->findnodes('xsd:restriction/xsd:enumeration', $self->node);
+    my @nodes = $self->parent->xpc->findnodes('xsd:restriction/xsd:enumeration', $self->node);
     my @enumeration;
 
     for my $node (@nodes) {

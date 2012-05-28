@@ -33,7 +33,7 @@ has ports => (
 sub _ports {
     my ($self) = @_;
     my @complex_types;
-    my @nodes = $self->document->xc->findnodes('wsdl:port', $self->node);
+    my @nodes = $self->document->xpc->findnodes('wsdl:port', $self->node);
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Port->new(
