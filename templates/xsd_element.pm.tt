@@ -2,22 +2,9 @@
     is_array = element.max_occurs == 'unbounded'
         || ( element.max_occurs && element.max_occurs > 1 )
         || ( element.min_occurs && element.min_occurs > 1 ); %]
-subtype '[% module %]:[% element.name %]_type' =>
-    as '[% IF is_array %]ArrayRef[[% element.type_module %]][% ELSE %][% element.type_module %][% END %]';
-coerce '[% module %]:[% element.name %]_type' =>
-    from 'xml_node' =>
-    via { __PACKAGE__->_from_xml('[% element.type_module %]') };
-[%- IF is_array; %]
-coerce '[% module %]:[% element.name %]_type' =>
-    from '[% element.type_module %]',
-    via {[$_]};
-coerce '[% module %]:[% element.name %]_type' =>
-    from 'ArrayRef[xml_node]' =>
-    via { [ map {__PACKAGE__->_from_xml('[% element.type_module %]')} @$_ ] };
-[%- END %]
 has [% element.perl_name %] => (
     is            => 'rw',
-    isa           => '[% module %]:[% element.name %]_type',
+    isa           => __PACKAGE__->xsd_subtype('[% element.type_module %]'[% IF is_array %], list => 1[% END %]),
     traits        => [qw{ W3C::SOAP::XSD }],
     predicate     => 'has_[% element.name %]',
 [%- IF element.nillable == 'false' %]
