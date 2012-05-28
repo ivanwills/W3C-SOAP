@@ -90,8 +90,9 @@ sub main {
 
 sub show {
     # do stuff here
-    for my $wsdl (@ARGV) {
-        $wsdl = W3C::SOAP::WSDL::Document->new( location => $wsdl );
+    my %map = @ARGV;
+    for my $module (keys %map) {
+        my $wsdl = W3C::SOAP::WSDL::Document->new( location => $map{$module} );
         print $wsdl->target_namespace, "\n";
         print "Messages :\n";
         for my $node (@{ $wsdl->messages }) {
