@@ -1,0 +1,99 @@
+package [% module %];
+
+# Created on: [% date %] [% time %]
+# Create by:  [% user %]
+# $Id$
+# $Revision$, $HeadURL$, $Date$
+# $Revision$, $Source$, $Date$
+
+use strict;
+use warnings;
+use Moose;
+use version;
+use Data::Dumper qw/Dumper/;
+use [% xsd %];
+[%- FOR module IN modules %]
+use [% module %];
+[%- END %]
+extends 'W3C::SOPA::WSDL';
+
+our $VERSION     = version->new('0.0.1');
+our @EXPORT_OK   = qw//;
+our %EXPORT_TAGS = ();
+
+has '+location' => (
+    default => '[% wsdl.services.0.ports.0.address %]',
+);
+[% FOR service IN wsdl.services;
+    FOR port IN service.ports;
+        FOR operation IN port.binding.operations %]
+sub [% operation.perl_name %] {
+    my $self = shift;
+    my $xsd = [% xsd %]->new(
+        [% operation.perl_name %] => {@_}
+    );
+    my $resp = $self->request($xsd);
+
+    return [% xsd %]->new($resp);
+}
+        [% END %]
+    [% END %]
+[% END %]
+1;
+
+__END__
+
+=head1 NAME
+
+[% module %] - Talks to the [% end_point %] on the ESB
+
+=head1 VERSION
+
+This documentation refers to [% module %] version 0.1.
+
+=head1 SYNOPSIS
+
+   use [% module %];
+
+   # Brief but working code example(s) here showing the most common usage(s)
+   # This section will be as far as many users bother reading, so make it as
+   # educational and exemplary as possible.
+
+=head1 DESCRIPTION
+
+=head1 SUBROUTINES/METHODS
+
+=over 4
+[% FOR method IN methods %]
+=item C<[% method.name %] (%args)>
+
+Passes C<%args> to C<[% method.op %]> and returns the result
+[% END %]
+=back
+
+=head1 DIAGNOSTICS
+
+=head1 CONFIGURATION AND ENVIRONMENT
+
+=head1 DEPENDENCIES
+
+=head1 INCOMPATIBILITIES
+
+=head1 BUGS AND LIMITATIONS
+
+There are no known bugs in this module.
+
+Please report problems to [% user %] ([% user %]@optus.com.au).
+
+Patches are welcome.
+
+=head1 AUTHOR
+
+[% user %] - ([% user %]@optus.com.au)
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (c) 2012 Optus (1 Lyon Park Rd, Macquarie Park, NSW, Australia).
+All rights reserved.
+
+=cut
