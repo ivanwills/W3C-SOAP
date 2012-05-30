@@ -76,7 +76,7 @@ sub to_xml {
         next if !$self->$has;
         #warn "have $name\n";
 
-        my $xml_name = $att->does('NScreens::SDPx::XSD::Traits') && $att->has_xml_name ? $att->xml_name : $name;
+        my $xml_name = $att->has_xs_name ? $att->xs_name : $name;
         #warn $att->type_constraint;
         my $xsd_ns_name = $self->xsd_ns_name;
         my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
