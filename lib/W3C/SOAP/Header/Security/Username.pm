@@ -40,22 +40,22 @@ has password => (
 #argument to_xml => sub {
 sub to_xml {
     my ($self, $xml) = @_;
-    my $uname_token = $xml->createElement('wss:UsernameToken');
+    my $uname_token = $xml->createElement('wsse:UsernameToken');
     $uname_token->setAttribute('xmlns:wsu' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
     $uname_token->setAttribute('wsu:Id', 'UsernameToken-' . $id++);
 
-    my $username = $xml->createElement('wss:Username');
+    my $username = $xml->createElement('wsse:Username');
     $username->appendChild( $xml->createTextNode($self->username) );
     $uname_token->appendChild($username);
 
-    my $password = $xml->createElement('wss:Password');
+    my $password = $xml->createElement('wsse:Password');
     $password->appendChild( $xml->createTextNode($self->password) );
     $password->setAttribute('Type' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText');
     $uname_token->appendChild($password);
 
     my $nonce_text = '';
     $nonce_text .= ('a'..'z','A'..'Z',0..9)[rand 62] for  1 .. 24;
-    my $nonce = $xml->createElement('wss:Nonce');
+    my $nonce = $xml->createElement('wsse:Nonce');
     $nonce->appendChild( $xml->createTextNode($nonce_text.'==') );
     $nonce->setAttribute('EncodingType' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary');
     $uname_token->appendChild($nonce);

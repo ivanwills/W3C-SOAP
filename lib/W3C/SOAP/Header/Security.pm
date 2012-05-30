@@ -24,8 +24,8 @@ our %EXPORT_TAGS = ();
 sub to_xml {
     my ($self, $xml) = @_;
 
-    my $sec = $xml->createElement('wss:Security');
-    $sec->setAttribute('xmlns:wss' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
+    my $sec = $xml->createElement('wsse:Security');
+    $sec->setAttribute('xmlns:wsse' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
     $sec->setAttribute('soapenv:mustUnderstand' => 1);
 
     # Moose 2 syntax
