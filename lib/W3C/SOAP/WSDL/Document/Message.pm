@@ -22,7 +22,32 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has element => (
+    is         => 'rw',
+    isa        => 'Maybe[W3C::SOAP::XSD::Document::Element]',
+    builder    => '_element',
+    lazy_build => 1,
+);
 
+sub _element {
+    my ($self) = @_;
+    my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
+    my ($ns, $el_name) = split /:/, $part->getAttribute('element'), 2;
+    my $nsuri = $self->document->get_nsuri($ns);
+    my @schemas = @{ $self->document->schemas };
+
+    for my $schema (@schemas) {
+        push @schemas, @{ $schema->imports };
+
+        if ( $schema->target_namespace eq $nsuri ) {
+            for my $element (@{ $schema->elements }) {
+                return $element if $element->name eq $el_name;
+            }
+        }
+    }
+
+    return;
+}
 
 1;
 

@@ -1,3 +1,4 @@
+[% PROCESS config.tt -%]
 package [% module %];
 
 # Created on: [% date %] [% time %]
@@ -15,7 +16,7 @@ use [% xsd %];
 [%- FOR module IN modules %]
 use [% module %];
 [%- END %]
-extends 'W3C::SOAP::WSDL';
+extends '[% config.wsdl.parent_module %]';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
@@ -29,8 +30,9 @@ has '+location' => (
         FOR operation IN port.binding.operations %]
 sub [% operation.perl_name %] {
     my $self = shift;
+
     my $xsd = [% xsd %]->new(
-        [% operation.perl_name %] => {@_}
+        [% operation.port_type.inputs.0.message.element.perl_name %] => {@_}
     );
     my $resp = $self->request( [% operation.name %] => $xsd );
 

@@ -24,7 +24,7 @@ our %EXPORT_TAGS = ();
 
 has message => (
     is         => 'rw',
-    isa        => 'Maybe[Str]',
+    isa        => 'Maybe[W3C::SOAP::WSDL::Document::Message]',
     builder    => '_message',
     lazy_build => 1,
 );
@@ -43,7 +43,11 @@ has body => (
 
 sub _message {
     my ($self) = @_;
-    return $self->node->getAttribute('message');
+    my ($ns, $message) = split /:/, $self->node->getAttribute('message'), 2;
+
+    for my $msg (@{ $self->document->messages }) {
+        return $msg if $msg->name eq $message;
+    }
 }
 
 

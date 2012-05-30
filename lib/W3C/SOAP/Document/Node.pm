@@ -41,15 +41,16 @@ has document => (
 );
 has name => (
     is         => 'rw',
-    isa        => 'Str',
+    isa        => 'Maybe[Str]',
     builder    => '_name',
     lazy_build => 1,
 );
 
 sub _document {
     my ($self) = shift;
-    return $self->parent->document;
+    return $self->parent->isa('W3C::SOAP::Document') ? $self->parent : $self->parent->document;
 }
+
 sub _name {
     my ($self) = shift;
     return $self->node->getAttribute('name');
@@ -58,6 +59,7 @@ sub _name {
 sub perl_name {
     my ($self) = @_;
     my $name = $self->name;
+    return if !$name;
     $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
     return lc $name;
 }

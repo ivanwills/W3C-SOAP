@@ -1,3 +1,4 @@
+[% PROCESS config.tt -%]
 [%- module = xsd.get_module_base(xsd.target_namespace) -%]
 package [% module %];
 
@@ -22,6 +23,7 @@ our %EXPORT_TAGS = ();
 
 has '+xsd_ns' => (
     default => '[% xsd.target_namespace %]',
+    required => 1,
 );
 has '+xsd_ns_name' => (
     default => '[% ns_name %]',

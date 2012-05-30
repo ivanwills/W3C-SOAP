@@ -1,18 +1,50 @@
 [%
+    simple = element.simple_type;
     is_array = element.max_occurs == 'unbounded'
         || ( element.max_occurs && element.max_occurs > 1 )
-        || ( element.min_occurs && element.min_occurs > 1 ); %]
+        || ( element.min_occurs && element.min_occurs > 1 );
+    type_name
+        = simple && !is_array ? simple
+        :                       module _ ':' _ element.name _ '_type';
+    parent_type = element.type_module;
+%]
+# is simple == '[% simple %]' ([% element.type %])
+[%
+IF !simple || is_array; -%]
+subtype '[% type_name %]' =>
+    as '[% is_array ? 'ArrayRef[' : '' %][% parent_type %][% is_array ? ']' : '' %]';
+[%-
+END;
+IF !simple; %]
+coerce '[% type_name %]' =>
+    from 'xml_node' =>
+    via { __PACKAGE__->_from_xml('[% parent_type %]') };
+coerce '[% type_name %]' =>
+    from 'HashRef' =>
+    via { [% is_array ? '[' : '' %][% parent_type %]->new($_)[% is_array ? ']' : '' %] };
+[%-
+END;
+IF is_array; %]
+coerce '[% type_name %]' =>
+    from '[% parent_type %]',
+    via {[$_]};
+coerce '[% type_name %]' =>
+    from 'ArrayRef[xml_node]' =>
+    via { [ map {__PACKAGE__->_from_xml('[% parent_type %]')} @$_ ] };
+[%- END %]
 has [% element.perl_name %] => (
     is            => 'rw',
-    isa           => __PACKAGE__->xsd_subtype('[% element.type_module %]'[% IF is_array %], list => 1[% END %]),
-    traits        => [qw{ W3C::SOAP::XSD }],
-    predicate     => 'has_[% element.name %]',
+    isa           => '[% type_name %]',
+    predicate     => 'has_[% element.perl_name %]',
 [%- IF element.nillable == 'false' %]
     required      => 1,
 [%- END %]
+[%- IF !simple || is_array %]
+    coerce        => 1,
+[%- END %]
+    traits        => [qw{ W3C::SOAP::XSD }],
     xs_name       => '[% element.name       %]',
     xs_type       => '[% element.type       %]',
     xs_min_occurs => '[% element.min_occurs %]',
     xs_max_occurs => '[% element.max_occurs == 'unbounded' ? 0 : element.max_occurs %]',
-    coerce        => 1,
 );

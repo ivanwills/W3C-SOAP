@@ -49,6 +49,7 @@ sub main {
         'ns_module_map|ns|namespace-map|n=s%',
         'lib|l=s',
         'show|s',
+        'path|p=s',
         'verbose|v+',
         'man',
         'help',
@@ -69,7 +70,7 @@ sub main {
     # do stuff here
     my $file = shift @ARGV;
     my $template = Template->new(
-        INCLUDE_PATH => dist_dir('W3C-SOAP'),
+        INCLUDE_PATH => ($option{path} ? "$option{path}:" : '' . dist_dir('W3C-SOAP'),
         INTERPOLATE  => 0,
         EVAL_PERL    => 1,
     );

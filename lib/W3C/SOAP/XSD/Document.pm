@@ -40,6 +40,12 @@ has simple_types => (
     builder    => '_simple_types',
     lazy_build => 1,
 );
+has simple_type => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::XSD::Document::SimpleType]',
+    builder    => '_simple_type',
+    lazy_build => 1,
+);
 has complex_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::ComplexType]',
@@ -90,6 +96,17 @@ sub _simple_types {
     }
 
     return \@simple_types;
+}
+
+sub _simple_type {
+    my ($self) = @_;
+    my %simple_type;
+
+    for my $type (@{ $self->simple_types }) {
+        $simple_type{$type->name} = $type;
+    }
+
+    return \%simple_type;
 }
 
 sub _complex_types {

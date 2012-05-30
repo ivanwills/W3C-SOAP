@@ -124,10 +124,8 @@ sub _schemas {
     my ($self) = @_;
     my @complex_types;
     my @nodes = $self->xpc->findnodes('//wsdl:types/*');
-    warn ''.@nodes, "\n";
 
     for my $node (@nodes) {
-        warn $node->toString, "\n";
         push @complex_types, W3C::SOAP::XSD::Document->new(
             string => $node->toString,
         );
@@ -136,6 +134,11 @@ sub _schemas {
     return \@complex_types;
 }
 
+sub get_nsuri {
+    my ($self, $ns) = @_;
+    my ($node) = $self->xpc->findnodes("//namespace::*[name()='$ns']");
+    return $node->value;
+}
 
 1;
 

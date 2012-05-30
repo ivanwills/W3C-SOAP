@@ -26,12 +26,10 @@ our %EXPORT_TAGS = ();
 has xsd_ns => (
     is  => 'rw',
     isa => 'Str',
-    required => 1,
 );
 has xsd_ns_name => (
     is  => 'rw',
     isa => 'Str',
-    required => 1,
 );
 
 sub to_xml {
@@ -39,28 +37,30 @@ sub to_xml {
     my $child;
     my $meta = $self->meta;
 
+    warn ref $self, " converting to XML\n";
     my @attributes = sort {
-            $meta->get_attribute($a)->insertion_position <=> $meta->get_attribute($b)->insertion_position
+            $meta->get_attribute($a)->insertion_order <=> $meta->get_attribute($b)->insertion_order
         }
         grep {
             $meta->get_attribute($_)->does('W3C::SOAP::XSD::Traits')
         }
-        $meta->get_attributes;
+        $meta->get_attribute_list;
 
     warn 'XSD object: ', Dumper \@attributes;
 
-    my $wrapper = $xml->createElement( $self->xsd_ns_name . ':' . $name );
-    $wrapper->setAttribute( 'xmlns:' . $self->xsd_ns_name, $self->xsd_ns );
+    my @nodes;
 
     for my $name (@attributes) {
+        warn $name, "\n";
         my $att = $meta->get_attribute($name);
 
         # skip attributes that are not XSD attributes
-        next if !$att->does('NScreens::SDPx::XSD::Traits');
-        my $has = "has_$name";
+        next if !$att->does('W3C::SOAP::XSD');
+        warn my $has = "has_$name";
 
         # skip sttributes that are not set
         next if !$self->$has;
+        warn "have $name\n";
 
         my $xml_name = $att->does('NScreens::SDPx::XSD::Traits') && $att->has_xml_name ? $att->xml_name : $name;
         warn $att->type_constraint;
@@ -75,10 +75,11 @@ sub to_xml {
             $tag->appendChild( $xml->createTextNode("$value") );
         }
 
-        $wrapper->appendChild($tag);
+        warn $tag->toString, "\n";
+        push @nodes, $tag;
     }
 
-    return $wrapper;
+    return @nodes;
 }
 
 sub to_data {

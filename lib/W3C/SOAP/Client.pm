@@ -57,15 +57,35 @@ XML
     if ( !blessed $body ) {
         $soap_body->appendChild( $xml->createTextNode($body) );
     }
+    elsif ( $body->isa('XML::LibXNL::Node') ) {
+        $soap_body->appendChild( $body );
+    }
     elsif ( $body->can('to_xml') ) {
-        $soap_body->appendChild( $body->to_xml($xml) );
+        for my $node ( $body->to_xml($xml) ) {
+            warn $node->toString();
+            $soap_body->appendChild( $node );
+        }
+    }
+    else {
+        W3C::SOAP::Exception::Input->throw(
+            faultcode => 'UNKNOWN SOAP BODY',
+            message   => "Don't know how to process ". (ref $body) ."\n",
+            error     => undef,
+        );
     }
 
+    warn $xml->toString, "\n";
     if ( $self->has_header ) {
         my $node = $self->header->to_xml($xml);
         $xml->firstChild->insertBefore($node, $xml->firstChild->firstChild);
     }
     warn $xml->toString, "\n";
+
+    return $self->send($action, $xml);
+}
+
+sub send {
+    my ($self, $action, $xml) = @_;
 
     my $url = $self->location;
 
@@ -86,6 +106,7 @@ XML
             error     => $e,
         );
     };
+    warn $self->mech->content;
 
     return XML::LibXML->new( string => $self->mech->content );
 }

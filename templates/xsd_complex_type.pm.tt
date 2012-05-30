@@ -1,3 +1,4 @@
+[% PROCESS config.tt -%]
 [%- base = xsd.get_module_base(xsd.target_namespace) -%]
 package [% module %];
 
@@ -38,6 +39,7 @@ has '+xsd_element' => (
     default => '[% element_map.$module %]',
 );
 [%- END -%]
+
 [% FOREACH element IN node.sequence %]
 [% INCLUDE xsd_element.pm.tt %]
 [%- END %]

@@ -26,7 +26,7 @@ our $VERSION = version->new('0.0.1');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
-    out     => undef,
+    lib     => 'lib',
     verbose => 0,
     man     => 0,
     help    => 0,
@@ -48,6 +48,7 @@ sub main {
         'ns_module_map|ns|namespace-map|n=s%',
         'lib|l=s',
         'show|s',
+        'path|p=s',
         'verbose|v+',
         'man',
         'help',
@@ -68,7 +69,7 @@ sub main {
     return show() if $option{show};
 
     my $template = Template->new(
-        INCLUDE_PATH => dist_dir('W3C-SOAP'),
+        INCLUDE_PATH => ($option{path} ? "$option{path}:" : '') . dist_dir('W3C-SOAP'),
         INTERPOLATE  => 0,
         EVAL_PERL    => 1,
     );
