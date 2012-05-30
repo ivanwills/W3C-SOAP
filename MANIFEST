@@ -27,6 +27,7 @@ templates/xsd_base.pm.tt
 templates/xsd_element.pm.tt
 templates/xsd_complex_type.pm.tt
 templates/wsdl.pm.tt
+templates/config.tt
 META.json
 bin/wsdl-parser
 lib/W3C/SOAP/Client.pm
@@ -44,4 +45,7 @@ lib/W3C/SOAP/WSDL/Document/PortType.pm
 lib/W3C/SOAP/WSDL/Document/Service.pm
 lib/W3C/SOAP/WSDL/Parser.pm
 lib/W3C/SOAP/XSD/Parser.pm
+lib/W3C/SOAP/Header.pm
+lib/W3C/SOAP/Header/Security.pm
+lib/W3C/SOAP/Header/Security/Username.pm
 
