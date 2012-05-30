@@ -10,10 +10,11 @@ package [% module %];
 
 use Moose;
 use version;
+use namespace::autoclean;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::XSD::Traits;
-[%- FOREACH module IN parents %]
-use [% module %];
+[%- FOREACH type IN xsd.complex_types %]
+use [% type.module %];
 [%- END %]
 extends 'W3C::SOAP::XSD';
 
@@ -25,9 +26,9 @@ has '+xsd_ns' => (
     default => '[% xsd.target_namespace %]',
     required => 1,
 );
-has '+xsd_ns_name' => (
-    default => '[% ns_name %]',
-);
+#has '+xsd_ns_name' => (
+#    default => '[% ns_name %]',
+#);
 [% FOREACH element IN xsd.elements %]
 [% INCLUDE xsd_element.pm.tt %]
 [%- END %]

@@ -54,6 +54,14 @@ sub _enumeration {
     return \@enumeration;
 }
 
+sub moose_type {
+    my ($self) = @_;
+
+    my $type = $self->document->module . ':' . $self->name;
+
+    return $type;
+}
+
 1;
 
 __END__

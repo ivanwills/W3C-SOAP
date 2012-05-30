@@ -28,6 +28,12 @@ has sequence => (
     builder => '_sequence',
     lazy_build => 1,
 );
+has module => (
+    is        => 'rw',
+    isa       => 'Str',
+    builder   => '_module',
+    lazy_build => 1,
+);
 
 sub _sequence {
     my ($self) = @_;
@@ -42,6 +48,12 @@ sub _sequence {
     }
 
     return \@sequence;
+}
+
+sub _module {
+    my ($self) = @_;
+
+    return $self->document->module . '::' . $self->name;
 }
 
 1;

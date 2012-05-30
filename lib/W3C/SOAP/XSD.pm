@@ -8,7 +8,7 @@ package W3C::SOAP::XSD;
 
 use Moose;
 use version;
-use Carp;
+use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
 #use List::MoreUtils;
@@ -28,9 +28,23 @@ has xsd_ns => (
     isa => 'Str',
 );
 has xsd_ns_name => (
-    is  => 'rw',
-    isa => 'Str',
+    is         => 'rw',
+    isa        => 'Str',
+    predicate  => 'has_xsd_ns_name',
+    builder    => '_xsd_ns_name',
+    lazy_build => 1,
 );
+
+my %ns_map;
+my $count = 0;
+sub _xsd_ns_name {
+    my ($self) = @_;
+    my $ns = $self->xsd_ns;
+
+    return $ns_map{$ns} if $ns_map{$ns};
+
+    return $ns_map{$ns} = 'WSX' . $count++;
+}
 
 sub to_xml {
     my ($self, $xml) = @_;
@@ -51,31 +65,34 @@ sub to_xml {
     my @nodes;
 
     for my $name (@attributes) {
-        warn $name, "\n";
+        #warn $name, "\n";
         my $att = $meta->get_attribute($name);
 
         # skip attributes that are not XSD attributes
         next if !$att->does('W3C::SOAP::XSD');
-        warn my $has = "has_$name";
+        my $has = "has_$name";
 
         # skip sttributes that are not set
         next if !$self->$has;
-        warn "have $name\n";
+        #warn "have $name\n";
 
         my $xml_name = $att->does('NScreens::SDPx::XSD::Traits') && $att->has_xml_name ? $att->xml_name : $name;
-        warn $att->type_constraint;
-        my $tag = $xml->createElement($self->xsd_ns_name . ':' . $xml_name);
+        #warn $att->type_constraint;
+        my $xsd_ns_name = $self->xsd_ns_name;
+        my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
+        $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
 
         my $value = $self->$name;
 
         if ( blessed($value) && $value->can('to_xml') ) {
+            $value->xsd_ns_name( $xsd_ns_name ) if !$value->has_xsd_ns_name;
             $tag->appendChild($value->to_xml($xml));
         }
         else {
             $tag->appendChild( $xml->createTextNode("$value") );
         }
 
-        warn $tag->toString, "\n";
+        #warn $tag->toString, "\n";
         push @nodes, $tag;
     }
 

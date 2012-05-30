@@ -58,6 +58,12 @@ has elements => (
     builder   => '_elements',
     lazy_build => 1,
 );
+has module => (
+    is        => 'rw',
+    isa       => 'Str',
+    builder   => '_module',
+    lazy_build => 1,
+);
 has ns_map => (
     is        => 'rw',
     isa       => 'HashRef[Str]',
@@ -137,6 +143,15 @@ sub _elements {
     }
 
     return \@elements;
+}
+
+sub _module {
+    my ($self) = @_;
+
+    die "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
+    die "No mapping specified for the namespace ", $self->target_namespace, "!\n" if !$self->ns_module_map->{$self->target_namespace};
+
+    return $self->ns_module_map->{$self->target_namespace};
 }
 
 sub get_ns_uri {

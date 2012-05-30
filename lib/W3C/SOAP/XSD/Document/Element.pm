@@ -102,14 +102,13 @@ sub simple_type {
     my ($self) = @_;
     my ($ns, $type) = split /:/, $self->type, 2;
     my $ns_uri = $self->parent->get_ns_uri($ns);
-    warn "got {$ns_uri} => $ns:$type\n" if $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
     return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
 
     my @xsds = ($self->document);
     while ( my $xsd = shift @xsds ) {
         my $simple = $xsd->simple_type;
-        return $simple->{$type}->perl_name if $simple && $simple->{$type};
+        return $simple->{$type}->moose_type if $simple && $simple->{$type};
 
         push @xsds, @{$xsd->imports};
     }

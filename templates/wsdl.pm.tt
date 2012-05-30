@@ -7,10 +7,10 @@ package [% module %];
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use strict;
-use warnings;
 use Moose;
+use warnings;
 use version;
+use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
 use [% xsd %];
 [%- FOR module IN modules %]

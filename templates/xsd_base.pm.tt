@@ -1,5 +1,5 @@
 [% PROCESS config.tt -%]
-[%- module = xsd.get_module_base(xsd.target_namespace) _ '::Base' -%]
+[%- module = xsd.module _ '::Base' -%]
 package [% module %];
 
 # Created on: [% date %] [% time %]
@@ -9,8 +9,14 @@ package [% module %];
 # $Revision$, $Source$, $Date$
 
 use Moose;
+use warnings;
 use version;
+use namespace::autoclean;
 use Moose::Util::TypeConstraints;
+[%- FOREACH import IN xsd.imports %]
+use [% import.module %];
+[%- END %]
+
 extends 'W3C::SOAP::XSD';
 
 our $VERSION     = version->new('0.0.1');
@@ -19,7 +25,7 @@ our %EXPORT_TAGS = ();
 
 [% FOREACH subtype IN xsd.simple_types %]
 [% IF subtype.enumeration %]my %[% subtype.name %] = map {$_=>1} ('[% subtype.enumeration.join("', '") %]');[% END %]
-subtype [% subtype.perl_name %] =>
+subtype '[% subtype.moose_type %]' =>
     as      '[% subtype.type %]',
     where   { $[% subtype.name %]{$_} },
     message {'[% subtype.name %] must be one of [% subtype.enumeration.join(', ') %]'};

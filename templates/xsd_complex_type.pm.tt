@@ -12,6 +12,7 @@ use strict;
 use warnings;
 use Moose;
 use version;
+use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::XSD::Traits;

@@ -8,7 +8,7 @@ package W3C::SOAP::Client;
 
 use Moose;
 use version;
-use Carp;
+use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
 #use List::MoreUtils;
@@ -100,6 +100,7 @@ sub send {
         );
     }
     catch ($e) {
+        cluck "faultcode => ",$self->mech->res->code," message   => ",$self->mech->res->message,"\n";
         W3C::SOAP::Exception::HTTP->throw(
             faultcode => $self->mech->res->code,
             message   => $self->mech->res->message,
