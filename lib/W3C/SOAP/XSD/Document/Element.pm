@@ -98,6 +98,14 @@ sub type_module {
     return $self->parent->get_module_base( $ns_uri ) . '::' . $type;
 }
 
+sub very_simple_type {
+    my ($self) = @_;
+    my ($ns, $type) = split /:/, $self->type, 2;
+    my $ns_uri = $self->parent->get_ns_uri($ns);
+
+    return $ns_uri eq 'http://www.w3.org/2001/XMLSchema' ? "xs:$type" : undef;
+}
+
 sub simple_type {
     my ($self) = @_;
     my ($ns, $type) = split /:/, $self->type, 2;

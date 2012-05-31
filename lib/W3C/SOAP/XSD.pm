@@ -35,6 +35,106 @@ has xsd_ns_name => (
     lazy_build => 1,
 );
 
+my $indent;
+around BUILDARGS => sub {
+    my ($orig, $class, @args) = @_;
+    my $args
+        = !@args     ? {}
+        : @args == 1 ? $args[0]
+        :              {@args};
+
+    if ( blessed $args && $args->isa('XML::LibXML::Node') ) {
+        my $xml = $args;
+        my $map = $class->xml2perl_map;
+        my ($element)  = $class =~ /::([^:]+)$/;
+        my $child      = $xml->firstChild;
+        $args = {};
+
+        while ($child) {
+            if ( $child->nodeName !~ /^#/ ) {
+                my ($node_ns, $node) = split /:/, $child->nodeName, 2;
+                $node = $map->{$node};
+                my $value = $child;
+                $args->{$node}
+                    = !exists $args->{$node}        ? $value
+                    : ref $args->{$node} ne 'ARRAY' ? [   $args->{$node} , $value ]
+                    :                                 [ @{$args->{$node}}, $value ];
+            }
+            $child = $child->nextSibling;
+        }
+    }
+
+    return $class->$orig($args);
+};
+#around BUILDARGS => sub {
+#    my ($orig, $class, @args) = @_;
+#    my $args
+#        = !@args     ? {}
+#        : @args == 1 ? $args[0]
+#        :              {@args};
+#    my $old_indent = $indent;
+#    $indent .= (' ' x 8);
+#    warn "\n$indent$class\n";
+#
+#    if ( blessed $args && $args->isa('XML::LibXML::Node') ) {
+#        my $xml  = $args;
+#        $args = {};
+#        my $meta    = $class->meta;
+#        my $ns      = $class->_get_attribute_default('xsd_ns');
+#        my $ns_name = $class->_get_attribute_default('xsd_ns_name');
+#        my ($element)  = $class =~ /::([^:]+)$/;
+#
+#        my $child = $xml->firstChild;
+#        warn "$indent\n$indent",
+#            '=+' x 50,
+#            "\n$indent",
+#            $xml->toString,
+#            "\n$indent",
+#            '=+' x 50,
+#            "\n${indent}First Child is a ",$xml->firstChild->nodeName,
+#            "\n$indent",
+#            '=+' x 50,
+#            "\n";
+#
+#        my $map = $class->xml2perl_map;
+#        warn "${indent}Known elements are : ", (join ', ', sort keys %$map), "\n";
+#        while ($child) {
+#            $class->update_args($args, $child, $indent, $map);
+#
+#            $child = $child->nextSibling;
+#        }
+#    }
+#    else { warn "${indent}NOT AN XML object ", '!'x99,"\n"; }
+#
+#    #die Dumper $args if $args->{product_families};
+#
+#    warn "${indent}Before: ", (join ', ', map {"$_ => $args->{$_}"} sort keys %$args), "\n";
+#    #return $class->$orig($args);
+#
+#    my $self = $class->$orig($args);
+#    #$indent = $old_indent;
+#    #return $self;
+#    warn "${indent}After: ", Dumper $self;
+#    return $self;
+#};
+#
+#sub update_args {
+#    my ($self, $args, $child, $indent, $map) = @_;
+#    my $meta = $self->meta;
+#
+#    if ( $child->nodeName !~ /^#/ ) {
+#        my ($node_ns, $node) = split /:/, $child->nodeName, 2;
+#    warn "${indent}Node name = $node_ns\:$node\n";
+#        $node = $map->{$node};
+#        my $attrib = $meta->get_attribute($node);
+#        my $value = $attrib->has_xs_perlify ? $attrib->xs_perlify->($child) : $child;
+#        $args->{$node}
+#            = !exists $args->{$node}        ? $value
+#            : ref $args->{$node} ne 'ARRAY' ? [   $args->{$node} , $value ]
+#            :                                 [ @{$args->{$node}}, $value ];
+#    }
+#}
+
 my %ns_map;
 my $count = 0;
 sub _xsd_ns_name {
@@ -44,6 +144,58 @@ sub _xsd_ns_name {
     return $ns_map{$ns} if $ns_map{$ns};
 
     return $ns_map{$ns} = 'WSX' . $count++;
+}
+
+sub _from_xml {
+    my ($class, $type) = @_;
+    my $xml = $_;
+    die "Unknown conversion " . ( (ref $xml) || $xml )
+        if !$xml || !blessed $xml || !$xml->isa('XML::LibXML::Node');
+
+    eval {
+        return $type->new($xml);
+    }
+    or do {
+        my $e = $@;
+        $e =~ s/ at .*//ms;
+        warn "$class Failed in building from $type\->new($xml) : $e\n",
+            "Will use :\n\t'",
+            $xml->toString,
+            "'\n\tor\n\t'",
+            $xml->textContent,"'\n",
+            '*' x 222,
+            "\n";
+    };
+    return $xml->textContent;
+}
+
+sub xml2perl_map {
+    my ($class) = @_;
+    my $meta = $class->meta;
+    my %map;
+
+    for my $perl ($meta->get_attribute_list) {
+        my $attr = $meta->get_attribute($perl);
+        next unless $attr->does('W3C::SOAP::XSD::Traits');
+        $map{$attr->xs_name} = $perl;
+    }
+    return \%map;
+}
+
+# recursivly try to find the default value for an attribute
+sub _get_attribute_default {
+    my ($class, $attribute) = @_;
+    my $meta = $class->meta;
+    my $attrib = $meta->get_attribute($attribute);
+
+    return $attrib->default if $attrib;
+
+    for my $super ( $meta->superclasses ) {
+        my $default = $super->_get_attribute_default($attribute);
+        return $default if $default;
+    }
+
+    return;
 }
 
 sub to_xml {

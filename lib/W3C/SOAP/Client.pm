@@ -43,7 +43,6 @@ has mech => (
 
 sub request {
     my ($self, $action, $body) = @_;
-    warn Dumper $body, "\n";
     my $xml = XML::LibXML->load_xml(string => <<'XML');
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -87,7 +86,7 @@ XML
 sub send {
     my ($self, $action, $xml) = @_;
 
-    my $url = $self->location;
+    warn my $url = $self->location;
 
     try {
         $self->mech->post(
@@ -107,9 +106,18 @@ sub send {
             error     => $e,
         );
     };
-    warn $self->mech->content;
+    warn "\n",
+        '-' x 200,
+        "\n",
+        $self->mech->content,
+        "\n",
+        '-' x 200,
+        "\n";
 
-    return XML::LibXML->new( string => $self->mech->content );
+    my $xml_responce = XML::LibXML->load_xml( string => $self->mech->content );
+    my ($node) = $xml_responce->findnodes('//env:Body');
+
+    return $node;
 }
 
 sub _header {

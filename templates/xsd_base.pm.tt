@@ -28,7 +28,7 @@ our %EXPORT_TAGS = ();
 subtype '[% subtype.moose_type %]' =>
     as      '[% subtype.type %]',
     where   { $[% subtype.name %]{$_} },
-    message {'[% subtype.name %] must be one of [% subtype.enumeration.join(', ') %]'};
+    message {'[% subtype.name %] must be one of [% subtype.enumeration.join(', ') %] not "'.$_.'!"'};
 
 [%- END %]
 

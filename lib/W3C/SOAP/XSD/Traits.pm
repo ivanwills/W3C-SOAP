@@ -26,6 +26,11 @@ subtype 'PositiveInt',
     where { $_ >= 0 },
     message { "The number you provided, $_, was not a positive number" };
 
+has xs_perlify => (
+    is        => 'rw',
+    isa       => 'CodeRef',
+    predicate => 'has_xs_perlify',
+);
 has xs_min_occurs => (
     is        => 'rw',
     isa       => 'PositiveInt',
