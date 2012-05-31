@@ -1,54 +1,24 @@
 [%
-    very_simple = element.very_simple_type;
     simple = element.simple_type;
     is_array = element.max_occurs == 'unbounded'
         || ( element.max_occurs && element.max_occurs > 1 )
         || ( element.min_occurs && element.min_occurs > 1 );
-    type_name
-        = very_simple && !is_array ? very_simple
-       #: simple && !is_array      ? module _ ':' _ simple _ '_type';
-        :                            module _ ':' _ element.name _ '_type';
-    parent_type = simple ? simple : element.type_module;
+    type_name = element.type_module;
 %]
-# is simple == '[% simple %]' {[% very_simple %]} ([% element.type %])
-[%
-IF !very_simple || is_array; -%]
-subtype '[% type_name %]' =>
-    as '[% is_array ? 'ArrayRef[' : '' %][% parent_type %][% is_array ? ']' : '' %]';
-[%-
-END;
-IF !very_simple; %]
-coerce '[% type_name %]' =>
-    from 'xml_node' =>
-    via { [% IF simple %]$_->textContent[% ELSE %]__PACKAGE__->_from_xml('[% parent_type %]')[% END %] };
-[%- IF !simple %]
-coerce '[% type_name %]' =>
-    from 'HashRef' =>
-    via { [% is_array ? '[' : '' %][% parent_type %]->new($_)[% is_array ? ']' : '' %] };
-[%-
-    END;
-END;
-IF is_array; %]
-coerce '[% type_name %]' =>
-    from '[% parent_type %]',
-    via {[$_]};
-coerce '[% type_name %]' =>
-    from 'ArrayRef[xml_node]' =>
-    via { [ map {__PACKAGE__->_from_xml('[% parent_type %]')} @$_ ] };
-[%- END %]
 has [% element.perl_name %] => (
-    is            => 'rw',
-    isa           => '[% type_name %]',
-    predicate     => 'has_[% element.perl_name %]',
+    is             => 'rw',
+    isa            => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %], ),
+    predicate      => 'has_[% element.perl_name %]',
 [%- IF element.nillable == 'false' %]
-    required      => 1,
+    required       => 1,
 [%- END %]
-[%- IF !very_simple || is_array %]
-    coerce        => 1,
+    coerce         => 1,
+    traits         => [qw{ W3C::SOAP::XSD }],
+[%- IF !simple %]
+    xs_perl_module => '[% element.type_module %]',
 [%- END %]
-    traits        => [qw{ W3C::SOAP::XSD }],
-    xs_name       => '[% element.name       %]',
-    xs_type       => '[% element.type       %]',
-    xs_min_occurs => '[% element.min_occurs %]',
-    xs_max_occurs => '[% element.max_occurs == 'unbounded' ? 0 : element.max_occurs %]',
+    xs_name        => '[% element.name        %]',
+    xs_type        => '[% element.type        %]',
+    xs_min_occurs  => '[% element.min_occurs  %]',
+    xs_max_occurs  => '[% element.max_occurs  == 'unbounded' ? 0 : element.max_occurs %]',
 );

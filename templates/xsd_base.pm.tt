@@ -29,6 +29,9 @@ subtype '[% subtype.moose_type %]' =>
     as      '[% subtype.type %]',
     where   { $[% subtype.name %]{$_} },
     message {'[% subtype.name %] must be one of [% subtype.enumeration.join(', ') %] not "'.$_.'!"'};
+coerce '[% subtype.moose_type %]' =>
+    from 'xml_node' =>
+    via { $_->textContent };
 
 [%- END %]
 

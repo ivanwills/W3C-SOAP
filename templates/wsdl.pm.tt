@@ -36,7 +36,7 @@ sub [% operation.perl_name %] {
     );
     my $resp = $self->request( [% operation.name %] => $xsd );
 
-    return [% xsd %]->new($resp);
+    return [% xsd %]->new($resp)->[% operation.port_type.outputs.0.message.element.perl_name %];
 }
         [% END %]
     [% END %]

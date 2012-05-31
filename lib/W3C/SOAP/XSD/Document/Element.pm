@@ -94,8 +94,7 @@ sub type_module {
     my ($ns, $type) = split /:/, $self->type, 2;
     my $ns_uri = $self->parent->get_ns_uri($ns);
 
-    return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
-    return $self->parent->get_module_base( $ns_uri ) . '::' . $type;
+    return $self->simple_type || $self->parent->get_module_base( $ns_uri ) . '::' . $type;
 }
 
 sub very_simple_type {

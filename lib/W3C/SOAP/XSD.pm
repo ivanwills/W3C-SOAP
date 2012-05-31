@@ -17,6 +17,7 @@ use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::XMLSchema;
 use W3C::SOAP::XSD::Traits;
+use TryCatch;
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
@@ -35,7 +36,6 @@ has xsd_ns_name => (
     lazy_build => 1,
 );
 
-my $indent;
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
     my $args
@@ -54,7 +54,9 @@ around BUILDARGS => sub {
             if ( $child->nodeName !~ /^#/ ) {
                 my ($node_ns, $node) = split /:/, $child->nodeName, 2;
                 $node = $map->{$node};
-                my $value = $child;
+                my $attrib = $class->meta->get_attribute($node);
+                my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
+                my $value  = $module ? $module->new($child) : $child->textContent;
                 $args->{$node}
                     = !exists $args->{$node}        ? $value
                     : ref $args->{$node} ne 'ARRAY' ? [   $args->{$node} , $value ]
@@ -66,74 +68,6 @@ around BUILDARGS => sub {
 
     return $class->$orig($args);
 };
-#around BUILDARGS => sub {
-#    my ($orig, $class, @args) = @_;
-#    my $args
-#        = !@args     ? {}
-#        : @args == 1 ? $args[0]
-#        :              {@args};
-#    my $old_indent = $indent;
-#    $indent .= (' ' x 8);
-#    warn "\n$indent$class\n";
-#
-#    if ( blessed $args && $args->isa('XML::LibXML::Node') ) {
-#        my $xml  = $args;
-#        $args = {};
-#        my $meta    = $class->meta;
-#        my $ns      = $class->_get_attribute_default('xsd_ns');
-#        my $ns_name = $class->_get_attribute_default('xsd_ns_name');
-#        my ($element)  = $class =~ /::([^:]+)$/;
-#
-#        my $child = $xml->firstChild;
-#        warn "$indent\n$indent",
-#            '=+' x 50,
-#            "\n$indent",
-#            $xml->toString,
-#            "\n$indent",
-#            '=+' x 50,
-#            "\n${indent}First Child is a ",$xml->firstChild->nodeName,
-#            "\n$indent",
-#            '=+' x 50,
-#            "\n";
-#
-#        my $map = $class->xml2perl_map;
-#        warn "${indent}Known elements are : ", (join ', ', sort keys %$map), "\n";
-#        while ($child) {
-#            $class->update_args($args, $child, $indent, $map);
-#
-#            $child = $child->nextSibling;
-#        }
-#    }
-#    else { warn "${indent}NOT AN XML object ", '!'x99,"\n"; }
-#
-#    #die Dumper $args if $args->{product_families};
-#
-#    warn "${indent}Before: ", (join ', ', map {"$_ => $args->{$_}"} sort keys %$args), "\n";
-#    #return $class->$orig($args);
-#
-#    my $self = $class->$orig($args);
-#    #$indent = $old_indent;
-#    #return $self;
-#    warn "${indent}After: ", Dumper $self;
-#    return $self;
-#};
-#
-#sub update_args {
-#    my ($self, $args, $child, $indent, $map) = @_;
-#    my $meta = $self->meta;
-#
-#    if ( $child->nodeName !~ /^#/ ) {
-#        my ($node_ns, $node) = split /:/, $child->nodeName, 2;
-#    warn "${indent}Node name = $node_ns\:$node\n";
-#        $node = $map->{$node};
-#        my $attrib = $meta->get_attribute($node);
-#        my $value = $attrib->has_xs_perlify ? $attrib->xs_perlify->($child) : $child;
-#        $args->{$node}
-#            = !exists $args->{$node}        ? $value
-#            : ref $args->{$node} ne 'ARRAY' ? [   $args->{$node} , $value ]
-#            :                                 [ @{$args->{$node}}, $value ];
-#    }
-#}
 
 my %ns_map;
 my $count = 0;
@@ -152,11 +86,10 @@ sub _from_xml {
     die "Unknown conversion " . ( (ref $xml) || $xml )
         if !$xml || !blessed $xml || !$xml->isa('XML::LibXML::Node');
 
-    eval {
+    try {
         return $type->new($xml);
     }
-    or do {
-        my $e = $@;
+    catch ($e) {
         $e =~ s/ at .*//ms;
         warn "$class Failed in building from $type\->new($xml) : $e\n",
             "Will use :\n\t'",
@@ -165,7 +98,7 @@ sub _from_xml {
             $xml->textContent,"'\n",
             '*' x 222,
             "\n";
-    };
+    }
     return $xml->textContent;
 }
 
@@ -202,22 +135,11 @@ sub to_xml {
     my ($self, $xml) = @_;
     my $child;
     my $meta = $self->meta;
-
-    warn ref $self, " converting to XML\n";
-    my @attributes = sort {
-            $meta->get_attribute($a)->insertion_order <=> $meta->get_attribute($b)->insertion_order
-        }
-        grep {
-            $meta->get_attribute($_)->does('W3C::SOAP::XSD::Traits')
-        }
-        $meta->get_attribute_list;
-
-    warn 'XSD object: ', Dumper \@attributes;
+    my @attributes = $self->get_xml_nodes;
 
     my @nodes;
 
     for my $name (@attributes) {
-        #warn $name, "\n";
         my $att = $meta->get_attribute($name);
 
         # skip attributes that are not XSD attributes
@@ -226,10 +148,8 @@ sub to_xml {
 
         # skip sttributes that are not set
         next if !$self->$has;
-        #warn "have $name\n";
 
         my $xml_name = $att->has_xs_name ? $att->xs_name : $name;
-        #warn $att->type_constraint;
         my $xsd_ns_name = $self->xsd_ns_name;
         my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
         $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
@@ -244,7 +164,6 @@ sub to_xml {
             $tag->appendChild( $xml->createTextNode("$value") );
         }
 
-        #warn $tag->toString, "\n";
         push @nodes, $tag;
     }
 
@@ -252,23 +171,94 @@ sub to_xml {
 }
 
 sub to_data {
+    my ($self, $like_xml) = @_;
+    my $child;
+    my $meta = $self->meta;
+    my @attributes = $self->get_xml_nodes;
+
+    my %nodes;
+
+    for my $name (@attributes) {
+        my $att = $meta->get_attribute($name);
+
+        # skip attributes that are not XSD attributes
+        next if !$att->does('W3C::SOAP::XSD');
+        my $has = "has_$name";
+
+        # skip sttributes that are not set
+        next if !$self->$has;
+
+        my $key_name = $att->has_xs_name && $like_xml ? $att->xs_name : $name;
+        my $value = $self->$name;
+
+        if ( ref $value eq 'ARRAY' ) {
+            for my $element (@$value) {
+                if ( blessed($element) && $element->can('to_data') ) {
+                    $element = $element->to_data($like_xml);
+                }
+            }
+        }
+        elsif ( blessed($value) && $value->can('to_data') ) {
+            $value = $value->to_data($like_xml);
+        }
+
+        $nodes{$key_name} = $value;
+    }
+
+    return \%nodes;
+}
+
+sub get_xml_nodes {
+    my ($self) = @_;
+    my $meta = $self->meta;
+
+    return sort {
+            $meta->get_attribute($a)->insertion_order <=> $meta->get_attribute($b)->insertion_order
+        }
+        grep {
+            $meta->get_attribute($_)->does('W3C::SOAP::XSD::Traits')
+        }
+        $meta->get_attribute_list;
 }
 
 sub xsd_subtype {
-    my ($self, $type, %args) = @_;
+    my ($self, %args) = @_;
+    my $parent_type = $args{module} || $args{parent};
 
-    my $subtype = subtype as $args{list} ? "ArrayRef[$type]" : $type;
-    coerce $subtype =>
-        from 'xml_node' =>
-        via { eval { $type->new($_) } || $_->toString };
+    my $type    = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;;
+    my $subtype = subtype as $type;
+
+    if ( $args{module} ) {
+        coerce $subtype =>
+            from 'xml_node' =>
+            via { $parent_type->new($_) };
+        coerce $subtype =>
+            from 'HashRef' =>
+            via { $parent_type->new($_) };
+    }
+    else {
+        coerce $subtype =>
+            from 'xml_node' =>
+            via { $_->textContent };
+    }
 
     if ( $args{list} ) {
         coerce $subtype =>
-            from 'MyApp::XSD::TpsCommonTypes::ProductFamilyType',
+            from $parent_type,
             via {[$_]};
+        if ( $args{module} ) {
+            coerce $subtype =>
+                from 'ArrayRef[xml_node]' =>
+                via {[ map {$parent_type->new($_)} @$_ ]};
         coerce $subtype =>
-            from 'ArrayRef[xml_node]' =>
-            via { [ map { eval { $type->new($_) } || $_->toString } @$_ ] };
+            from 'ArrayRef[HashRef]' =>
+            via {[ map {$parent_type->new($_)} @$_ ]};
+        }
+        else {
+            coerce $subtype =>
+                from 'xml_node' =>
+                via {[ map {$_->textContent} @$_ ]};
+        }
     }
 
     return $subtype;

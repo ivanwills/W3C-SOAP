@@ -11,7 +11,6 @@ use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use WWW::Mechanize;
@@ -22,7 +21,6 @@ use W3C::SOAP::Exception;
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 has location => (
     is       => 'rw',
@@ -61,7 +59,6 @@ XML
     }
     elsif ( $body->can('to_xml') ) {
         for my $node ( $body->to_xml($xml) ) {
-            warn $node->toString();
             $soap_body->appendChild( $node );
         }
     }
@@ -73,12 +70,10 @@ XML
         );
     }
 
-    warn $xml->toString, "\n";
     if ( $self->has_header ) {
         my $node = $self->header->to_xml($xml);
         $xml->firstChild->insertBefore($node, $xml->firstChild->firstChild);
     }
-    warn $xml->toString, "\n";
 
     return $self->send($action, $xml);
 }
@@ -86,7 +81,7 @@ XML
 sub send {
     my ($self, $action, $xml) = @_;
 
-    warn my $url = $self->location;
+    my $url = $self->location;
 
     try {
         $self->mech->post(
@@ -99,20 +94,12 @@ sub send {
         );
     }
     catch ($e) {
-        cluck "faultcode => ",$self->mech->res->code," message   => ",$self->mech->res->message,"\n";
         W3C::SOAP::Exception::HTTP->throw(
             faultcode => $self->mech->res->code,
             message   => $self->mech->res->message,
             error     => $e,
         );
     };
-    warn "\n",
-        '-' x 200,
-        "\n",
-        $self->mech->content,
-        "\n",
-        '-' x 200,
-        "\n";
 
     my $xml_responce = XML::LibXML->load_xml( string => $self->mech->content );
     my ($node) = $xml_responce->findnodes('//env:Body');
