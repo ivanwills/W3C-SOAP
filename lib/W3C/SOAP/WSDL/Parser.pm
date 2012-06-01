@@ -82,7 +82,6 @@ sub write_modules {
     }
     mkdir $_ for reverse @missing;
 
-    warn Dumper $self->ns_module_map;
     my @modules;
     for my $xsd (@{ $self->document->schemas }) {
         my $parse = W3C::SOAP::XSD::Parser->new(
