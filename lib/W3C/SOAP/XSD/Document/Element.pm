@@ -14,6 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Node';
 
@@ -61,7 +62,7 @@ sub _type {
 sub _package {
     my ($self) = @_;
     my $type = $self->type;
-    my ($ns, $name) = split /:/, $type, 2;
+    my ($ns, $name) = split_ns($type)
     my $ns_uri = $name ? $self->parent->get_ns_uri($ns) : '';
     $name ||= $ns;
 
@@ -91,7 +92,7 @@ sub _nillble {
 
 sub type_module {
     my ($self) = @_;
-    my ($ns, $type) = split /:/, $self->type, 2;
+    my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->parent->get_ns_uri($ns);
 
     return $self->simple_type || $self->parent->get_module_base( $ns_uri ) . '::' . $type;
@@ -99,7 +100,7 @@ sub type_module {
 
 sub very_simple_type {
     my ($self) = @_;
-    my ($ns, $type) = split /:/, $self->type, 2;
+    my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->parent->get_ns_uri($ns);
 
     return $ns_uri eq 'http://www.w3.org/2001/XMLSchema' ? "xs:$type" : undef;
@@ -107,7 +108,7 @@ sub very_simple_type {
 
 sub simple_type {
     my ($self) = @_;
-    my ($ns, $type) = split /:/, $self->type, 2;
+    my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->parent->get_ns_uri($ns);
 
     return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';

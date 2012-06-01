@@ -14,6 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::Document::Node';
 
@@ -38,7 +39,7 @@ has address => (
 
 sub _binding {
     my ($self) = @_;
-    my ($ns, $name) = split /:/, $self->node->getAttribute('binding'), 2;
+    my ($ns, $name) = split($self->node->getAttribute('binding'));
 
     for my $binding (@{ $self->document->bindings }) {
         return $binding if $binding->name eq $name;

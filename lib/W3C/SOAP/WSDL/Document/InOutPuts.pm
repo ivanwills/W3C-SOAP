@@ -14,7 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-
+use W3C::SOAP::Utils qw/split_ns/;
 extends 'W3C::SOAP::Document::Node';
 
 our $VERSION     = version->new('0.0.1');
@@ -43,7 +43,7 @@ has body => (
 
 sub _message {
     my ($self) = @_;
-    my ($ns, $message) = split /:/, $self->node->getAttribute('message'), 2;
+    my ($ns, $message) = split_ns($self->node->getAttribute('message'));
 
     for my $msg (@{ $self->document->messages }) {
         return $msg if $msg->name eq $message;

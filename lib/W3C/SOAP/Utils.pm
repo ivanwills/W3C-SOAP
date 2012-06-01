@@ -1,53 +1,29 @@
-package W3C::SOAP::WSDL::Document::Message;
+package W3C::SOAP::Utils;
 
-# Created on: 2012-05-27 19:25:15
-# Create by:  Ivan Wills
+# Created on: 2012-06-01 12:15:15
+# Create by:  dev
 # $Id$
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use strict;
+use warnings;
 use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use W3C::SOAP::Utils qw/split_ns/;
-
-extends 'W3C::SOAP::Document::Node';
+use base qw/Exporter/;
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
+our @EXPORT_OK   = qw/split_ns/;
 our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
-has element => (
-    is         => 'rw',
-    isa        => 'Maybe[W3C::SOAP::XSD::Document::Element]',
-    builder    => '_element',
-    lazy_build => 1,
-);
-
-sub _element {
-    my ($self) = @_;
-    my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
-    my ($ns, $el_name) = split($part->getAttribute('element'));
-    my $nsuri = $self->document->get_nsuri($ns);
-    my @schemas = @{ $self->document->schemas };
-
-    for my $schema (@schemas) {
-        push @schemas, @{ $schema->imports };
-
-        if ( $schema->target_namespace eq $nsuri ) {
-            for my $element (@{ $schema->elements }) {
-                return $element if $element->name eq $el_name;
-            }
-        }
-    }
-
-    return;
+sub split_ns {
+    my ($tag) = @_;
+    my ($ns, $name) = split /:/, $tag, 2;
+    return $name ? ($ns, $name) : ('', $ns);
 }
 
 1;
@@ -56,16 +32,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Document::Message - <One-line description of module's purpose>
+W3C::SOAP::Utils - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Message version 0.1.
+This documentation refers to W3C::SOAP::Utils version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Document::Message;
+   use W3C::SOAP::Utils;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
@@ -94,6 +70,15 @@ form "An object of this class represents ...") to give the reader a high-level
 context to help them understand the methods that are subsequently described.
 
 
+=head3 C<new ( $search, )>
+
+Param: C<$search> - type (detail) - description
+
+Return: W3C::SOAP::Utils -
+
+Description:
+
+=cut
 
 
 =head1 DIAGNOSTICS
@@ -137,18 +122,18 @@ The initial template usually just has:
 
 There are no known bugs in this module.
 
-Please report problems to Ivan Wills (ivan.wills@gmail.com).
+Please report problems to dev (dev@localhost).
 
 Patches are welcome.
 
 =head1 AUTHOR
 
-Ivan Wills - (ivan.wills@gmail.com)
+dev - (dev@localhost)
 <Author name(s)>  (<contact address>)
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012 Ivan Wills (14 Mullion Close, Hornsby Heights, NSW Australia 2077).
+Copyright (c) 2012 dev (123 Timbuc Too).
 All rights reserved.
 
 This module is free software; you can redistribute it and/or modify it under

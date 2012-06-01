@@ -156,17 +156,18 @@ sub _module {
 
 sub get_ns_uri {
     my ($self, $ns_name) = @_;
+    confess "No namespace passed when trying to map a namespace uri!\n" if !$ns_name;
 
     if ( !$self->has_ns_map ) {
         my %map
-            = map {$_->name =~ /^xmlns:(.*)$/; ($1 => $_->value)}
-            grep { $_->name =~ /^xmlns:/ }
+            = map {$_->name =~ /^xmlns(.*)$/; ($1 => $_->value)}
+            grep { $_->name =~ /^xmlns/ }
             $self->xml->firstChild->getAttributes;
 
         $self->ns_map(\%map);
     }
 
-    confess "Couldn't the namespace $ns_name to map\n" if !$self->ns_map->{$ns_name};
+    confess "Couldn't find the namespace '$ns_name' to map\nMap has:\n", Dumper $self->ns_map if !$self->ns_map->{$ns_name};
     return $self->ns_map->{$ns_name};
 }
 

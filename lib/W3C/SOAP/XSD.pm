@@ -17,6 +17,7 @@ use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::XMLSchema;
 use W3C::SOAP::XSD::Traits;
+use W3C::SOAP::Utils qw/split_ns/;
 use TryCatch;
 
 our $VERSION     = version->new('0.0.1');
@@ -52,7 +53,7 @@ around BUILDARGS => sub {
 
         while ($child) {
             if ( $child->nodeName !~ /^#/ ) {
-                my ($node_ns, $node) = split /:/, $child->nodeName, 2;
+                my ($node_ns, $node) = split_ns($child->nodeName);
                 $node = $map->{$node};
                 my $attrib = $class->meta->get_attribute($node);
                 my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
