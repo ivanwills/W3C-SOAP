@@ -62,7 +62,7 @@ sub _type {
 sub _package {
     my ($self) = @_;
     my $type = $self->type;
-    my ($ns, $name) = split_ns($type)
+    my ($ns, $name) = split_ns($type);
     my $ns_uri = $name ? $self->parent->get_ns_uri($ns) : '';
     $name ||= $ns;
 
