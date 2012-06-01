@@ -39,7 +39,7 @@ has address => (
 
 sub _binding {
     my ($self) = @_;
-    my ($ns, $name) = split($self->node->getAttribute('binding'));
+    my ($ns, $name) = split_ns($self->node->getAttribute('binding'));
 
     for my $binding (@{ $self->document->bindings }) {
         return $binding if $binding->name eq $name;

@@ -33,7 +33,7 @@ has element => (
 sub _element {
     my ($self) = @_;
     my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
-    my ($ns, $el_name) = split($part->getAttribute('element'));
+    my ($ns, $el_name) = split_ns($part->getAttribute('element'));
     my $nsuri = $self->document->get_nsuri($ns);
     my @schemas = @{ $self->document->schemas };
 

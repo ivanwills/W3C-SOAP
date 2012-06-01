@@ -160,7 +160,7 @@ sub get_ns_uri {
 
     if ( !$self->has_ns_map ) {
         my %map
-            = map {$_->name =~ /^xmlns(.*)$/; ($1 => $_->value)}
+            = map {$_->name =~ /^xmlns:?(.*)$/; ($1 => $_->value)}
             grep { $_->name =~ /^xmlns/ }
             $self->xml->firstChild->getAttributes;
 
