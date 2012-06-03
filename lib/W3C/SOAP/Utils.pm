@@ -22,6 +22,7 @@ our %EXPORT_TAGS = ();
 
 sub split_ns {
     my ($tag) = @_;
+    confess "No XML tag passed to split!\n" unless defined $tag;
     my ($ns, $name) = split /:/, $tag, 2;
     return $name ? ($ns, $name) : ('', $ns);
 }

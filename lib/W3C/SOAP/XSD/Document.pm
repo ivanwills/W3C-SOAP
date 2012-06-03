@@ -17,6 +17,7 @@ use English qw/ -no_match_vars /;
 use Path::Class;
 use XML::LibXML;
 use WWW::Mechanize;
+use TryCatch;
 use W3C::SOAP::XSD::Document::Element;
 use W3C::SOAP::XSD::Document::ComplexType;
 use W3C::SOAP::XSD::Document::SimpleType;
@@ -103,7 +104,7 @@ sub _simple_types {
 
     for my $node (@nodes) {
         push @simple_types, W3C::SOAP::XSD::Document::SimpleType->new(
-            parent => $self,
+            document => $self,
             node   => $node,
         );
     }
@@ -128,10 +129,39 @@ sub _complex_types {
     my @nodes = $self->xpc->findnodes('//xsd:complexType');
 
     for my $node (@nodes) {
+        my $parent = $node->parentNode;
+        if ( $parent->nodeName !~ /\bschema$/ ) {
+            if ( $parent->nodeName =~ /\belement/ ) {
+                for my $element (@{ $self->elements }) {
+                    if ( $parent->getAttribute('name') eq $element->name ) {
+                        $parent = $element;
+                        last;
+                    }
+                }
+            }
+            else {
+                warn "?????? ". $parent->nodeName;
+            }
+        }
+        else {
+            $parent = undef;
+        }
+
+        try {
         push @complex_types, W3C::SOAP::XSD::Document::ComplexType->new(
-            parent => $self,
-            node   => $node,
+            ($parent ? (parent_node => $parent) : ()),
+            document => $self,
+            node     => $node,
         );
+        }
+        catch ($e) {
+        warn Dumper {
+            ($parent ? (parent_node => $parent) : ()),
+            document => $self,
+            node     => $node,
+        };
+        die $e;
+        }
     }
 
     return \@complex_types;
@@ -144,7 +174,7 @@ sub _elements {
 
     for my $node (@nodes) {
         push @elements, W3C::SOAP::XSD::Document::Element->new(
-            parent => $self,
+            document => $self,
             node   => $node,
         );
     }

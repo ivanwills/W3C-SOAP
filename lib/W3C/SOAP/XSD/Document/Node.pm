@@ -17,9 +17,10 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-has '+parent' => (
-    isa    => 'W3C::SOAP::XSD::Document',
+has '+parent_node' => (
+    isa    => 'Maybe[W3C::SOAP::XSD::Document::Node]',
 );
+
 1;
 
 __END__

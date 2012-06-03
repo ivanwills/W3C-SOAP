@@ -89,7 +89,6 @@ sub write_modules {
         ns_module_map => $self->ns_module_map,
     );
 
-    my @modules;
     for my $xsd (@{ $self->document->schemas }) {
         $xsd->ns_module_map($self->ns_module_map);
         $xsd->clear_xpc;
@@ -99,7 +98,10 @@ sub write_modules {
         $parse->documents->[-1]->target_namespace($self->document->target_namespace)
             if !$parse->documents->[-1]->has_target_namespace;
     }
-    $parse->write_modules;
+    my @modules = $parse->write_modules;
+
+    confess "No XSD modules found!\n" unless @modules;
+    warn Dumper \@modules;
 
     my $data = {
         wsdl    => $wsdl,
@@ -107,6 +109,7 @@ sub write_modules {
         xsd     => shift @modules,
         modules => \@modules,
     };
+    warn $file;
     $template->process('wsdl.pm.tt', $data, "$file");
     die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
         if $template->error;

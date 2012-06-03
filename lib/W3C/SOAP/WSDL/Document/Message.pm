@@ -29,11 +29,20 @@ has element => (
     builder    => '_element',
     lazy_build => 1,
 );
+has type => (
+    is         => 'rw',
+    isa        => 'Maybe[Str]',
+    builder    => '_type',
+    lazy_build => 1,
+);
 
 sub _element {
     my ($self) = @_;
     my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
-    my ($ns, $el_name) = split_ns($part->getAttribute('element'));
+    my $element = $part->getAttribute('element');
+    return unless $element;
+
+    my ($ns, $el_name) = split_ns($element);
     my $nsuri = $self->document->get_nsuri($ns);
     my @schemas = @{ $self->document->schemas };
 
@@ -48,6 +57,16 @@ sub _element {
     }
 
     return;
+}
+
+sub _type {
+    my ($self) = @_;
+    my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
+    my $type = $part->getAttribute('type');
+    warn "Found message part type $type, ".$part->toString,"\n" if $type;
+    return unless $type;
+
+    return $type;
 }
 
 1;

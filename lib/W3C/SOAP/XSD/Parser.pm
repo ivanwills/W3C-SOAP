@@ -87,15 +87,16 @@ sub write_modules {
 
     # flatten schemas specified more than once
     for my $ns ( keys %xsd ) {
-        if ( my $max = @{ $xsd{$ns} } - 1 ) {
-            for my $i ( 1 .. $max ) {
-                push @{ $xsd{$ns}[0]->simple_types  }, @{ $xsd{$ns}[$i]->simple_types  };
-                push @{ $xsd{$ns}[0]->complex_types }, @{ $xsd{$ns}[$i]->complex_types };
-                push @{ $xsd{$ns}[0]->elements      }, @{ $xsd{$ns}[$i]->elements      };
+        my $xsd = pop @{ $xsd{$ns} };
+        if ( @{ $xsd{$ns} } ) {
+            for my $xsd_repeat ( @{ $xsd{$ns} } ) {
+                push @{ $xsd->simple_types  }, @{ $xsd_repeat->simple_types  };
+                push @{ $xsd->complex_types }, @{ $xsd_repeat->complex_types };
+                push @{ $xsd->elements      }, @{ $xsd_repeat->elements      };
             }
         }
 
-        push @xsds, $xsd{$ns}[0];
+        push @xsds, $xsd;
     }
 
     # process the schemas
@@ -114,8 +115,17 @@ sub write_modules {
         mkdir $_ for reverse @missing;
 
         for my $type ( @{ $xsd->complex_types } ) {
-            my $type_name = $type->name;# || $type->parent->name;
-            confess "No name found for ",$type->node->toString, "\nin :\n", $type->document->string,"\n"
+            my $type_name = $type->name || $type->parent_node->name;
+            warn  "me          = ".(ref $type).
+                "\nnode        = ".($type->node->nodeName).
+                "\nparent      = ".(ref $type->parent_node).
+                "\nparent node = ".($type->node->parentNode->nodeName).
+                "\ndocument    = ".(ref $type->document)."\n"
+                if !$type_name;
+            confess "No name found for ",
+                $type->node->toString,
+                "\nin :\n",
+                $type->document->string,"\n"
                 if !$type_name;
             my $type_module = $module . '::' . $type_name;
             push @parents, $type_module;

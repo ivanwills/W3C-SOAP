@@ -37,7 +37,7 @@ sub _ports {
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::WSDL::Document::Port->new(
-            parent   => $self,
+            parent_node   => $self,
             node     => $node,
         );
     }

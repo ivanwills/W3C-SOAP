@@ -24,10 +24,11 @@ has node => (
     isa      => 'XML::LibXML::Node',
     required => 1,
 );
-has parent => (
-    is       => 'rw',
-    isa      => 'W3C::SOAP::Document::Node',
-    weak_ref => 1,
+has parent_node => (
+    is        => 'rw',
+    isa       => 'Maybe[W3C::SOAP::Document::Node]',
+    predicate => 'has_parent_node',
+    weak_ref  => 1,
 );
 has document => (
     is         => 'rw',
@@ -44,9 +45,23 @@ has name => (
     lazy_build => 1,
 );
 
+around BUILDARGS => sub {
+    my ($orig, $class, @args) = @_;
+    my $args
+        = !@args     ? {}
+        : @args == 1 ? $args[0]
+        :              {@args};
+
+    confess "If document is not specified parent_node must be defined!\n"
+        if !$args->{document} && !$args->{parent_node};
+
+    return $class->$orig($args);
+};
+
 sub _document {
     my ($self) = shift;
-    return $self->parent->isa('W3C::SOAP::Document') ? $self->parent : $self->parent->document;
+    confess "Lazybuild $self has both no parent_node nore document!\n" if !$self->has_parent_node || !defined $self->parent_node;
+    return $self->parent_node->isa('W3C::SOAP::Document') ? $self->parent_node : $self->parent_node->document;
 }
 
 sub _name {

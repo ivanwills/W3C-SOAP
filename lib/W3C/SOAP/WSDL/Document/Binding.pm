@@ -65,7 +65,7 @@ sub _operations {
 
     for my $node (@nodes) {
         push @operations, W3C::SOAP::WSDL::Document::Operation->new(
-            parent   => $self,
+            parent_node   => $self,
             node     => $node,
         );
     }

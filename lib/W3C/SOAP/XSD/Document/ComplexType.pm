@@ -42,7 +42,7 @@ sub _sequence {
 
     for my $node (@nodes) {
         push @sequence, W3C::SOAP::XSD::Document::Element->new(
-            parent => $self->parent,
+            parent_node => $self,
             node   => $node,
         );
     }
@@ -53,7 +53,7 @@ sub _sequence {
 sub _module {
     my ($self) = @_;
 
-    return $self->document->module . '::' . $self->name;
+    return $self->document->module . '::' . ( $self->name || $self->parent_node->name );
 }
 
 1;

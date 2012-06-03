@@ -79,7 +79,7 @@ sub _in_out_puts {
 
     for my $node (@nodes) {
         push @puts, W3C::SOAP::WSDL::Document::InOutPuts->new(
-            parent   => $self,
+            parent_node   => $self,
             node     => $node,
         );
     }

@@ -73,21 +73,27 @@ sub _complex_type {
 
 sub _type {
     my ($self) = @_;
-    return $self->node->getAttribute('type');
+    my $type = $self->node->getAttribute('type');
+    return $type if $type;
+
+    # try to determine generated type
+    my $ns_uri = $self->document->target_namespace;
+    my %map = reverse %{$self->document->ns_map};
+    return $map{$ns_uri} . ':' . $self->name . 'Type';
 }
 
 sub _package {
     my ($self) = @_;
     my $type = $self->type;
     my ($ns, $name) = split_ns($type);
-    my $ns_uri = $name ? $self->parent->get_ns_uri($ns) : '';
+    my $ns_uri = $name ? $self->document->get_ns_uri($ns) : '';
     $name ||= $ns;
 
     if ( $ns_uri eq 'http://www.w3.org/2001/XMLSchema' ) {
         return "xs:$name";
     }
 
-    my $base = $self->parent->get_module_base( $ns_uri || $self->parent->target_namespace );
+    my $base = $self->document->get_module_base( $ns_uri || $self->document->target_namespace );
 
     return $base . '::' . $name;
 }
@@ -110,15 +116,15 @@ sub _nillble {
 sub type_module {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
-    my $ns_uri = $self->parent->get_ns_uri($ns);
+    my $ns_uri = $self->document->get_ns_uri($ns);
 
-    return $self->simple_type || $self->parent->get_module_base( $ns_uri ) . '::' . $type;
+    return $self->simple_type || $self->document->get_module_base( $ns_uri ) . '::' . $type;
 }
 
 sub very_simple_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
-    my $ns_uri = $self->parent->get_ns_uri($ns);
+    my $ns_uri = $self->document->get_ns_uri($ns);
 
     return $ns_uri eq 'http://www.w3.org/2001/XMLSchema' ? "xs:$type" : undef;
 }
@@ -126,7 +132,7 @@ sub very_simple_type {
 sub simple_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
-    my $ns_uri = $self->parent->get_ns_uri($ns);
+    my $ns_uri = $self->document->get_ns_uri($ns);
     warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
