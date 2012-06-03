@@ -57,6 +57,7 @@ sub _enumeration {
 sub moose_type {
     my ($self) = @_;
 
+    warn "No name for ".$self->node->toString if !$self->name;
     my $type = $self->document->module . ':' . $self->name;
 
     return $type;

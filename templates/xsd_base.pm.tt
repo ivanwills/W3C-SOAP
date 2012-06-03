@@ -24,6 +24,7 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 
 [% FOREACH subtype IN xsd.simple_types %]
+[%- NEXT IF !subtype.name %]
 [% IF subtype.enumeration %]my %[% subtype.name %] = map {$_=>1} ('[% subtype.enumeration.join("', '") %]');[% END %]
 subtype '[% subtype.moose_type %]' =>
     as      '[% subtype.type %]',

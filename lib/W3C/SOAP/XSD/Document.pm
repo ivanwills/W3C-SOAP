@@ -66,9 +66,11 @@ has module => (
     lazy_build => 1,
 );
 has ns_map => (
-    is        => 'rw',
-    isa       => 'HashRef[Str]',
-    predicate => 'has_ns_map',
+    is         => 'rw',
+    isa        => 'HashRef[Str]',
+    predicate  => 'has_ns_map',
+    builder    => '_ns_map',
+    lazy_build => 1,
 );
 has ns_module_map => (
     is        => 'rw',
@@ -117,6 +119,7 @@ sub _simple_type {
     my %simple_type;
 
     for my $type (@{ $self->simple_types }) {
+        warn "No name for type ".$type->node->toString if !$type->name;
         $simple_type{$type->name} = $type;
     }
 
@@ -191,20 +194,22 @@ sub _module {
     return $self->ns_module_map->{$self->target_namespace};
 }
 
+sub _ns_map {
+    my ($self) = @_;
+
+    my %map
+        = map {$_->name =~ /^xmlns:?(.*)$/; ($1 => $_->value)}
+        grep { $_->name =~ /^xmlns/ }
+        $self->xml->firstChild->getAttributes;
+
+    return \%map;
+}
+
 sub get_ns_uri {
     my ($self, $ns_name) = @_;
     confess "No namespace passed when trying to map a namespace uri!\n" if !defined $ns_name;
-
-    if ( !$self->has_ns_map ) {
-        my %map
-            = map {$_->name =~ /^xmlns:?(.*)$/; ($1 => $_->value)}
-            grep { $_->name =~ /^xmlns/ }
-            $self->xml->firstChild->getAttributes;
-
-        $self->ns_map(\%map);
-    }
-
     confess "Couldn't find the namespace '$ns_name' to map\nMap has:\n", Dumper $self->ns_map if !$self->ns_map->{$ns_name};
+
     return $self->ns_map->{$ns_name};
 }
 

@@ -36,10 +36,14 @@ sub [% operation.perl_name %] {
     );
     my $resp = $self->request( [% operation.name %] => $xsd );
 
+[%              IF operation.port_type.outputs.0.message.element %]
     return [% xsd %]->new($resp)->[% operation.port_type.outputs.0.message.element.perl_name %];
+[%-             ELSIF operation.port_type.outputs.0.message.type %]
+    return $resp->firstChild->toString;
+[%-             END %]
 }
-        [% END %]
-    [% END %]
+[%         END %]
+[%     END %]
 [% END %]
 1;
 
