@@ -17,17 +17,22 @@ use English qw/ -no_match_vars /;
 use Path::Class;
 use W3C::SOAP::XSD::Document;
 use File::ShareDir qw/dist_dir/;
-
+use Moose::Util::TypeConstraints;
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-has document => (
+subtype xsd_documents =>
+    as 'ArrayRef[W3C::SOAP::XSD::Document]';
+coerce xsd_documents =>
+    from 'W3C::SOAP::XSD::Document',
+    via {[$_]};
+has documents => (
     is       => 'rw',
-    isa      => 'W3C::SOAP::XSD::Document',
-    required => 1,
+    isa      => 'xsd_documents',
+    coerce   => 1,
 );
 has template => (
     is       => 'rw',
@@ -63,12 +68,38 @@ around BUILDARGS => sub {
 
 sub write_modules {
     my ($self) = @_;
-    my @xsd = ($self->document);
+    my @xsds     = @{ $self->documents };
     my $template = $self->template;
+    my @schemas;
     my $self_module;
     my @parents;
+    my %xsd;
 
-    while ( my $xsd = shift @xsd ) {
+    # import all schemas
+    while ( my $xsd = shift @xsds ) {
+        my $target_namespace = $xsd->target_namespace;
+        push @{ $xsd{$target_namespace} }, $xsd;
+
+        for my $import ( @{ $xsd->imports } ) {
+            push @xsds, $import;
+        }
+    }
+
+    # flatten schemas specified more than once
+    for my $ns ( keys %xsd ) {
+        if ( my $max = @{ $xsd{$ns} } - 1 ) {
+            for my $i ( 1 .. $max ) {
+                push @{ $xsd{$ns}[0]->simple_types  }, @{ $xsd{$ns}[$i]->simple_types  };
+                push @{ $xsd{$ns}[0]->complex_types }, @{ $xsd{$ns}[$i]->complex_types };
+                push @{ $xsd{$ns}[0]->elements      }, @{ $xsd{$ns}[$i]->elements      };
+            }
+        }
+
+        push @xsds, $xsd{$ns}[0];
+    }
+
+    # process the schemas
+    for my $xsd (@xsds) {
         my $module = $xsd->get_module_base($xsd->target_namespace);
         $self_module ||= $module;
         my $file   = $self->lib . '/' . $module;
@@ -82,12 +113,11 @@ sub write_modules {
         }
         mkdir $_ for reverse @missing;
 
-        for my $type ( @{ $xsd->imports } ) {
-            push @xsd, $type;
-        }
-
         for my $type ( @{ $xsd->complex_types } ) {
-            my $type_module = $module . '::' . $type->name;
+            my $type_name = $type->name;# || $type->parent->name;
+            confess "No name found for ",$type->node->toString, "\nin :\n", $type->document->string,"\n"
+                if !$type_name;
+            my $type_module = $module . '::' . $type_name;
             push @parents, $type_module;
             my $type_file = $self->lib . '/' . $type_module;
             $type_file =~ s{::}{/}g;
@@ -110,6 +140,17 @@ sub write_modules {
     }
 
     return $self_module;
+}
+
+my %written;
+sub write_module {
+    my ($self, $tt, $data, $file) = @_;
+    my $template = $self->template;
+    confess "Already written $file!\n" if $written{$file}++;
+
+    $template->process($tt, $data, "$file");
+    die "Error in creating $file (via $tt): ". $template->error."\n"
+        if $template->error;
 }
 
 1;

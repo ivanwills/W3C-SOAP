@@ -82,22 +82,24 @@ sub write_modules {
     }
     mkdir $_ for reverse @missing;
 
+    my $parse = W3C::SOAP::XSD::Parser->new(
+        documents     => [],
+        template      => $self->template,
+        lib           => $self->lib     ,
+        ns_module_map => $self->ns_module_map,
+    );
+
     my @modules;
     for my $xsd (@{ $self->document->schemas }) {
-        my $parse = W3C::SOAP::XSD::Parser->new(
-            document => $xsd,
-            template => $self->template,
-            lib      => $self->lib     ,
-            ns_module_map => $self->ns_module_map,
-        );
         $xsd->ns_module_map($self->ns_module_map);
         $xsd->clear_xpc;
 
-        $parse->document->target_namespace($self->document->target_namespace)
-            if !$parse->document->has_target_namespace;
+        push @{ $parse->documents }, $xsd;
 
-        push @modules, $parse->write_modules;
+        $parse->documents->[-1]->target_namespace($self->document->target_namespace)
+            if !$parse->documents->[-1]->has_target_namespace;
     }
+    $parse->write_modules;
 
     my $data = {
         wsdl    => $wsdl,

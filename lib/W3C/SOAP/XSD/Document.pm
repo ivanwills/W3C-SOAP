@@ -86,6 +86,13 @@ sub _imports {
         push @imports, __PACKAGE__->new( location => $location, ns_module_map => $self->ns_module_map );
     }
 
+    @nodes = $self->xpc->findnodes('//xsd:include');
+
+    for my $import (@nodes) {
+        my $location = $import->getAttribute('schemaLocation');
+        push @imports, __PACKAGE__->new( location => $location, ns_module_map => $self->ns_module_map );
+    }
+
     return \@imports;
 }
 
@@ -156,7 +163,7 @@ sub _module {
 
 sub get_ns_uri {
     my ($self, $ns_name) = @_;
-    confess "No namespace passed when trying to map a namespace uri!\n" if !$ns_name;
+    confess "No namespace passed when trying to map a namespace uri!\n" if !defined $ns_name;
 
     if ( !$self->has_ns_map ) {
         my %map

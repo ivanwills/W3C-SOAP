@@ -19,6 +19,14 @@ our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 
+has string => (
+    is         => 'rw',
+    isa        => 'Str',
+);
+has location => (
+    is         => 'rw',
+    isa        => 'Str',
+);
 has xml => (
     is       => 'ro',
     isa      => 'XML::LibXML::Document',

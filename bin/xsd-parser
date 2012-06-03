@@ -74,7 +74,11 @@ sub main {
         INTERPOLATE  => 0,
         EVAL_PERL    => 1,
     );
-    my $parser = W3C::SOAP::XSD::Parser->new( location => $file, template => $template, %option );
+    my $parser = W3C::SOAP::XSD::Parser->new(
+        location => $file,
+        template => $template,
+        %option
+    );
 
     return show($parser) if $option{show};
 
@@ -83,7 +87,7 @@ sub main {
 
 sub show {
     my ($parser) = @_;
-    my @xsd = ($parser->document);
+    my @xsd = @{$parser->documents};
 
     while ( my $xsd = shift @xsd ) {
         print "Namespace = " . $xsd->target_namespace . "\n";

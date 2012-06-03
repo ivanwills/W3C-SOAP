@@ -23,6 +23,12 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has complex_type => (
+    is     => 'rw',
+    isa    => 'Str',
+    builder => '_complex_type',
+    lazy_build => 1,
+);
 has type => (
     is     => 'rw',
     isa    => 'Str',
@@ -53,6 +59,17 @@ has nillble => (
     builder => '_nillble',
     lazy_build => 1,
 );
+
+sub _complex_type {
+    my ($self) = @_;
+    my $complex;
+    my @nodes = $self->document->xpc->findnodes('xsd:complexType', $self->node);
+
+    for my $node (@nodes) {
+    }
+
+    return $complex;
+}
 
 sub _type {
     my ($self) = @_;
@@ -110,6 +127,8 @@ sub simple_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->parent->get_ns_uri($ns);
+    warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
+        if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
     return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
 
