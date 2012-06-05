@@ -73,6 +73,7 @@ sub write_modules {
     my @schemas;
     my $self_module;
     my @parents;
+    my @xsd_modules;
     my %xsd;
 
     # import all schemas
@@ -82,6 +83,9 @@ sub write_modules {
 
         for my $import ( @{ $xsd->imports } ) {
             push @xsds, $import;
+        }
+        for my $include ( @{ $xsd->includes } ) {
+            push @xsds, $include;
         }
     }
 
@@ -102,6 +106,7 @@ sub write_modules {
     # process the schemas
     for my $xsd (@xsds) {
         my $module = $xsd->get_module_base($xsd->target_namespace);
+        push @xsd_modules, $module;
         $self_module ||= $module;
         my $file   = $self->lib . '/' . $module;
         $file =~ s{::}{/}g;
@@ -135,20 +140,21 @@ sub write_modules {
             mkdir $type_file->parent if !-d $type_file->parent;
 
             $template->process('xsd_complex_type.pm.tt', {xsd => $xsd, module => $type_module, node => $type}, "$type_file.pm");
-            die "Error in creating $type_file.pm (xsd_complex_type.pm.tt): ". $template->error."\n"
+            die "Error in creating $type_file (xsd_complex_type.pm.tt): ". $template->error."\n"
                 if $template->error;
         }
 
         $template->process('xsd_base.pm.tt', {xsd => $xsd}, "$file/Base.pm");
-        die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+        die "Error in creating $file (xsd.pm): ". $template->error."\n"
             if $template->error;
 
         $template->process('xsd.pm.tt', {xsd => $xsd, parents => \@parents}, "$file.pm");
-        die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+        die "Error in creating $file (xsd.pm): ". $template->error."\n"
             if $template->error;
 
     }
 
+    #warn Dumper \@xsd_modules, $self_module;
     return $self_module;
 }
 

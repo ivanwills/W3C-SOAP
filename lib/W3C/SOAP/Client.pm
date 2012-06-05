@@ -41,6 +41,18 @@ has mech => (
 
 sub request {
     my ($self, $action, $body) = @_;
+    my $xml = $self->build_request_xml($action, $body);
+
+    if ( $self->has_header ) {
+        my $node = $self->header->to_xml($xml);
+        $xml->firstChild->insertBefore($node, $xml->firstChild->firstChild);
+    }
+
+    return $self->send($action, $xml);
+}
+
+sub build_request_xml {
+    my ($self, $action, $body) = @_;
     my $xml = XML::LibXML->load_xml(string => <<'XML');
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -70,12 +82,7 @@ XML
         );
     }
 
-    if ( $self->has_header ) {
-        my $node = $self->header->to_xml($xml);
-        $xml->firstChild->insertBefore($node, $xml->firstChild->firstChild);
-    }
-
-    return $self->send($action, $xml);
+    return $xml;
 }
 
 sub send {

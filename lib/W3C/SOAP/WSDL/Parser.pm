@@ -101,7 +101,6 @@ sub write_modules {
     my @modules = $parse->write_modules;
 
     confess "No XSD modules found!\n" unless @modules;
-    warn Dumper \@modules;
 
     my $data = {
         wsdl    => $wsdl,
@@ -109,9 +108,8 @@ sub write_modules {
         xsd     => shift @modules,
         modules => \@modules,
     };
-    warn $file;
     $template->process('wsdl.pm.tt', $data, "$file");
-    die "Error in creating $file.pm (xsd.pm): ". $template->error."\n"
+    die "Error in creating $file (xsd.pm): ". $template->error."\n"
         if $template->error;
 
 }

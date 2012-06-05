@@ -35,6 +35,26 @@ has imports => (
     builder    => '_imports',
     lazy_build => 1,
 );
+has imported => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::XSD::Document]',
+    builder    => '_imported',
+    lazy_build => 1,
+    weak_ref   => 1,
+);
+has includes => (
+    is         => 'rw',
+    isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
+    builder    => '_includes',
+    lazy_build => 1,
+);
+has include => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::XSD::Document]',
+    builder    => '_include',
+    lazy_build => 1,
+    weak_ref   => 1,
+);
 has simple_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::SimpleType]',
@@ -46,6 +66,7 @@ has simple_type => (
     isa        => 'HashRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_type',
     lazy_build => 1,
+    weak_ref   => 1,
 );
 has complex_types => (
     is         => 'rw',
@@ -53,11 +74,25 @@ has complex_types => (
     builder    => '_complex_types',
     lazy_build => 1,
 );
+has complex_type => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::XSD::Document::ComplexType]',
+    builder    => '_complex_type',
+    lazy_build => 1,
+    weak_ref   => 1,
+);
 has elements => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::Element]',
     builder   => '_elements',
     lazy_build => 1,
+);
+has element => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::XSD::Document::Element]',
+    builder   => '_element',
+    lazy_build => 1,
+    weak_ref   => 1,
 );
 has module => (
     is        => 'rw',
@@ -89,14 +124,38 @@ sub _imports {
         push @imports, __PACKAGE__->new( location => $location, ns_module_map => $self->ns_module_map );
     }
 
-    @nodes = $self->xpc->findnodes('//xsd:include');
+    return \@imports;
+}
 
-    for my $import (@nodes) {
-        my $location = $import->getAttribute('schemaLocation');
-        push @imports, __PACKAGE__->new( location => $location, ns_module_map => $self->ns_module_map );
+sub _imported {
+    my ($self) = @_;
+    my %import;
+    for my $import (@{ $self->imports }) {
+        $import{$import->name} = $import;
+    }
+    return \%import;
+}
+
+sub _includes {
+    my ($self) = @_;
+    my @includes;
+    my @nodes = $self->xpc->findnodes('//xsd:include');
+
+    for my $include (@nodes) {
+        my $location = $include->getAttribute('schemaLocation');
+        push @includes, __PACKAGE__->new( location => $location, ns_module_map => $self->ns_module_map );
     }
 
-    return \@imports;
+    return \@includes;
+}
+
+sub _include {
+    my ($self) = @_;
+    my %include;
+    for my $include (@{ $self->include }) {
+        $include{$include->name} = $include;
+    }
+    return \%include;
 }
 
 sub _simple_types {
@@ -170,6 +229,15 @@ sub _complex_types {
     return \@complex_types;
 }
 
+sub _complex_type {
+    my ($self) = @_;
+    my %complex_type;
+    for my $complex_type (@{ $self->complex_type }) {
+        $complex_type{$complex_type->name} = $complex_type;
+    }
+    return \%complex_type;
+}
+
 sub _elements {
     my ($self) = @_;
     my @elements;
@@ -183,6 +251,15 @@ sub _elements {
     }
 
     return \@elements;
+}
+
+sub _element {
+    my ($self) = @_;
+    my %element;
+    for my $element (@{ $self->element }) {
+        $element{$element->name} = $element;
+    }
+    return \%element;
 }
 
 sub _module {

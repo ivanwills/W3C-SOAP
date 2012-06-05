@@ -32,26 +32,54 @@ our %EXPORT_TAGS = ();
 has messages => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Message]',
+    builder    => '_messages',
+    lazy_build => 1,
+);
+has message => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::WSDL::Document::Message]',
     builder    => '_message',
     lazy_build => 1,
+    weak_ref   => 1,
 );
 has port_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::PortType]',
+    builder    => '_port_types',
+    lazy_build => 1,
+);
+has port_type => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::WSDL::Document::PortType]',
     builder    => '_port_type',
     lazy_build => 1,
+    weak_ref   => 1,
 );
 has bindings => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Binding]',
+    builder    => '_bindings',
+    lazy_build => 1,
+);
+has binding => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::WSDL::Document::Binding]',
     builder    => '_binding',
     lazy_build => 1,
+    weak_ref   => 1,
 );
 has services => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Service]',
+    builder    => '_services',
+    lazy_build => 1,
+);
+has service => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::WSDL::Document::Service]',
     builder    => '_service',
     lazy_build => 1,
+    weak_ref   => 1,
 );
 has schemas => (
     is         => 'rw',
@@ -59,8 +87,15 @@ has schemas => (
     builder    => '_schemas',
     lazy_build => 1,
 );
+has schema => (
+    is         => 'rw',
+    isa        => 'HashRef[W3C::SOAP::XSD::Document]',
+    builder    => '_schema',
+    lazy_build => 1,
+    weak_ref   => 1,
+);
 
-sub _message {
+sub _messages {
     my ($self) = @_;
     my @complex_types;
     my @nodes = $self->xpc->findnodes('//wsdl:message');
@@ -75,7 +110,17 @@ sub _message {
     return \@complex_types;
 }
 
-sub _port_type {
+sub _message {
+    my ($self) = @_;
+    my %message;
+    for my $message ( @{ $self->messages }) {
+        $message{$message->name} = $message;
+    }
+
+    return \%message;
+}
+
+sub _port_types {
     my ($self) = @_;
     my @complex_types;
     my @nodes = $self->xpc->findnodes('//wsdl:portType');
@@ -90,7 +135,17 @@ sub _port_type {
     return \@complex_types;
 }
 
-sub _binding {
+sub _port_type {
+    my ($self) = @_;
+    my %port_type;
+    for my $port_type ( @{ $self->port_type }) {
+        $port_type{$port_type->name} = $port_type;
+    }
+
+    return \%port_type;
+}
+
+sub _bindings {
     my ($self) = @_;
     my @complex_types;
     my @nodes = $self->xpc->findnodes('//wsdl:binding');
@@ -105,7 +160,17 @@ sub _binding {
     return \@complex_types;
 }
 
-sub _service {
+sub _binding {
+    my ($self) = @_;
+    my %binding;
+    for my $binding ( @{ $self->binding }) {
+        $binding{$binding->name} = $binding;
+    }
+
+    return \%binding;
+}
+
+sub _services {
     my ($self) = @_;
     my @complex_types;
     my @nodes = $self->xpc->findnodes('//wsdl:service');
@@ -120,6 +185,16 @@ sub _service {
     return \@complex_types;
 }
 
+sub _service {
+    my ($self) = @_;
+    my %service;
+    for my $service ( @{ $self->service }) {
+        $service{$service->name} = $service;
+    }
+
+    return \%service;
+}
+
 sub _schemas {
     my ($self) = @_;
     my @complex_types;
@@ -132,6 +207,16 @@ sub _schemas {
     }
 
     return \@complex_types;
+}
+
+sub _schema {
+    my ($self) = @_;
+    my %schema;
+    for my $schema ( @{ $self->schemas }) {
+        $schema{$schema->target_namespace} = $schema;
+    }
+
+    return \%schema;
 }
 
 sub get_nsuri {

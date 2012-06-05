@@ -159,7 +159,8 @@ sub to_xml {
 
         if ( blessed($value) && $value->can('to_xml') ) {
             $value->xsd_ns_name( $xsd_ns_name ) if !$value->has_xsd_ns_name;
-            $tag->appendChild($value->to_xml($xml));
+            my @children = $value->to_xml($xml);
+            $tag->appendChild($_) for @children;
         }
         else {
             $tag->appendChild( $xml->createTextNode("$value") );
