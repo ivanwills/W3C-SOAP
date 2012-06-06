@@ -46,6 +46,7 @@ sub main {
     GetOptions(
         \%option,
         'ns_module_map|ns|namespace-map|n=s%',
+        'ns_module_map_file|map-file|f=s',
         'lib|l=s',
         'show|s',
         'path|p=s',
@@ -65,6 +66,18 @@ sub main {
     elsif ( $option{'help'} ) {
         pod2usage( -verbose => 1 );
     }
+
+    if ( $option{ns_module_map_file} && -f $option{ns_module_map_file} ) {
+        $option{ns_module_map} ||= {};
+        my $file = file $option{ns_module_map_file};
+
+        for my $line ($file->slurp) {
+            chomp $line;
+            my ($ns, $mod) = split /,|\t/, $line, 2;
+            $option{ns_module_map}{$ns} ||= $mod
+        }
+    }
+    #warn Dumper $option{ns_module_map}, $option{ns_module_map_file};
 
     return show() if $option{show};
 
@@ -93,7 +106,10 @@ sub show {
     # do stuff here
     my %map = @ARGV;
     for my $module (keys %map) {
-        my $wsdl = W3C::SOAP::WSDL::Document->new( location => $map{$module} );
+        my $wsdl = W3C::SOAP::WSDL::Document->new(
+            %option,
+            location => $map{$module},
+        );
         print $wsdl->target_namespace, "\n";
         print "Messages :\n";
         for my $node (@{ $wsdl->messages }) {
@@ -113,9 +129,17 @@ sub show {
             for my $port (@{ $node->ports }) {
                 print "\t\t", $port->binding->name, ' : ', $port->address, "\n";
                 for my $operation (@{ $port->binding->operations }) {
-                    print "\t\t\t", $operation->name,
-                        ': in ', $operation->port_type->inputs->[0]->message,
-                        ': out ', $operation->port_type->outputs->[0]->message, "\n";
+                    print "\t\t\t", $operation->name, "\n";
+                    for my $dir (qw/inputs outputs/) {
+                        print "\t\t\t\t$dir: ";
+                        if ($operation->port_type->$dir->[0]->message->element) {
+                            print $operation->port_type->$dir->[0]->message->element->type_module;
+                        }
+                        elsif ($operation->port_type->$dir->[0]->message->type) {
+                            print $operation->port_type->$dir->[0]->message->type;
+                        }
+                        print "\n";
+                    }
                 }
             }
         }
