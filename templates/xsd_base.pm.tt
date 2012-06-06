@@ -25,15 +25,18 @@ our %EXPORT_TAGS = ();
 
 [% FOREACH subtype IN xsd.simple_types %]
 [%- NEXT IF !subtype.name %]
-[% IF subtype.enumeration %]my %[% subtype.name %] = map {$_=>1} ('[% subtype.enumeration.join("', '") %]');[% END %]
+[% IF subtype.enumeration.size %]
+enum(
+    '[% subtype.moose_type %]'
+    => ['[% subtype.enumeration.join("', '") %]']
+);
+[%- ELSE %]
 subtype '[% subtype.moose_type %]' =>
-    as      '[% subtype.type %]',
-    where   { $[% subtype.name %]{$_} },
-    message {'[% subtype.name %] must be one of [% subtype.enumeration.join(', ') %] not "'.$_.'!"'};
+    as      '[% subtype.type %]';
+[%- END %]
 coerce '[% subtype.moose_type %]' =>
     from 'xml_node' =>
     via { $_->textContent };
-
 [%- END %]
 
 1;
@@ -61,7 +64,13 @@ This documentation refers to [% module %] version 0.1.
 =head1 SUBROUTINES/METHODS
 
 =over 4
-
+[% FOREACH subtype IN xsd.simple_types %]
+[% NEXT IF !subtype.name %]
+=item subtype C<[% subtype.moose_type %]>
+[% IF subtype.documentation %]
+[% subtype.documentation %]
+[% END %]
+[% END %]
 =back
 
 =head1 DIAGNOSTICS

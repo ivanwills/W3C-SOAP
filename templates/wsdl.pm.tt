@@ -13,9 +13,10 @@ use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
 use [% xsd %];
-[%- FOR module IN modules %]
-use [% module %];
+[%- FOR schema IN wsdl.xsd_modules %]
+use [% schema %];
 [%- END %]
+
 extends '[% config.wsdl.parent_module %]';
 
 our $VERSION     = version->new('0.0.1');
@@ -31,16 +32,23 @@ has '+location' => (
 sub [% operation.perl_name %] {
     my $self = shift;
 
-    my $xsd = [% xsd %]->new(
-        [% operation.port_type.inputs.0.message.element.perl_name %] => {@_}
+[%-
+           IF operation.port_type.outputs.0.message.element;
+                in_element = operation.port_type.inputs.0.message.element;
+                out_element = operation.port_type.outputs.0.message.element;
+%]
+    my $xsd = [% in_element.module %]->new(
+        [% in_element.perl_name %] => {@_}
     );
     my $resp = $self->request( [% operation.name %] => $xsd );
 
-[%              IF operation.port_type.outputs.0.message.element %]
-    return [% xsd %]->new($resp)->[% operation.port_type.outputs.0.message.element.perl_name %];
-[%-             ELSIF operation.port_type.outputs.0.message.type %]
+    return [% out_element.module %]->new($resp)->[% out_element.perl_name %];
+[%-
+            ELSIF operation.port_type.outputs.0.message.type;
+                type = operation.port_type.outputs.0.message.type
+%]
     return $resp->firstChild->toString;
-[%-             END %]
+[%-         END %]
 }
 [%         END %]
 [%     END %]

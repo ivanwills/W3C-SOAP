@@ -29,7 +29,11 @@ use [% use_module %];
     type = subtypes.$type ? subtypes.$type.name : attribute.type; %]
 use Moose::Util::TypeConstraints;
 [%- END %]
+[%- IF node.extension %]
+extends '[% node.extension %]';
+[%- ELSE %]
 extends '[% base %]::Base';
+[%- END %]
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
