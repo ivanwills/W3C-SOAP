@@ -37,6 +37,16 @@ has xsd_ns_name => (
     lazy_build => 1,
 );
 
+{
+my %required;
+my $require = sub {
+    my ($module) = @_;
+    return if $required{$module}++;
+
+    my $file = "$module.pm";
+    $file =~ s{::}{/}g;
+    require $file;
+};
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
     my $args
@@ -57,6 +67,7 @@ around BUILDARGS => sub {
                 $node = $map->{$node};
                 my $attrib = $class->meta->get_attribute($node);
                 my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
+                $require->($module);
                 my $value  = $module ? $module->new($child) : $child->textContent;
                 $args->{$node}
                     = !exists $args->{$node}        ? $value
@@ -68,6 +79,7 @@ around BUILDARGS => sub {
     }
 
     return $class->$orig($args);
+};
 };
 
 my %ns_map;
@@ -223,12 +235,23 @@ sub get_xml_nodes {
         $meta->get_attribute_list;
 }
 
+my %types;
 sub xsd_subtype {
     my ($self, %args) = @_;
     my $parent_type = $args{module} || $args{parent};
 
-    my $type    = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;;
+    my $type = $parent_type;;
+    if ($args{list} ) {
+        $type .= "|$parent_type\_array";
+
+        if ( !$types{"$parent_type\_array"}++ ) {
+            subtype "$parent_type\_array" =>
+                as "ArrayRef[$parent_type]";
+        }
+    }
+    cluck $type if $parent_type eq 'NScreens::SDP::XSD::TpsProvisioningDto:msisdNumber';
     my $subtype = subtype as $type;
+    warn "$type\n\n" if $parent_type eq 'NScreens::SDP::XSD::TpsProvisioningDto:msisdNumber';
 
     if ( $args{module} ) {
         coerce $subtype =>
@@ -244,26 +267,7 @@ sub xsd_subtype {
             via { $_->textContent };
     }
 
-    if ( $args{list} ) {
-        coerce $subtype =>
-            from $parent_type,
-            via {[$_]};
-        if ( $args{module} ) {
-            coerce $subtype =>
-                from 'ArrayRef[xml_node]' =>
-                via {[ map {$parent_type->new($_)} @$_ ]};
-        coerce $subtype =>
-            from 'ArrayRef[HashRef]' =>
-            via {[ map {$parent_type->new($_)} @$_ ]};
-        }
-        else {
-            coerce $subtype =>
-                from 'xml_node' =>
-                via {[ map {$_->textContent} @$_ ]};
-        }
-    }
-
-    return $subtype;
+    return $types{$type} = $subtype;
 }
 
 1;

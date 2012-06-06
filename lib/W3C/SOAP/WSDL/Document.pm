@@ -94,6 +94,11 @@ has schema => (
     lazy_build => 1,
     weak_ref   => 1,
 );
+has ns_module_map => (
+    is       => 'rw',
+    isa      => 'HashRef[Str]',
+    required => 1,
+);
 
 sub _messages {
     my ($self) = @_;
@@ -202,7 +207,8 @@ sub _schemas {
 
     for my $node (@nodes) {
         push @complex_types, W3C::SOAP::XSD::Document->new(
-            string => $node->toString,
+            string        => $node->toString,
+            ns_module_map => $self->ns_module_map ,
         );
     }
 
@@ -223,6 +229,23 @@ sub get_nsuri {
     my ($self, $ns) = @_;
     my ($node) = $self->xpc->findnodes("//namespace::*[name()='$ns']");
     return $node->value;
+}
+
+sub xsd_modules {
+    my ($self) = @_;
+    my %modules;
+
+    for my $service (@{ $self->services }) {
+        for my $port (@{ $service->ports }) {
+            for my $operation (@{ $port->binding->operations }) {
+                if ( $operation->port_type->outputs->[0]->message->element ) {
+                    $modules{$operation->port_type->outputs->[0]->message->element->module}++;
+                }
+            }
+        }
+    }
+
+    return sort keys %modules;
 }
 
 1;

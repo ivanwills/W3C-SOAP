@@ -113,6 +113,14 @@ sub _nillble {
     return $self->node->getAttribute('nillble') || 0;
 }
 
+sub module {
+    my ($self) = @_;
+    my ($ns, $type) = split_ns($self->type);
+    my $ns_uri = $self->document->get_ns_uri($ns);
+
+    return $self->simple_type || $self->document->get_module_base( $ns_uri );
+}
+
 sub type_module {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
@@ -141,6 +149,11 @@ sub simple_type {
     my @xsds = ($self->document);
     while ( my $xsd = shift @xsds ) {
         my $simple = $xsd->simple_type;
+        if ( !$simple && @{ $xsd->simple_types } ) {
+            $simple = $xsd->simple_type($xsd->_simple_type);
+            warn $xsd->target_namespace . " $type => $simple\n" if $type eq 'GetCreateUIDResponseDto';
+        }
+
         return $simple->{$type}->moose_type if $simple && $simple->{$type};
 
         push @xsds, @{$xsd->imports};

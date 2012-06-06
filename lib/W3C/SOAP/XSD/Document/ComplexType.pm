@@ -14,6 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Node';
 
@@ -32,6 +33,18 @@ has module => (
     is        => 'rw',
     isa       => 'Str',
     builder   => '_module',
+    lazy_build => 1,
+);
+has complex_content => (
+    is        => 'rw',
+    isa       => 'Str',
+    builder   => '_complex_content',
+    lazy_build => 1,
+);
+has extension => (
+    is        => 'rw',
+    isa       => 'Maybe[Str]',
+    builder   => '_extension',
     lazy_build => 1,
 );
 
@@ -54,6 +67,37 @@ sub _module {
     my ($self) = @_;
 
     return $self->document->module . '::' . ( $self->name || $self->parent_node->name );
+}
+
+sub _complex_content {
+    my ($self) = @_;
+
+    return $self->document->module . '::' . ( $self->name || $self->parent_node->name );
+}
+
+sub _extension {
+    my ($self) = @_;
+    my @nodes = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
+
+    for my $node (@nodes) {
+        my ($ns, $tag) = split_ns($node->getAttribute('base'));
+        my $ns_uri = $self->document->get_ns_uri($ns);
+
+        my @nodes = $self->document->xpc->findnodes('xsd:sequence/xsd:element', $node);
+        my @sequence;
+
+        for my $node (@nodes) {
+            push @sequence, W3C::SOAP::XSD::Document::Element->new(
+                parent_node => $self,
+                node   => $node,
+            );
+        }
+        $self->sequence(\@sequence);
+
+        return $self->document->get_module_base( $ns_uri ) . "::$tag";
+    }
+
+    return;
 }
 
 1;

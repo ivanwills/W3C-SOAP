@@ -48,6 +48,7 @@ sub _element {
 
     for my $schema (@schemas) {
         push @schemas, @{ $schema->imports };
+        push @schemas, @{ $schema->includes };
 
         if ( $schema->target_namespace eq $nsuri ) {
             for my $element (@{ $schema->elements }) {
@@ -63,7 +64,6 @@ sub _type {
     my ($self) = @_;
     my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
     my $type = $part->getAttribute('type');
-    #warn "Found message part type $type, ".$part->toString,"\n" if $type;
     return unless $type;
 
     return $type;

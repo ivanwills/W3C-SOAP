@@ -110,7 +110,8 @@ has ns_map => (
 has ns_module_map => (
     is        => 'rw',
     isa       => 'HashRef[Str]',
-    default   => sub {{}},
+    #default   => sub {{}},
+    required  => 1,
     predicate => 'has_ns_module_map',
 );
 
@@ -168,6 +169,7 @@ sub _simple_types {
             document => $self,
             node   => $node,
         );
+        warn $simple_types[-1]->name;
     }
 
     return \@simple_types;
@@ -181,6 +183,7 @@ sub _simple_type {
         warn "No name for type ".$type->node->toString if !$type->name;
         $simple_type{$type->name} = $type;
     }
+    warn join "\n\t", sort keys %simple_type;
 
     return \%simple_type;
 }
