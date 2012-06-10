@@ -70,7 +70,7 @@ sub main {
     # do stuff here
     my $file = shift @ARGV;
     my $template = Template->new(
-        INCLUDE_PATH => ($option{path} ? "$option{path}:" : '' . dist_dir('W3C-SOAP'),
+        INCLUDE_PATH => ($option{path} ? "$option{path}:" : '' . dist_dir('W3C-SOAP')),
         INTERPOLATE  => 0,
         EVAL_PERL    => 1,
     );
@@ -105,23 +105,29 @@ sub show {
 
         print "Imports:\n";
         my @parents;
-        for my $type ( @{ $xsd->imports } ) {
-            print "\t", $type->target_namespace, "\n";
-            push @xsd, $type;
-            push @parents, $xsd->get_module_base($type->target_namespace);
+        for my $import ( @{ $xsd->imports } ) {
+            print "\t", $import->target_namespace, "\n";
+            push @xsd, $import;
+            push @parents, $xsd->get_module_base($import->target_namespace);
+        }
+        print "Includes:\n";
+        for my $include ( @{ $xsd->includes } ) {
+            print "\t", $include->target_namespace, "\n";
+            push @xsd, $include;
+            push @parents, $xsd->get_module_base($include->target_namespace);
         }
         print "Simple Types:\n";
-        for my $type ( @{ $xsd->simple_types } ) {
-            print "\t", $type->name, ' : ', $type->type, '(' . @{ $type->enumeration } . ')', "\n";
+        for my $stype ( @{ $xsd->simple_types } ) {
+            print "\t", $stype->name, ' : ', $stype->type, '(' . @{ $stype->enumeration } . ')', "\n";
         }
         print "Complex Types:\n";
-        for my $type ( @{ $xsd->complex_types } ) {
-            print "\t", $type->name, '(' . @{ $type->sequence } . ')', "\n";
+        for my $ctype ( @{ $xsd->complex_types } ) {
+            print "\t", $ctype->name, '(' . @{ $ctype->sequence } . ')', "\n";
             print "\tElements:\n";
-            for my $type ( @{ $type->sequence } ) {
-                print "\t\t", $type->name, ' : ', $type->package, "\n";
+            for my $seq ( @{ $ctype->sequence } ) {
+                print "\t\t", $seq->name, ' : ', $seq->package, "\n";
             }
-            my $type_module = $module . '::' . $type->name;
+            my $type_module = $module . '::' . $ctype->name;
             push @parents, $type_module;
             my $type_file = "$option{lib}/" . $type_module;
             $type_file =~ s{::}{/}g;
@@ -130,8 +136,8 @@ sub show {
 
         }
         print "Elements:\n";
-        for my $type ( @{ $xsd->elements } ) {
-            print "\t", $type->name, ' : ', $type->package, "\n";
+        for my $elem ( @{ $xsd->elements } ) {
+            print "\t", $elem->name, ' : ', $elem->package, "\n";
         }
 
     }
@@ -146,32 +152,33 @@ __DATA__
 
 =head1 NAME
 
-<Name> - <One-line description of commands purpose>
+xsd-parser - Parse XSD files and create perl/Moose modules that encapsulate
+that information.
 
 =head1 VERSION
 
-This documentation refers to <Name> version 0.1.
+This documentation refers to xsd-parser version 0.1.
 
 =head1 SYNOPSIS
 
-   <Name> [option]
+   xsd-parser [option]
 
  OPTIONS:
-  -o --other         other option
+  -n --namespace-map uri=module
+                    Map of XML namespace URIs to Perl Modules
+  -l --lib[=]path   The default path where outputted xml files should be placed
+  -p --path[=]path  Extra path where overridded template toolkit files can be
+                    found.
+  -s --show         Show details about found XSDs rather than creating files
 
-  -v --verbose       Show more detailed option
-     --version       Prints the version information
-     --help          Prints this help information
-     --man           Prints the full documentation for <Name>
-
-
+  -v --verbose      Show more detailed option
+     --version      Prints the version information
+     --help         Prints this help information
+     --man          Prints the full documentation for xsd-parser
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
+This
 
 =head1 SUBROUTINES/METHODS
 
@@ -248,3 +255,4 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.
 
 =cut
+
