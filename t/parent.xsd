@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    targetNamespace="urn:parent.schema.org"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="urn:parent.schema.org"
+    >
+
+    <xs:simpleType name="simpleEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SUCCESS"/>
+            <xs:enumeration value="FAILURE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="complexThing">
+        <xs:sequence>
+            <xs:element name="firstThing"   type="xs:string"      minOccurs="1"/>
+            <xs:element name="sencondThing" type="tns:simpleEnum" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

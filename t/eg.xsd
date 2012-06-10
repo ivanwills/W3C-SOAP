@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    targetNamespace="urn:eg.schema.org"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns:tns="urn:eg.schema.org"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="urn:parent.schema.org"
+    >
+
+    <xs:import
+        namespace="urn:parent.schema.org"
+        schemaLocation="t/parent.xsd"
+        />
+
+    <xs:simpleType name="simpleThing">
+        <xs:restriction base="xs:string">
+            <xs:length value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="simplePattern">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="simpleRestrictedString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="9"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element
+        name="el1"
+        type="tns:simpleThing"
+        minOccurs="1"
+        maxOccurs="1"
+        nillable="false"
+        default="abcd"
+        />
+    <xs:element
+        name="el2"
+        minOccurs="0"
+        maxOccurs="1"
+        nillable="true"
+        >
+        <xs:simpleType>
+            <xs:restriction base="xs:int"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element
+        name="el3"
+        minOccurs="0"
+        maxOccurs="1"
+        nillable="true"
+        >
+        <xs:simpleType name="simpleThing">
+            <xs:restriction base="xs:string">
+                <xs:length value="4"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element
+        name="el4"
+        type="common:complexThing"
+        minOccurs="1"
+        maxOccurs="unbounded"
+        nillable="false"
+        default=""
+        />
+    <xs:element
+        name="el5"
+        minOccurs="0"
+        maxOccurs="10"
+        >
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="firstThing"   type="xs:string"      minOccurs="1"/>
+                <xs:element name="sencondThing" type="common:simpleEnum" minOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element
+        name="el6"
+        minOccurs="0"
+        maxOccurs="10"
+        >
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="firstThing"   type="xs:string"      minOccurs="1"/>
+                <xs:element name="sencondThing" type="common:simpleEnum" minOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

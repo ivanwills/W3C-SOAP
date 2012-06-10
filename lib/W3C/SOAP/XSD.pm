@@ -45,6 +45,7 @@ my $require = sub {
 
     my $file = "$module.pm";
     $file =~ s{::}{/}g;
+    warn "requiring $module => $file\n";
     require $file;
 };
 around BUILDARGS => sub {
@@ -67,7 +68,7 @@ around BUILDARGS => sub {
                 $node = $map->{$node};
                 my $attrib = $class->meta->get_attribute($node);
                 my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
-                $require->($module);
+                $require->($module) if $module;
                 my $value  = $module ? $module->new($child) : $child->textContent;
                 $args->{$node}
                     = !exists $args->{$node}        ? $value

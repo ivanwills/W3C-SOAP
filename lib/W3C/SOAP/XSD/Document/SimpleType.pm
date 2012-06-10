@@ -23,15 +23,43 @@ our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
 has type => (
-    is     => 'rw',
-    isa    => 'Str',
-    builder => '_type',
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_type',
     lazy_build => 1,
 );
 has enumeration => (
-    is     => 'rw',
-    isa    => 'ArrayRef[Str]',
-    builder => '_enumeration',
+    is         => 'rw',
+    isa        => 'ArrayRef[Str]',
+    builder    => '_enumeration',
+    lazy_build => 1,
+);
+has pattern => (
+    is         => 'rw',
+    isa        => 'Maybe[Str]',
+    builder    => '_pattern',
+    predicate  => 'has_pattern',
+    lazy_build => 1,
+);
+has maxLength => (
+    is         => 'rw',
+    isa        => 'Maybe[Int]',
+    builder    => '_minLength',
+    predicate  => 'has_minLength',
+    lazy_build => 1,
+);
+has minLength => (
+    is         => 'rw',
+    isa        => 'Maybe[Int]',
+    builder    => '_maxLength',
+    predicate  => 'has_maxLength',
+    lazy_build => 1,
+);
+has length => (
+    is         => 'rw',
+    isa        => 'Maybe[Int]',
+    builder    => '_length',
+    predicate  => 'has_length',
     lazy_build => 1,
 );
 
@@ -54,6 +82,16 @@ sub _enumeration {
     return \@enumeration;
 }
 
+sub _pattern   { return shift->_build_restriction('pattern')   }
+sub _maxLength { return shift->_build_restriction('maxLength') }
+sub _minLength { return shift->_build_restriction('minLength') }
+sub _length    { return shift->_build_restriction('length')    }
+sub _build_restriction {
+    my ($self, $type) = @_;
+    my ($node) = $self->document->xpc->findnodes("xsd:restriction/xsd:$type", $self->node);
+    return $node->getAttribute('value');
+}
+
 sub moose_type {
     my ($self) = @_;
 
@@ -61,6 +99,13 @@ sub moose_type {
     my $type = $self->document->module . ':' . $self->name;
 
     return $type;
+}
+
+sub moosex_type {
+    my ($self) = @_;
+
+    warn "No name for ".$self->node->toString if !$self->name;
+    return $self->name;
 }
 
 1;

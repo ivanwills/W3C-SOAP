@@ -16,7 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/split_ns/;
 
-extends 'W3C::SOAP::XSD::Document::Node';
+extends 'W3C::SOAP::XSD::Document::Type';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
@@ -34,6 +34,7 @@ has type => (
     isa    => 'Str',
     builder => '_type',
     lazy_build => 1,
+    predicate  => 'has_type',
 );
 has package => (
     is     => 'rw',
@@ -76,10 +77,7 @@ sub _type {
     my $type = $self->node->getAttribute('type');
     return $type if $type;
 
-    # try to determine generated type
-    my $ns_uri = $self->document->target_namespace;
-    my %map = reverse %{$self->document->ns_map};
-    return $map{$ns_uri} . ':' . $self->name . 'Type';
+    return $self->has_anonymous;
 }
 
 sub _package {
@@ -139,6 +137,7 @@ sub very_simple_type {
 
 sub simple_type {
     my ($self) = @_;
+    $self->document->simple_type;
     my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->document->get_ns_uri($ns);
     warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
@@ -151,13 +150,64 @@ sub simple_type {
         my $simple = $xsd->simple_type;
         if ( !$simple && @{ $xsd->simple_types } ) {
             $simple = $xsd->simple_type($xsd->_simple_type);
-            warn $xsd->target_namespace . " $type => $simple\n" if $type eq 'GetCreateUIDResponseDto';
+            #warn $xsd->target_namespace . " $type => $simple\n" if $type eq 'GetCreateUIDResponseDto';
         }
 
         return $simple->{$type}->moose_type if $simple && $simple->{$type};
 
         push @xsds, @{$xsd->imports};
     }
+    return;
+}
+
+sub moosex_type {
+    my ($self) = @_;
+    my ($ns, $type) = split_ns($self->type);
+    my $ns_uri = $self->document->get_ns_uri($ns);
+    warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
+        if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
+
+    return "'xs:$type'" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
+
+    my @xsds = ($self->document);
+    while ( my $xsd = shift @xsds ) {
+        my $simple = $xsd->simple_type;
+        if ( !$simple && @{ $xsd->simple_types } ) {
+            $simple = $xsd->simple_type($xsd->_simple_type);
+            #warn $xsd->target_namespace . " $type => $simple\n" if $type eq 'GetCreateUIDResponseDto';
+        }
+
+        return $simple->{$type}->moosex_type if $simple && $simple->{$type};
+
+        push @xsds, @{$xsd->imports};
+    }
+    return;
+}
+
+sub has_anonymous {
+    my ($self) = @_;
+    return if $self->has_type && $self->type;
+
+    my $simple = $self->document->simple_type;
+    for my $type (keys %{$simple}) {
+        my  $type_name = $simple->{$type}->node->parentNode->getAttribute('name');
+        if ( $type_name && $type_name eq $self->name ) {
+            my %map = reverse %{ $self->document->ns_map };
+            return $map{$self->document->target_namespace} . ':' . $type;
+        }
+        $type_name ||= '';
+    }
+
+    my $complex = $self->document->complex_type;
+    for my $type (keys %{$complex}) {
+        my  $type_name = $complex->{$type}->node->parentNode->getAttribute('name');
+        if ( $type_name && $type_name eq $self->name ) {
+            my %map = reverse %{ $self->document->ns_map };
+            return $map{$self->document->target_namespace} . ':' . $type;
+        }
+        $type_name ||= '';
+    }
+
     return;
 }
 

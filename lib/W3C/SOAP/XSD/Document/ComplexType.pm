@@ -16,7 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/split_ns/;
 
-extends 'W3C::SOAP::XSD::Document::Node';
+extends 'W3C::SOAP::XSD::Document::Type';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;

@@ -37,6 +37,9 @@ has document => (
     builder    => '_document',
     lazy_build => 1,
     weak_ref   => 1,
+    handles    => {
+        xpc => 'xpc',
+    },
 );
 has name => (
     is         => 'rw',

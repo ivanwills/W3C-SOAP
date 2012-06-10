@@ -58,8 +58,8 @@ around BUILDARGS => sub {
         :              {@args};
 
     for my $arg ( keys %$args ) {
-        if ( $arg eq 'location' || $arg eq 'strign' ) {
-            $args->{document} = W3C::SOAP::XSD::Document->new($args);
+        if ( $arg eq 'location' || $arg eq 'string' ) {
+            $args->{documents} = W3C::SOAP::XSD::Document->new($args);
         }
     }
 
@@ -145,7 +145,7 @@ sub write_modules {
         }
 
         $template->process('xsd_base.pm.tt', {xsd => $xsd}, "$file/Base.pm");
-        die "Error in creating $file (xsd.pm): ". $template->error."\n"
+        die "Error in creating $file/Base.pm (xsd_base.pm): ". $template->error."\n"
             if $template->error;
 
         $template->process('xsd.pm.tt', {xsd => $xsd, parents => \@parents}, "$file.pm");

@@ -26,6 +26,7 @@ templates/xsd.pm.tt
 templates/xsd_base.pm.tt
 templates/xsd_element.pm.tt
 templates/xsd_complex_type.pm.tt
+templates/xsd_type.pm.tt
 templates/wsdl.pm.tt
 templates/config.tt
 META.json
@@ -48,4 +49,9 @@ lib/W3C/SOAP/XSD/Parser.pm
 lib/W3C/SOAP/Header.pm
 lib/W3C/SOAP/Header/Security.pm
 lib/W3C/SOAP/Header/Security/Username.pm
+lib/W3C/SOAP/Manual/XSD.pod
+lib/W3C/SOAP/Utils.pm
+lib/W3C/SOAP/XSD/Document/Type.pm
+t/eg.xsd
+t/parent.xsd
 

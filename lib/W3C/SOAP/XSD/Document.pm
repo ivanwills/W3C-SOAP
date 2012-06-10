@@ -40,7 +40,6 @@ has imported => (
     isa        => 'HashRef[W3C::SOAP::XSD::Document]',
     builder    => '_imported',
     lazy_build => 1,
-    weak_ref   => 1,
 );
 has includes => (
     is         => 'rw',
@@ -53,7 +52,6 @@ has include => (
     isa        => 'HashRef[W3C::SOAP::XSD::Document]',
     builder    => '_include',
     lazy_build => 1,
-    weak_ref   => 1,
 );
 has simple_types => (
     is         => 'rw',
@@ -65,8 +63,7 @@ has simple_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_type',
-    lazy_build => 1,
-    weak_ref   => 1,
+    lazy_build => 0,
 );
 has complex_types => (
     is         => 'rw',
@@ -78,8 +75,7 @@ has complex_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_type',
-    lazy_build => 1,
-    weak_ref   => 1,
+    lazy_build => 0,
 );
 has elements => (
     is         => 'rw',
@@ -92,7 +88,6 @@ has element => (
     isa        => 'HashRef[W3C::SOAP::XSD::Document::Element]',
     builder   => '_element',
     lazy_build => 1,
-    weak_ref   => 1,
 );
 has module => (
     is        => 'rw',
@@ -169,21 +164,28 @@ sub _simple_types {
             document => $self,
             node   => $node,
         );
-        warn $simple_types[-1]->name;
     }
 
     return \@simple_types;
 }
 
+my $simple_type_count = 0;
 sub _simple_type {
     my ($self) = @_;
     my %simple_type;
 
     for my $type (@{ $self->simple_types }) {
-        warn "No name for type ".$type->node->toString if !$type->name;
-        $simple_type{$type->name} = $type;
+        my $name = $type->name;
+        if ( !$name ) {
+            my $parent = $type->node->parentNode;
+            $name = $parent->getAttribute('name');
+            $name = $name ? 'anon'.$simple_type_count++ : $name;
+            $type->name($name);
+        }
+        die "No name for simple type ".$type->node->parentNode->toString if !$name;
+        $simple_type{$name} = $type;
     }
-    warn join "\n\t", sort keys %simple_type;
+    #warn "created: $self\n\t", join "\t", sort keys %simple_type;
 
     return \%simple_type;
 }
@@ -213,31 +215,41 @@ sub _complex_types {
         }
 
         try {
-        push @complex_types, W3C::SOAP::XSD::Document::ComplexType->new(
-            ($parent ? (parent_node => $parent) : ()),
-            document => $self,
-            node     => $node,
-        );
+            push @complex_types, W3C::SOAP::XSD::Document::ComplexType->new(
+                ($parent ? (parent_node => $parent) : ()),
+                document => $self,
+                node     => $node,
+            );
         }
         catch ($e) {
-        warn Dumper {
-            ($parent ? (parent_node => $parent) : ()),
-            document => $self,
-            node     => $node,
-        };
-        die $e;
+            warn Dumper {
+                ($parent ? (parent_node => $parent) : ()),
+                document => $self,
+                node     => $node,
+            };
+            die $e;
         }
     }
 
     return \@complex_types;
 }
 
+my $complex_type_count = 0;
 sub _complex_type {
     my ($self) = @_;
     my %complex_type;
-    for my $complex_type (@{ $self->complex_type }) {
-        $complex_type{$complex_type->name} = $complex_type;
+    for my $type (@{ $self->complex_types }) {
+        my $name = $type->name;
+        if ( !$name ) {
+            my $parent = $type->node->parentNode;
+            $name = $parent->getAttribute('name');
+            $name = $name ? 'Anon'.$complex_type_count++ : $name;
+            $type->name($name);
+        }
+        die "No name for complex type ".$type->node->parentNode->toString if !$name;
+        $complex_type{$name} = $type;
     }
+
     return \%complex_type;
 }
 

@@ -48,7 +48,7 @@
 \B\._
 
 # Avoid vim temporary file
-.*\.sw[po]$
+.*\.swp?[ponx]$
 
 # This generated file
 \bMYMETA.yml$
@@ -66,3 +66,4 @@ tags
 test
 cmds
 t/xsd
+t/lib/MyApp

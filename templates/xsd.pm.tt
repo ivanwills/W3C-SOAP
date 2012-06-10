@@ -13,6 +13,9 @@ use version;
 use namespace::autoclean;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::XSD::Traits;
+[%- IF node.simple_types.size %]
+extends '[% base %]::Types' qw/:all/;
+[%- END %]
 [%- FOREACH type IN xsd.complex_types %]
 use [% type.module %];
 [%- END %]
