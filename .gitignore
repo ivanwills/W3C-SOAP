@@ -1,4 +1,5 @@
 .*.sw[ponxmn]
+.*.swp[ponxmn]
 Debian_CPANTS.txt
 W3C-SOAP-XSD-*
 .vimtagsdisplay
@@ -20,3 +21,4 @@ tmp*
 vim.sh
 temp/*
 errors.err
+t/lib/MyApp
