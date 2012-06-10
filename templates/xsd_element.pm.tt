@@ -3,7 +3,7 @@
     is_array = element.max_occurs == 'unbounded'
         || ( element.max_occurs && element.max_occurs > 1 )
         || ( element.min_occurs && element.min_occurs > 1 );
-    type_name = element.type_module;
+    type_name = simple || element.type_module;
 %]
 has [% element.perl_name %] => (
     is             => 'rw',

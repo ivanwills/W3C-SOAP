@@ -14,6 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
@@ -97,6 +98,16 @@ sub moose_type {
 
     warn "No name for ".$self->node->toString if !$self->name;
     my $type = $self->document->module . ':' . $self->name;
+
+    return $type;
+}
+
+sub moose_base_type {
+    my ($self) = @_;
+    my ($ns, $type) = split_ns($self->type);
+    my $ns_uri = $self->document->get_ns_uri($ns);
+
+    return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
 
     return $type;
 }

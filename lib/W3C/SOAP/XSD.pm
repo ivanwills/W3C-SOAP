@@ -45,7 +45,6 @@ my $require = sub {
 
     my $file = "$module.pm";
     $file =~ s{::}{/}g;
-    warn "requiring $module => $file\n";
     require $file;
 };
 around BUILDARGS => sub {
@@ -250,9 +249,7 @@ sub xsd_subtype {
                 as "ArrayRef[$parent_type]";
         }
     }
-    cluck $type if $parent_type eq 'NScreens::SDP::XSD::TpsProvisioningDto:msisdNumber';
     my $subtype = subtype as $type;
-    warn "$type\n\n" if $parent_type eq 'NScreens::SDP::XSD::TpsProvisioningDto:msisdNumber';
 
     if ( $args{module} ) {
         coerce $subtype =>

@@ -22,7 +22,6 @@ extends 'W3C::SOAP::XSD';
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
-
 [% FOREACH subtype IN xsd.simple_types %]
 [%- NEXT IF !subtype.name %]
 [% IF subtype.enumeration.size %]
@@ -32,7 +31,7 @@ enum(
 );
 [%- ELSE %]
 subtype '[% subtype.moose_type %]' =>
-    as      '[% subtype.type %]';
+    as      '[% subtype.moose_base_type %]';
 [%- END %]
 coerce '[% subtype.moose_type %]' =>
     from 'xml_node' =>

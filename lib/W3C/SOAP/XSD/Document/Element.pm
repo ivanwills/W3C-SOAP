@@ -116,7 +116,7 @@ sub module {
     my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->document->get_ns_uri($ns);
 
-    return $self->simple_type || $self->document->get_module_base( $ns_uri );
+    return $self->document->get_module_base( $ns_uri );
 }
 
 sub type_module {

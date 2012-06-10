@@ -30,6 +30,7 @@ use [% use_module %];
 use Moose::Util::TypeConstraints;
 [%- END %]
 [%- IF node.extension %]
+use [% base %]::Base;
 extends '[% node.extension %]';
 [%- ELSE %]
 extends '[% base %]::Base';
