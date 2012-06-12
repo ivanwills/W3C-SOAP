@@ -240,18 +240,24 @@ sub xsd_subtype {
     my ($self, %args) = @_;
     my $parent_type = $args{module} || $args{parent};
 
-    my $type = $parent_type;;
-    if ($args{list} ) {
-        $type .= "|$parent_type\_array";
+    my $subtype = subtype as ( $args{list} ? "ArrayRef[$parent_type]" : $parent_type );
 
-        if ( !$types{"$parent_type\_array"}++ ) {
-            subtype "$parent_type\_array" =>
-                as "ArrayRef[$parent_type]";
+    if ( $args{list} ) {
+        if ( $args{module} ) {
+            coerce $subtype =>
+                from 'xml_node' =>
+                via { [$parent_type->new($_)] };
+            coerce $subtype =>
+                from 'HashRef' =>
+                via { [$parent_type->new($_)] };
+        }
+        else {
+            coerce $subtype =>
+                from 'xml_node' =>
+                via { [$_->textContent] };
         }
     }
-    my $subtype = subtype as $type;
-
-    if ( $args{module} ) {
+    elsif ( $args{module} ) {
         coerce $subtype =>
             from 'xml_node' =>
             via { $parent_type->new($_) };
@@ -265,7 +271,7 @@ sub xsd_subtype {
             via { $_->textContent };
     }
 
-    return $types{$type} = $subtype;
+    return $subtype;
 }
 
 1;
