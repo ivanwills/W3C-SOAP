@@ -78,10 +78,26 @@ This documentation refers to [% module %] version 0.1.
 =head1 SUBROUTINES/METHODS
 
 =over 4
-[% FOR method IN methods %]
-=item C<[% method.name %] (%args)>
+[% FOR service IN wsdl.services;
+    FOR port IN service.ports;
+        FOR operation IN port.binding.operations %]
+=item C<[% operation.perl_name %] (%args)>
 
-Passes C<%args> to C<[% method.op %]> and returns the result
+[%
+           IF operation.port_type.outputs.0.message.element;
+                in_element = operation.port_type.inputs.0.message.element;
+                out_element = operation.port_type.outputs.0.message.element;
+-%]
+Passes C<%args> to C<[% operation.name %]> (via L<[% in_element.module %]>->[% in_element.perl_name %])
+and returns the result (via L<[% in_element.module %]/[% out_element.perl_name %]>->[% out_element.perl_name %])
+[%-
+            ELSIF operation.port_type.outputs.0.message.type;
+                type = operation.port_type.outputs.0.message.type
+%]
+Not yet implemented properly
+[%-         END %]
+[%         END %]
+[%     END %]
 [% END %]
 =back
 

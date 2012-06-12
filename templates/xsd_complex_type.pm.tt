@@ -75,7 +75,9 @@ This documentation refers to [% module %] version 0.1.
 =head1 SUBROUTINES/METHODS
 
 =over 4
-
+[% FOREACH element IN node.sequence %]
+[% INCLUDE xsd_element.pod.tt %]
+[%- END %]
 =back
 
 =head1 DIAGNOSTICS
