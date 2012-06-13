@@ -36,6 +36,11 @@
                 <xs:sequence>
                     <xs:element name="thirdThing"   type="xs:string" minOccurs="1"/>
                     <xs:element name="fourthThing" type="tns:int"    minOccurs="0"/>
+                    <xs:choice>
+                        <xs:element name="localChoice1"  type="xs:int" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="localChoice2"  type="xs:int" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="localChoice3"  type="xs:int" minOccurs="0" maxOccurs="1"/>
+                    </xs:choice>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

@@ -80,6 +80,7 @@ sub written_modules {
             first_thing  => '8: 1st',
             third_thing  => '8: 3rd',
             #fourth_thing => 4,
+            local_choice3 => 333,
         },
     );
     my $eg = eval {

@@ -50,7 +50,39 @@ has extension => (
 
 sub _sequence {
     my ($self) = @_;
-    my @nodes = $self->document->xpc->findnodes('xsd:sequence/*', $self->node);
+    my ($node) = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
+    return $self->_get_sequence_elements($node || $self->node);
+}
+
+sub _module {
+    my ($self) = @_;
+
+    return $self->document->module . '::' . ( $self->name || $self->parent_node->name );
+}
+
+sub _complex_content {
+    my ($self) = @_;
+
+    return $self->document->module . '::' . ( $self->name || $self->parent_node->name );
+}
+
+sub _extension {
+    my ($self) = @_;
+    my @nodes = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
+
+    for my $node (@nodes) {
+        my ($ns, $tag) = split_ns($node->getAttribute('base'));
+        my $ns_uri = $self->document->get_ns_uri($ns);
+
+        return $self->document->get_module_base( $ns_uri ) . "::$tag";
+    }
+
+    return;
+}
+
+sub _get_sequence_elements {
+    my ($self, $node) = @_;
+    my @nodes = $self->document->xpc->findnodes('xsd:sequence/*', $node);
     my @sequence;
     my $group = 0;
 
@@ -75,43 +107,6 @@ sub _sequence {
     }
 
     return \@sequence;
-}
-
-sub _module {
-    my ($self) = @_;
-
-    return $self->document->module . '::' . ( $self->name || $self->parent_node->name );
-}
-
-sub _complex_content {
-    my ($self) = @_;
-
-    return $self->document->module . '::' . ( $self->name || $self->parent_node->name );
-}
-
-sub _extension {
-    my ($self) = @_;
-    my @nodes = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
-
-    for my $node (@nodes) {
-        my ($ns, $tag) = split_ns($node->getAttribute('base'));
-        my $ns_uri = $self->document->get_ns_uri($ns);
-
-        my @nodes = $self->document->xpc->findnodes('xsd:sequence/xsd:element', $node);
-        my @sequence;
-
-        for my $node (@nodes) {
-            push @sequence, W3C::SOAP::XSD::Document::Element->new(
-                parent_node => $self,
-                node   => $node,
-            );
-        }
-        $self->sequence(\@sequence);
-
-        return $self->document->get_module_base( $ns_uri ) . "::$tag";
-    }
-
-    return;
 }
 
 1;
