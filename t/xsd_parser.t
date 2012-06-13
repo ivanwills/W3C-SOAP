@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Test::More;
 use Path::Class;
+use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::XSD::Parser;
@@ -48,24 +49,64 @@ sub written_modules {
     push @INC, $dir->subdir('lib').'';
     require_ok('MyApp::Eg');
     require_ok('MyApp::Parent');
+    my %test_data = (
+        el1 => '1234',
+        el2 => 1234,
+        el3 => 'abcd',
+        el4 => {
+            first_thing => 'a string',
+            second_thing => 'SUCCESS',
+        },
+        el5 => {
+            first_thing => 'another string',
+            second_thing => 'FAILURE',
+        },
+        el6 => [
+            {
+                firstThing  => 'el6 first thing',
+                secondThing => 'SUCCESS',
+            },
+            {
+                firstThing  => 'el6 second first thing',
+                secondThing => 'FAILURE',
+            },
+        ],
+        el7 => {
+            firstThing => '1st',
+            choice2    => 'choice no 2',
+            lastThing  => 'wooden spoon',
+        },
+        el8 => {
+            first_thing  => '8: 1st',
+            third_thing  => '8: 3rd',
+            #fourth_thing => 4,
+        },
+    );
     my $eg = eval {
-        MyApp::Eg->new(
-            el1 => '1234',
-            el2 => 1234,
-            el3 => 'abcd',
-            el4 => {
-                first_thing => 'a string',
-                second_thing => 'SUCCESS',
-            },
-            el5 => {
-                first_thing => 'another string',
-                second_thing => 'FAILURE',
-            },
-        )
+        MyApp::Eg->new(%test_data)
     };
     ok !$@, "No error in creating eg object"
         or diag $@;
     isa_ok $eg, 'MyApp::Eg', 'Get an actual object';
+
+    $test_data{el6}[0]{first_thing}  = $test_data{el6}[0]{firstThing};
+    $test_data{el6}[0]{second_thing} = $test_data{el6}[0]{secondThing};
+    $test_data{el6}[1]{first_thing}  = $test_data{el6}[1]{firstThing};
+    $test_data{el6}[1]{second_thing} = $test_data{el6}[1]{secondThing};
+    $test_data{el7}{first_thing}     = $test_data{el7}{firstThing};
+    $test_data{el7}{last_thing}      = $test_data{el7}{lastThing};
+    delete $test_data{el6}[0]{firstThing};
+    delete $test_data{el6}[0]{secondThing};
+    delete $test_data{el6}[1]{firstThing};
+    delete $test_data{el6}[1]{secondThing};
+    delete $test_data{el7}{firstThing};
+    delete $test_data{el7}{lastThing};
+    $test_data{el4} = [$test_data{el4}];
+    $test_data{el5} = [$test_data{el5}];
+
+    local $Data::Dumper::Sortkeys = 1;
+    is_deeply $eg->to_data, \%test_data, 'Get out what you put in'
+        or diag Dumper $eg->to_data, \%test_data;
 }
 
 sub cleanup {

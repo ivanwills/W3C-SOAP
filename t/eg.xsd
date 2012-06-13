@@ -30,6 +30,17 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:complexType name="localComplexThing">
+        <xs:complexContent>
+            <xs:extension base="common:moreComplexThing">
+                <xs:sequence>
+                    <xs:element name="thirdThing"   type="xs:string" minOccurs="1"/>
+                    <xs:element name="fourthThing" type="tns:int"    minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
     <xs:element
         name="el1"
         type="tns:simpleThing"
@@ -92,4 +103,20 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element
+        name="el7"
+        type="common:moreComplexThing"
+        minOccurs="1"
+        maxOccurs="1"
+        nillable="false"
+        default=""
+        />
+    <xs:element
+        name="el8"
+        type="tns:localComplexThing"
+        minOccurs="1"
+        maxOccurs="1"
+        nillable="false"
+        default=""
+        />
 </xs:schema>
