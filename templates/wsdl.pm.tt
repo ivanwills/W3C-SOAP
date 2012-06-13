@@ -12,6 +12,9 @@ use warnings;
 use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
+[%- IF config.alias %]
+use MooseX::Aliases;
+[%- END %]
 use [% xsd %];
 [%- FOR schema IN wsdl.xsd_modules %]
 use [% schema %];
@@ -50,6 +53,9 @@ sub [% operation.perl_name %] {
     return $resp->firstChild->toString;
 [%-         END %]
 }
+[%- IF config.alias && element.name.replace('^\w+:', '') != element.perl_name %]
+alias [% element.name.replace('^\w+:', '') %] => '[% element.perl_name %]';
+[%- END %]
 [%         END %]
 [%     END %]
 [% END %]

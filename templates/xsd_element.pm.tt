@@ -13,6 +13,9 @@ has [% element.perl_name %] => (
     required       => 1,
 [%- END %]
     coerce         => 1,
+[%- IF config.alias && element.name.replace('^\w+:', '') != element.perl_name %]
+    alias          => '[% element.name.replace('^\w+:', '') %]',
+[%- END %]
     traits         => [qw{ W3C::SOAP::XSD }],
 [%- IF !simple %]
     xs_perl_module => '[% element.type_module %]',

@@ -13,6 +13,9 @@ use warnings;
 use version;
 use namespace::autoclean;
 use Moose::Util::TypeConstraints;
+[%- IF config.alias %]
+use MooseX::Aliases;
+[%- END %]
 [%- FOREACH import IN xsd.imports %]
 use [% import.module %];
 [%- END %]

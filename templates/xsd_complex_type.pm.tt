@@ -15,6 +15,9 @@ use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
 use Moose::Util::TypeConstraints;
+[%- IF config.alias %]
+use MooseX::Aliases;
+[%- END %]
 use W3C::SOAP::XSD::Traits;
 [%
 found = {};

@@ -12,6 +12,9 @@ use Moose;
 use version;
 use namespace::autoclean;
 use Moose::Util::TypeConstraints;
+[%- IF config.alias %]
+use MooseX::Aliases;
+[%- END %]
 use W3C::SOAP::XSD::Traits;
 [%- FOREACH type IN xsd.complex_types %]
 use [% type.module %];
