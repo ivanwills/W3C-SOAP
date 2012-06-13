@@ -50,14 +50,28 @@ has extension => (
 
 sub _sequence {
     my ($self) = @_;
-    my @nodes = $self->document->xpc->findnodes('xsd:sequence/xsd:element', $self->node);
+    my @nodes = $self->document->xpc->findnodes('xsd:sequence/*', $self->node);
     my @sequence;
+    my $group = 0;
 
     for my $node (@nodes) {
-        push @sequence, W3C::SOAP::XSD::Document::Element->new(
-            parent_node => $self,
-            node   => $node,
-        );
+        if ( $node->nodeName =~ /:element$/ ) {
+            push @sequence, W3C::SOAP::XSD::Document::Element->new(
+                parent_node => $self,
+                node   => $node,
+            );
+        }
+        elsif ( $node->nodeName =~ /:choice$/ ) {
+            my @choices = $self->document->xpc->findnodes('xsd:element', $node);
+            for my $choice (@choices) {
+                push @sequence, W3C::SOAP::XSD::Document::Element->new(
+                    parent_node  => $self,
+                    node         => $choice,
+                    choice_group => $group,
+                );
+            }
+            $group++;
+        }
     }
 
     return \@sequence;

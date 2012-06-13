@@ -60,6 +60,10 @@ has nillble => (
     builder => '_nillble',
     lazy_build => 1,
 );
+has choice_group => (
+    is     => 'rw',
+    isa    => 'Int',
+);
 
 sub _complex_type {
     my ($self) = @_;

@@ -69,6 +69,7 @@ around BUILDARGS => sub {
                 my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
                 $require->($module) if $module;
                 my $value  = $module ? $module->new($child) : $child->textContent;
+
                 $args->{$node}
                     = !exists $args->{$node}        ? $value
                     : ref $args->{$node} ne 'ARRAY' ? [   $args->{$node} , $value ]
@@ -152,8 +153,8 @@ sub to_xml {
 
     my @nodes;
 
-    for my $name (@attributes) {
-        my $att = $meta->get_attribute($name);
+    for my $att (@attributes) {
+        my $name = $att->name;
 
         # skip attributes that are not XSD attributes
         next if !$att->does('W3C::SOAP::XSD');
@@ -164,21 +165,41 @@ sub to_xml {
 
         my $xml_name = $att->has_xs_name ? $att->xs_name : $name;
         my $xsd_ns_name = $self->xsd_ns_name;
-        my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
-        $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
 
         my $value = $self->$name;
 
-        if ( blessed($value) && $value->can('to_xml') ) {
-            $value->xsd_ns_name( $xsd_ns_name ) if !$value->has_xsd_ns_name;
-            my @children = $value->to_xml($xml);
-            $tag->appendChild($_) for @children;
+        if ( ref $value eq 'ARRAY' ) {
+            for my $item (@$value) {
+                my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
+                $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
+
+                if ( blessed($item) && $item->can('to_xml') ) {
+                    $item->xsd_ns_name( $xsd_ns_name ) if !$item->has_xsd_ns_name;
+                    my @children = $item->to_xml($xml);
+                    $tag->appendChild($_) for @children;
+                }
+                else {
+                    $tag->appendChild( $xml->createTextNode("$item") );
+                }
+
+                push @nodes, $tag;
+            }
         }
         else {
-            $tag->appendChild( $xml->createTextNode("$value") );
-        }
+            my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
+            $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
 
-        push @nodes, $tag;
+            if ( blessed($value) && $value->can('to_xml') ) {
+                $value->xsd_ns_name( $xsd_ns_name ) if !$value->has_xsd_ns_name;
+                my @children = $value->to_xml($xml);
+                $tag->appendChild($_) for @children;
+            }
+            else {
+                $tag->appendChild( $xml->createTextNode("$value") );
+            }
+
+            push @nodes, $tag;
+        }
     }
 
     return @nodes;
@@ -192,8 +213,8 @@ sub to_data {
 
     my %nodes;
 
-    for my $name (@attributes) {
-        my $att = $meta->get_attribute($name);
+    for my $att (@attributes) {
+        my $name = $att->name;
 
         # skip attributes that are not XSD attributes
         next if !$att->does('W3C::SOAP::XSD');
@@ -226,7 +247,16 @@ sub get_xml_nodes {
     my ($self) = @_;
     my $meta = $self->meta;
 
-    return sort {
+    my @parent_nodes;
+    my @supers = $meta->superclasses;
+    for my $super (@supers) {
+        push @parent_nodes, $super->get_xml_nodes if $super ne __PACKAGE__ && UNIVERSAL::can($super, 'get_xml_nodes');
+    }
+
+    return @parent_nodes, map {
+            $meta->get_attribute($_)
+        }
+        sort {
             $meta->get_attribute($a)->insertion_order <=> $meta->get_attribute($b)->insertion_order
         }
         grep {
@@ -250,11 +280,20 @@ sub xsd_subtype {
             coerce $subtype =>
                 from 'HashRef' =>
                 via { [$parent_type->new($_)] };
+            coerce $subtype =>
+                from 'ArrayRef[HashRef]' =>
+                via { [ map { $parent_type->new($_) } @$_ ] };
+            coerce $subtype =>
+                from $parent_type =>
+                via { [$_] };
         }
         else {
             coerce $subtype =>
                 from 'xml_node' =>
                 via { [$_->textContent] };
+            coerce $subtype =>
+                from 'ArrayRef[xml_node]' =>
+                via { [ map { $_->textContent } @$_ ] };
         }
     }
     elsif ( $args{module} ) {
