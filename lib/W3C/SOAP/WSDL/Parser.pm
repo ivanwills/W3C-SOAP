@@ -45,6 +45,10 @@ has module => (
     isa      => 'Str',
     required => 1,
 );
+has location => (
+    is       => 'rw',
+    isa      => 'Str',
+);
 has lib => (
     is       => 'rw',
     isa      => 'Str',
@@ -103,10 +107,11 @@ sub write_modules {
     confess "No XSD modules found!\n" unless @modules;
 
     my $data = {
-        wsdl    => $wsdl,
-        module  => $self->module,
-        xsd     => shift @modules,
-        modules => \@modules,
+        wsdl     => $wsdl,
+        module   => $self->module,
+        xsd      => shift @modules,
+        modules  => \@modules,
+        location => $self->location,
     };
     $template->process('wsdl.pm.tt', $data, "$file");
     die "Error in creating $file (xsd.pm): ". $template->error."\n"

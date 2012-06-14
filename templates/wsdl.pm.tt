@@ -81,6 +81,8 @@ This documentation refers to [% module %] version 0.1.
 
 =head1 DESCRIPTION
 
+This SOAP client code was extracted from L<[% location %]>;
+
 =head1 SUBROUTINES/METHODS
 
 =over 4
