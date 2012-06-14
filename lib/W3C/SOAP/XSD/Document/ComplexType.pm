@@ -84,7 +84,7 @@ sub _get_sequence_elements {
     my ($self, $node) = @_;
     my @nodes = $self->document->xpc->findnodes('xsd:sequence/*', $node);
     my @sequence;
-    my $group = 0;
+    my $group = 1;
 
     for my $node (@nodes) {
         if ( $node->nodeName =~ /:element$/ ) {

@@ -24,4 +24,7 @@ has [% element.perl_name %] => (
     xs_type        => '[% element.type        %]',
     xs_min_occurs  => '[% element.min_occurs  %]',
     xs_max_occurs  => '[% element.max_occurs  == 'unbounded' ? 0 : element.max_occurs %]',
+[%- IF element.choice_group %]
+    xs_choice_group => [% element.choice_group %],
+[%- END %]
 );

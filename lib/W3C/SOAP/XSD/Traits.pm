@@ -53,6 +53,11 @@ has xs_type => (
     isa       => 'Str',
     predicate => 'has_xs_type',
 );
+has xs_choice_group => (
+    is        => 'rw',
+    isa       => 'PositiveInt',
+    predicate => 'has_xs_choice_group',
+);
 
 1;
 
