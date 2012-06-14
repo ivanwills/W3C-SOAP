@@ -22,6 +22,13 @@ my $builder = Module::Build->new(
         'XML::LibXML'                  => 1.7,
         'Exception::Class'             => 1.2,
         'TryCatch'                     => 1.0,
+        'DateTime'                     => 0,
+        'DateTime::Format::Strptime'   => 0,
+        'MooseX::Types'                => 0,
+        'namespace::autoclean'         => 0,
+    },
+    recommends => {
+        'MooseX::Aliases' => 0,
     },
     build_requires => {
         'Test::More'       => 0,
