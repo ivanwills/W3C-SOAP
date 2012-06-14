@@ -12,6 +12,8 @@ use Moose;
 use version;
 use namespace::autoclean;
 use Moose::Util::TypeConstraints;
+use MooseX::Types::XMLSchema qw/:all/;
+use W3C::SOAP::XSD::Types qw/:all/;
 [%- IF config.alias %]
 use MooseX::Aliases;
 [%- END %]
