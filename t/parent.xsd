@@ -17,7 +17,7 @@
     <xs:complexType name="complexThing">
         <xs:sequence>
             <xs:element name="firstThing"   type="xs:string"      minOccurs="1"/>
-            <xs:element name="sencondThing" type="tns:simpleEnum" minOccurs="1"/>
+            <xs:element name="secondThing" type="tns:simpleEnum" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -63,6 +63,67 @@ sub written_modules {
         },
         el6 => [
             {
+                first_thing  => 'el6 first thing',
+                second_thing => 'SUCCESS',
+            },
+            {
+                first_thing  => 'el6 second first thing',
+                second_thing => 'FAILURE',
+            },
+        ],
+        el7 => {
+            first_thing => '1st',
+            choice2    => 'choice no 2',
+            last_thing  => 'wooden spoon',
+        },
+        el8 => {
+            first_thing  => '8: 1st',
+            third_thing  => '2012-06-14',
+            #fourth_thing => 4,
+            fith_thing    => '2012-06-14+10:00',
+            local_choice3 => 333,
+        },
+    );
+    my $eg = eval {
+        MyApp::Eg->new(%test_data)
+    };
+    ok !$@, "No error in creating eg object"
+        or diag $@;
+    isa_ok $eg, 'MyApp::Eg', 'Get an actual object';
+
+    $test_data{el4} = [$test_data{el4}];
+    $test_data{el5} = [$test_data{el5}];
+    $test_data{el8}{third_thing} = '2012-06-14T00:00:00';
+    $test_data{el8}{fith_thing}  = '2012-06-14T00:00:00';
+
+    local $Data::Dumper::Sortkeys = 1;
+    if ( $eg ) {
+        is_deeply $eg->to_data(stringify=>1), \%test_data, 'Get out what you put in'
+            or diag Dumper $eg->to_data(stringify=>1), \%test_data;
+    }
+    else {
+        ok 0, 'Got no object';
+    }
+}
+
+sub written_modules_alias {
+    push @INC, $dir->subdir('lib').'';
+    require_ok('MyApp::Eg');
+    require_ok('MyApp::Parent');
+    my %test_data = (
+        el1 => '1234',
+        el2 => 1234,
+        el3 => 'abcd',
+        el4 => {
+            first_thing => 'a string',
+            second_thing => 'SUCCESS',
+        },
+        el5 => {
+            first_thing => 'another string',
+            second_thing => 'FAILURE',
+        },
+        el6 => [
+            {
                 firstThing  => 'el6 first thing',
                 secondThing => 'SUCCESS',
             },
@@ -78,8 +139,9 @@ sub written_modules {
         },
         el8 => {
             first_thing  => '8: 1st',
-            third_thing  => '8: 3rd',
+            third_thing  => '2012-06-14',
             #fourth_thing => 4,
+            fith_thing    => '2012-06-14+10:00',
             local_choice3 => 333,
         },
     );
@@ -104,10 +166,17 @@ sub written_modules {
     delete $test_data{el7}{lastThing};
     $test_data{el4} = [$test_data{el4}];
     $test_data{el5} = [$test_data{el5}];
+    $test_data{el8}{third_thing} = '2012-06-14T00:00:00';
+    $test_data{el8}{fith_thing}  = '2012-06-14T00:00:00';
 
     local $Data::Dumper::Sortkeys = 1;
-    is_deeply $eg->to_data, \%test_data, 'Get out what you put in'
-        or diag Dumper $eg->to_data, \%test_data;
+    if ( $eg ) {
+        is_deeply $eg->to_data(stringify=>1), \%test_data, 'Get out what you put in'
+            or diag Dumper $eg->to_data(stringify=>1), \%test_data;
+    }
+    else {
+        ok 0, 'Got no object';
+    }
 }
 
 sub cleanup {

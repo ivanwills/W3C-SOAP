@@ -34,8 +34,9 @@
         <xs:complexContent>
             <xs:extension base="common:moreComplexThing">
                 <xs:sequence>
-                    <xs:element name="thirdThing"   type="xs:string" minOccurs="1"/>
-                    <xs:element name="fourthThing" type="tns:int"    minOccurs="0"/>
+                    <xs:element name="thirdThing"  type="xs:date" minOccurs="1"/>
+                    <xs:element name="fourthThing" type="tns:int" minOccurs="0"/>
+                    <xs:element name="fithThing"   type="xs:date" minOccurs="0"/>
                     <xs:choice>
                         <xs:element name="localChoice1"  type="xs:int" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="localChoice2"  type="xs:int" minOccurs="0" maxOccurs="1"/>
@@ -92,7 +93,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="firstThing"   type="xs:string"      minOccurs="1"/>
-                <xs:element name="sencondThing" type="common:simpleEnum" minOccurs="1"/>
+                <xs:element name="secondThing" type="common:simpleEnum" minOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -104,7 +105,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="firstThing"   type="xs:string"      minOccurs="1"/>
-                <xs:element name="sencondThing" type="common:simpleEnum" minOccurs="1"/>
+                <xs:element name="secondThing" type="common:simpleEnum" minOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
