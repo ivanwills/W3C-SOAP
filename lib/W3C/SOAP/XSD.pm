@@ -16,9 +16,11 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::XMLSchema;
+use W3C::SOAP::XSD::Types qw/:all/;
 use W3C::SOAP::XSD::Traits;
 use W3C::SOAP::Utils qw/split_ns/;
 use TryCatch;
+use DateTime::Format::Strptime qw/strptime/;
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
@@ -206,7 +208,7 @@ sub to_xml {
 }
 
 sub to_data {
-    my ($self, $like_xml) = @_;
+    my ($self, %option) = @_;
     my $child;
     my $meta = $self->meta;
     my @attributes = $self->get_xml_nodes;
@@ -223,18 +225,21 @@ sub to_data {
         # skip sttributes that are not set
         next if !$self->$has;
 
-        my $key_name = $att->has_xs_name && $like_xml ? $att->xs_name : $name;
+        my $key_name = $att->has_xs_name && $option{like_xml} ? $att->xs_name : $name;
         my $value = $self->$name;
 
         if ( ref $value eq 'ARRAY' ) {
             for my $element (@$value) {
                 if ( blessed($element) && $element->can('to_data') ) {
-                    $element = $element->to_data($like_xml);
+                    $element = $element->to_data(%option);
                 }
             }
         }
         elsif ( blessed($value) && $value->can('to_data') ) {
-            $value = $value->to_data($like_xml);
+            $value = $value->to_data(%option);
+        }
+        elsif ($option{stringify}) {
+            $value = "$value";
         }
 
         $nodes{$key_name} = $value;
@@ -269,8 +274,18 @@ my %types;
 sub xsd_subtype {
     my ($self, %args) = @_;
     my $parent_type = $args{module} || $args{parent};
+    # upgrade dates
+    $parent_type = 'xsd:date'    if $parent_type eq 'xs:date';
+    $parent_type = 'xsd:boolean' if $parent_type eq 'xs:boolean';
+    $parent_type = 'xsd:double'  if $parent_type eq 'xs:double';
 
-    my $subtype = subtype as ( $args{list} ? "ArrayRef[$parent_type]" : $parent_type );
+    my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
+    my $subtype = $parent_type =~ /^xsd:\w/ && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);
+    return $subtype if $subtype;
+
+    $subtype = subtype
+        as $parent_type_name,
+        message {"'$_' failed to validate as a $parent_type"};
 
     if ( $args{list} ) {
         if ( $args{module} ) {
