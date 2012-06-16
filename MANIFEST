@@ -26,7 +26,6 @@ templates/xsd.pm.tt
 templates/xsd_base.pm.tt
 templates/xsd_element.pm.tt
 templates/xsd_complex_type.pm.tt
-templates/xsd_type.pm.tt
 templates/wsdl.pm.tt
 templates/config.tt
 META.json
