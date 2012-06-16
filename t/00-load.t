@@ -3,12 +3,12 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::NoWarnings;
+#use Test::NoWarnings;
 use Path::Class;
 
 my @modules = get_modules();
 
-plan  tests => @modules + 1;
+plan  tests => @modules + 0;
 
 for my $module (@modules) {
     use_ok($module);
