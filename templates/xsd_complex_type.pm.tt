@@ -55,6 +55,8 @@ has '+xsd_element' => (
 [% INCLUDE xsd_element.pm.tt %]
 [%- END %]
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__

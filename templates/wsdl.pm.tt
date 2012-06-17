@@ -59,6 +59,8 @@ alias [% element.name.replace('^\w+:', '') %] => '[% element.perl_name %]';
 [%         END %]
 [%     END %]
 [% END %]
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
