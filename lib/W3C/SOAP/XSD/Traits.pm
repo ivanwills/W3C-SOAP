@@ -6,10 +6,10 @@ package W3C::SOAP::XSD::Traits;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose::Role;
 use strict;
 use warnings;
 use version;
+use Moose::Role;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;

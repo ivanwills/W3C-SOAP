@@ -245,7 +245,7 @@ sub xsd_modules {
         }
     }
 
-    return sort keys %modules;
+    return ( sort keys %modules );
 }
 
 1;

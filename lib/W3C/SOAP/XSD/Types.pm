@@ -1,7 +1,4 @@
 package W3C::SOAP::XSD::Types;
-BEGIN {
-    $MooseX::Types::XMLSchema::AUTHORITY = 'cpan:IVANWILLS';
-}
 
 # Created on: 2012-05-26 23:08:42
 # Create by:  Ivan Wills
@@ -13,6 +10,9 @@ use strict;
 use warnings;
 use version;
 use Carp;
+BEGIN {
+    $MooseX::Types::XMLSchema::AUTHORITY = 'cpan:IVANWILLS';
+}
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use DateTime::Format::Strptime;
