@@ -7,6 +7,8 @@ package W3C::SOAP::XSD::Traits;
 # $Revision$, $Source$, $Date$
 
 use Moose::Role;
+use strict;
+use warnings;
 use version;
 use Carp;
 use Data::Dumper qw/Dumper/;
