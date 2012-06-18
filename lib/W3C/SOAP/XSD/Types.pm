@@ -65,14 +65,21 @@ coerce 'xsd:double',
 #        DateTime::Format::Strptime("", $_)
 #    };
 #
-#subtype 'xsd:dateTime',
-#    as 'DateTime';
-#coerce 'xsd:dateTime',
-#    from 'Str',
-#    via {
-#        DateTime::Format::Strptime("", $_)
-#    };
-#
+subtype 'xsd:dateTime',
+    as 'DateTime';
+coerce 'xsd:dateTime',
+    from 'XML::LibXML::Node' =>
+        => via { $_->textContent },
+    from 'Str',
+        => via {
+            return strptime("%FT%T", $_) if /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/xms;
+            # DateTime expects timezones as [+-]hhmm XMLSchema expects them as [+-]hh:mm
+            # also remove any milli seconds
+            s/(?:[.]\d+)? ([+-]\d{2}) : (\d{2}) $/$1$2/xms;
+            # Dates with timezones are meant to track the begging of the day
+            return strptime("%FT%T%z", $_);
+        };
+
 #subtype 'xsd:time',
 #    as 'DateTime';
 #coerce 'xsd:time',
