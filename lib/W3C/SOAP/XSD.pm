@@ -238,7 +238,7 @@ sub to_data {
             $value = $value->to_data(%option);
         }
         elsif ($option{stringify}) {
-            $value = "$value";
+            $value = defined $value ? "$value" : $value;
         }
 
         $nodes{$key_name} = $value;
