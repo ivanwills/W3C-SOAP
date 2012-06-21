@@ -37,6 +37,8 @@ our $VERSION     = version->new('0.0.1');
 #our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+my $sig_warn = $SIG{__WARN__};
+$SIG{__WARN__} = sub {};
 class_type 'DateTime';
 class_type 'XML::LibXML::Node';
 
@@ -142,6 +144,7 @@ coerce 'xsd:date',
 #        DateTime::Format::Striptime("", $_)
 #    };
 
+$SIG{__WARN__} = $sig_warn;
 
 1;
 
