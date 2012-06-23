@@ -34,5 +34,6 @@ add_stopwords(qw/
     xsd
     XSD
     XMLSchema
+    WS
 /);
 all_pod_files_spelling_ok();
