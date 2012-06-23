@@ -123,18 +123,17 @@ The initial template usually just has:
 
 There are no known bugs in this module.
 
-Please report problems to dev (dev@localhost).
+Please report problems to Ivan Wills - (ivan.wills@gmail.com)
 
 Patches are welcome.
 
 =head1 AUTHOR
 
-dev - (dev@localhost)
-<Author name(s)>  (<contact address>)
+Ivan Wills - (ivan.wills@gmail.com)
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012 dev (123 Timbuc Too).
+Copyright (c) 2012 Ivan Wills (14 Mullion Close, Hornsby Heights, NSW Australia 2077).
 All rights reserved.
 
 This module is free software; you can redistribute it and/or modify it under

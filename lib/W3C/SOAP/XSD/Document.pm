@@ -339,7 +339,7 @@ This documentation refers to W3C::SOAP::XSD::Document version 0.1.
 
 =head1 DESCRIPTION
 
-Takes a XMLSchema Document and makes the contents available in a convienient
+Takes a XMLSchema Document and makes the contents available in a convenient
 interface.
 
 =head1 SUBROUTINES/METHODS
