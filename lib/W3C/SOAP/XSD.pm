@@ -57,17 +57,19 @@ around BUILDARGS => sub {
         :              {@args};
 
     if ( blessed $args && $args->isa('XML::LibXML::Node') ) {
-        my $xml = $args;
-        my $map = $class->xml2perl_map;
+        my $xml   = $args;
+        my $child = $xml->firstChild;
+        my $map   = $class->xml2perl_map;
         my ($element)  = $class =~ /::([^:]+)$/;
-        my $child      = $xml->firstChild;
         $args = {};
 
         while ($child) {
             if ( $child->nodeName !~ /^#/ ) {
                 my ($node_ns, $node) = split_ns($child->nodeName);
-                $node = $map->{$node};
-                my $attrib = $class->meta->get_attribute($node);
+                confess "Could not get node from (".$child->nodeName." via $node_ns, $node)\n", Dumper $map
+                    if !$map->{$node};
+                my $attrib = $map->{$node};
+                $node = $attrib->name;
                 my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
                 $require->($module) if $module;
                 my $value  = $module ? $module->new($child) : $child->textContent;
@@ -120,13 +122,10 @@ sub _from_xml {
 
 sub xml2perl_map {
     my ($class) = @_;
-    my $meta = $class->meta;
     my %map;
 
-    for my $perl ($meta->get_attribute_list) {
-        my $attr = $meta->get_attribute($perl);
-        next unless $attr->does('W3C::SOAP::XSD::Traits');
-        $map{$attr->xs_name} = $perl;
+    for my $attr ($class->get_xml_nodes) {
+        $map{$attr->xs_name} = $attr;
     }
     return \%map;
 }
@@ -239,7 +238,7 @@ sub to_data {
             $value = $value->to_data(%option);
         }
         elsif ($option{stringify}) {
-            $value = "$value";
+            $value = defined $value ? "$value" : $value;
         }
 
         $nodes{$key_name} = $value;
@@ -275,9 +274,10 @@ sub xsd_subtype {
     my ($self, %args) = @_;
     my $parent_type = $args{module} || $args{parent};
     # upgrade dates
-    $parent_type = 'xsd:date'    if $parent_type eq 'xs:date';
-    $parent_type = 'xsd:boolean' if $parent_type eq 'xs:boolean';
-    $parent_type = 'xsd:double'  if $parent_type eq 'xs:double';
+    $parent_type = 'xsd:date'     if $parent_type eq 'xs:date';
+    $parent_type = 'xsd:dateTime' if $parent_type eq 'xs:dateTime';
+    $parent_type = 'xsd:boolean'  if $parent_type eq 'xs:boolean';
+    $parent_type = 'xsd:double'   if $parent_type eq 'xs:double';
 
     my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
     my $subtype = $parent_type =~ /^xsd:\w/ && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);

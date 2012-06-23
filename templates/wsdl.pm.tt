@@ -41,7 +41,7 @@ sub [% operation.perl_name %] {
                 out_element = operation.port_type.outputs.0.message.element;
 %]
     my $xsd = [% in_element.module %]->new(
-        [% in_element.perl_name %] => {@_}
+        [% in_element.perl_name %] => @_ == 1 ? $_[0] : {@_},
     );
     my $resp = $self->request( [% operation.name %] => $xsd );
 
@@ -59,6 +59,8 @@ alias [% element.name.replace('^\w+:', '') %] => '[% element.perl_name %]';
 [%         END %]
 [%     END %]
 [% END %]
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__

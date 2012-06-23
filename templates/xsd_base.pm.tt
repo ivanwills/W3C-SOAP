@@ -43,6 +43,8 @@ coerce '[% subtype.moose_type %]' =>
     via { $_->textContent };
 [%- END %]
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__

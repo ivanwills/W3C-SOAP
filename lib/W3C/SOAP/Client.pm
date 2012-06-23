@@ -109,7 +109,13 @@ sub send {
     };
 
     my $xml_responce = XML::LibXML->load_xml( string => $self->mech->content );
-    my ($node) = $xml_responce->findnodes('//env:Body');
+    my %map
+        = map {$_->name =~ /^xmlns:?(.*)$/; ($_->value => $1)}
+        grep { $_->name =~ /^xmlns/ }
+        $xml_responce->firstChild->getAttributes;
+    my $ns = $map{'http://schemas.xmlsoap.org/soap/envelope/'};
+
+    my ($node) = $xml_responce->findnodes("//$ns\:Body");
 
     return $node;
 }
