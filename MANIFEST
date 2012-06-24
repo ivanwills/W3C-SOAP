@@ -14,6 +14,7 @@ lib/W3C/SOAP/XSD/Document/Element.pm
 lib/W3C/SOAP/XSD/Document/Node.pm
 lib/W3C/SOAP/XSD/Document/SimpleType.pm
 lib/W3C/SOAP/XSD/Traits.pm
+lib/W3C/SOAP/XSD/Types.pm
 t/00-load.t
 t/boilerplate.t
 t/critic.t
@@ -25,6 +26,7 @@ t/spelling.t
 templates/xsd.pm.tt
 templates/xsd_base.pm.tt
 templates/xsd_element.pm.tt
+templates/xsd_element.pod.tt
 templates/xsd_complex_type.pm.tt
 templates/wsdl.pm.tt
 templates/config.tt

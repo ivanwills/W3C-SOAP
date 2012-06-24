@@ -67,3 +67,4 @@ test
 cmds
 t/xsd
 t/lib/MyApp
+.prove
