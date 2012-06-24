@@ -344,6 +344,46 @@ interface.
 
 =head1 SUBROUTINES/METHODS
 
+=over 4
+
+=item C<get_ns_uri ()>
+
+=item C<get_module_base ()>
+
+=back
+
+=head1 ATTRIBUTES
+
+=over 4
+
+=item C<imports>
+
+=item C<imported>
+
+=item C<includes>
+
+=item C<include>
+
+=item C<simple_types>
+
+=item C<simple_type>
+
+=item C<complex_types>
+
+=item C<complex_type>
+
+=item C<elements>
+
+=item C<element>
+
+=item C<module>
+
+=item C<ns_map>
+
+=item C<ns_module_map>
+
+=back
+
 =head1 DIAGNOSTICS
 
 =head1 CONFIGURATION AND ENVIRONMENT

@@ -67,7 +67,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Traits - <One-line description of module's purpose>
+W3C::SOAP::XSD::Traits - Specifies the traits of an XSD Moose attribute
 
 =head1 VERSION
 
@@ -85,66 +85,52 @@ This documentation refers to W3C::SOAP::XSD::Traits version 0.1.
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
+Defines the Moose attribute trait C<W3C::SOAP::XSD>. This specifies a number
+of properties that an attribute can have which helps the processing of
+objects representing XSDs.
 
-May include numerous subsections (i.e., =head2, =head3, etc.).
+=over 4
 
+=item C<xs_perl_module>
+
+If the attribute has a type that is a perl module (or a list of a perl module)
+This parameter helps in the coercing of XML nodes to the attribute.
+
+=item C<xs_min_occurs>
+
+This represents the minimum number of occurrences of elements in a list.
+
+=item C<xs_max_occurs>
+
+This specifies the maximum number of occurrences of elements in a list.
+
+=item C<xs_name>
+
+This is the name as it appears in the XSD
+
+=item C<xs_type>
+
+This is the type as it appears in the XSD (this will be translated
+to perl types/modules specified by the isa property)
+
+=item C<xs_choice_group>
+
+If a complex element has choices this records the grouping of those
+choices.
+
+=back
 
 =head1 SUBROUTINES/METHODS
 
-A separate section listing the public components of the module's interface.
-
-These normally consist of either subroutines that may be exported, or methods
-that may be called on objects belonging to the classes that the module
-provides.
-
-Name the section accordingly.
-
-In an object-oriented module, this section should begin with a sentence (of the
-form "An object of this class represents ...") to give the reader a high-level
-context to help them understand the methods that are subsequently described.
-
-
-
-
 =head1 DIAGNOSTICS
-
-A list of every error and warning message that the module can generate (even
-the ones that will "never happen"), with a full explanation of each problem,
-one or more likely causes, and any suggested remedies.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-A full explanation of any configuration system(s) used by the module, including
-the names and locations of any configuration files, and the meaning of any
-environment variables or properties that can be set. These descriptions must
-also include details of any configuration language used.
-
 =head1 DEPENDENCIES
-
-A list of all of the other modules that this module relies upon, including any
-restrictions on versions, and an indication of whether these required modules
-are part of the standard Perl distribution, part of the module's distribution,
-or must be installed separately.
 
 =head1 INCOMPATIBILITIES
 
-A list of any modules that this module cannot be used in conjunction with.
-This may be due to name conflicts in the interface, or competition for system
-or program resources, or due to internal limitations of Perl (for example, many
-modules that use source code filters are mutually incompatible).
-
 =head1 BUGS AND LIMITATIONS
-
-A list of known problems with the module, together with some indication of
-whether they are likely to be fixed in an upcoming release.
-
-Also, a list of restrictions on the features the module does provide: data types
-that cannot be handled, performance issues and the circumstances in which they
-may arise, practical limitations on the size of data sets, special cases that
-are not (yet) handled, etc.
-
-The initial template usually just has:
 
 There are no known bugs in this module.
 
@@ -155,7 +141,6 @@ Patches are welcome.
 =head1 AUTHOR
 
 Ivan Wills - (ivan.wills@gmail.com)
-<Author name(s)>  (<contact address>)
 
 =head1 LICENSE AND COPYRIGHT
 

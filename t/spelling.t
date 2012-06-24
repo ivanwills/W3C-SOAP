@@ -31,12 +31,15 @@ add_stopwords(qw/
     Param
     eg
     Arg
+    isa
     xsd
     XSD
+    XSDs
     XMLSchema
     WS
     xml
     XML
     TagName
+    DateTime
 /);
 all_pod_files_spelling_ok();

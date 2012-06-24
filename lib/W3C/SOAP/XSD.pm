@@ -40,52 +40,52 @@ has xsd_ns_name => (
 );
 
 {
-my %required;
-my $require = sub {
-    my ($module) = @_;
-    return if $required{$module}++;
+    my %required;
+    my $require = sub {
+        my ($module) = @_;
+        return if $required{$module}++;
 
-    my $file = "$module.pm";
-    $file =~ s{::}{/}g;
-    require $file;
-};
-around BUILDARGS => sub {
-    my ($orig, $class, @args) = @_;
-    my $args
-        = !@args     ? {}
-        : @args == 1 ? $args[0]
-        :              {@args};
+        my $file = "$module.pm";
+        $file =~ s{::}{/}g;
+        require $file;
+    };
+    around BUILDARGS => sub {
+        my ($orig, $class, @args) = @_;
+        my $args
+            = !@args     ? {}
+            : @args == 1 ? $args[0]
+            :              {@args};
 
-    if ( blessed $args && $args->isa('XML::LibXML::Node') ) {
-        my $xml   = $args;
-        my $child = $xml->firstChild;
-        my $map   = $class->xml2perl_map;
-        my ($element)  = $class =~ /::([^:]+)$/;
-        $args = {};
+        if ( blessed $args && $args->isa('XML::LibXML::Node') ) {
+            my $xml   = $args;
+            my $child = $xml->firstChild;
+            my $map   = $class->xml2perl_map;
+            my ($element)  = $class =~ /::([^:]+)$/;
+            $args = {};
 
-        while ($child) {
-            if ( $child->nodeName !~ /^#/ ) {
-                my ($node_ns, $node) = split_ns($child->nodeName);
-                confess "Could not get node from (".$child->nodeName." via $node_ns, $node)\n", Dumper $map
-                    if !$map->{$node};
-                my $attrib = $map->{$node};
-                $node = $attrib->name;
-                my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
-                $require->($module) if $module;
-                my $value  = $module ? $module->new($child) : $child->textContent;
+            while ($child) {
+                if ( $child->nodeName !~ /^#/ ) {
+                    my ($node_ns, $node) = split_ns($child->nodeName);
+                    confess "Could not get node from (".$child->nodeName." via $node_ns, $node)\n", Dumper $map
+                        if !$map->{$node};
+                    my $attrib = $map->{$node};
+                    $node = $attrib->name;
+                    my $module = $attrib->has_xs_perl_module ? $attrib->xs_perl_module : undef;
+                    $require->($module) if $module;
+                    my $value  = $module ? $module->new($child) : $child->textContent;
 
-                $args->{$node}
-                    = !exists $args->{$node}        ? $value
-                    : ref $args->{$node} ne 'ARRAY' ? [   $args->{$node} , $value ]
-                    :                                 [ @{$args->{$node}}, $value ];
+                    $args->{$node}
+                        = !exists $args->{$node}        ? $value
+                        : ref $args->{$node} ne 'ARRAY' ? [   $args->{$node} , $value ]
+                        :                                 [ @{$args->{$node}}, $value ];
+                }
+                $child = $child->nextSibling;
             }
-            $child = $child->nextSibling;
         }
-    }
 
-    return $class->$orig($args);
-};
-};
+        return $class->$orig($args);
+    };
+}
 
 my %ns_map;
 my $count = 0;
@@ -334,12 +334,11 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD - <One-line description of module's purpose>
+W3C::SOAP::XSD - The parent module to XSD modules
 
 =head1 VERSION
 
 This documentation refers to W3C::SOAP::XSD version 0.1.
-
 
 =head1 SYNOPSIS
 
@@ -352,66 +351,47 @@ This documentation refers to W3C::SOAP::XSD version 0.1.
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
 
 =head1 SUBROUTINES/METHODS
 
-A separate section listing the public components of the module's interface.
+=over 4
 
-These normally consist of either subroutines that may be exported, or methods
-that may be called on objects belonging to the classes that the module
-provides.
+=item C<xml2perl_map ()>
 
-Name the section accordingly.
+Returns a mapping of XML tag elements to perl attributes
 
-In an object-oriented module, this section should begin with a sentence (of the
-form "An object of this class represents ...") to give the reader a high-level
-context to help them understand the methods that are subsequently described.
+=item C<to_xml ($xml)>
 
+Converts the object to an L<XML::LibXML> node.
 
+=item C<to_data (%options)>
 
+Converts this object to a perl data structure. If C<$option{like_xml}> is
+specified and true, the keys will be the same as the XML tags otherwise the
+keys will be perl names. If C<$option{stringify}> is true and specified
+any non XSD objects will be stringified (eg DateTime objects).
+
+=item C<get_xml_nodes ()>
+
+Returns a list of attributes of the current object that have the
+C<W3C::SOAP::XSD> trait (which is defined in L<W3C::SOAP::XSD::Traits>)
+
+=item C<xsd_subtype ()>
+
+Helper method to create XSD subtypes that do coercions form L<XML::LibXML>
+objects and strings.
+
+=back
 
 =head1 DIAGNOSTICS
 
-A list of every error and warning message that the module can generate (even
-the ones that will "never happen"), with a full explanation of each problem,
-one or more likely causes, and any suggested remedies.
-
 =head1 CONFIGURATION AND ENVIRONMENT
-
-A full explanation of any configuration system(s) used by the module, including
-the names and locations of any configuration files, and the meaning of any
-environment variables or properties that can be set. These descriptions must
-also include details of any configuration language used.
 
 =head1 DEPENDENCIES
 
-A list of all of the other modules that this module relies upon, including any
-restrictions on versions, and an indication of whether these required modules
-are part of the standard Perl distribution, part of the module's distribution,
-or must be installed separately.
-
 =head1 INCOMPATIBILITIES
 
-A list of any modules that this module cannot be used in conjunction with.
-This may be due to name conflicts in the interface, or competition for system
-or program resources, or due to internal limitations of Perl (for example, many
-modules that use source code filters are mutually incompatible).
-
 =head1 BUGS AND LIMITATIONS
-
-A list of known problems with the module, together with some indication of
-whether they are likely to be fixed in an upcoming release.
-
-Also, a list of restrictions on the features the module does provide: data types
-that cannot be handled, performance issues and the circumstances in which they
-may arise, practical limitations on the size of data sets, special cases that
-are not (yet) handled, etc.
-
-The initial template usually just has:
 
 There are no known bugs in this module.
 
@@ -422,7 +402,6 @@ Patches are welcome.
 =head1 AUTHOR
 
 Ivan Wills - (ivan.wills@gmail.com)
-<Author name(s)>  (<contact address>)
 
 =head1 LICENSE AND COPYRIGHT
 
