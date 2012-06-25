@@ -1,0 +1,34 @@
+=head1 TODO
+
+W3C::SOAP tasks still to be done
+
+=head1 TASKS
+
+=over 4
+
+=item Tests for WSDL creation.
+
+There are some known issues with generation of WSDL Clients, need to test for
+those and other issues.
+
+=item In memory XSD object creation
+
+Need to dynamically create objects for any XSD found.
+
+=item In memory WSDL object creation (soap client)
+
+Create whole SOAP clients (ala SOAP::Lite)
+
+=item Server creation
+
+Helpers to create SOAP servers, Catalyst/Dancer/Mojolicious helpers.
+
+=item WS-Security
+
+Currently the Username part of the spec has some form of implementation but
+their doesn't exist a way of auto generating this or other security forms
+from the WSDL.
+
+=back
+
+=cut
