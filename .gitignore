@@ -22,3 +22,6 @@ vim.sh
 temp/*
 errors.err
 t/lib/MyApp
+t/xsd/
+test/
+
