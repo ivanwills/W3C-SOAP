@@ -146,8 +146,15 @@ This documentation refers to W3C::SOAP::XSD::Document::SimpleType version 0.1.
 
 =head1 SUBROUTINES/METHODS
 
+=over 4
 
+=item C<moose_type ()>
 
+=item C<moose_base_type ()>
+
+=item C<moosex_type ()>
+
+=back
 
 =head1 DIAGNOSTICS
 
