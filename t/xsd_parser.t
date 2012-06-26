@@ -27,6 +27,7 @@ my $parser = W3C::SOAP::XSD::Parser->new(
     ns_module_map => {
         'urn:eg.schema.org'     => 'MyApp::Eg',
         'urn:parent.schema.org' => 'MyApp::Parent',
+        'urn:other.schema.org'  => 'MyApp::Other',
     },
 );
 
@@ -82,6 +83,12 @@ sub written_modules {
             #fourth_thing => 4,
             fith_thing    => '2012-06-14+10:00',
             local_choice3 => 333,
+        },
+        el9 => {
+            other => {
+                other_one => 'Other One',
+                other_two => 55,
+            },
         },
     );
     my $eg = eval {

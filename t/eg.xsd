@@ -6,11 +6,17 @@
     xmlns:tns="urn:eg.schema.org"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:common="urn:parent.schema.org"
+    xmlns:other="urn:other.schema.org"
     >
 
     <xs:import
         namespace="urn:parent.schema.org"
         schemaLocation="t/parent.xsd"
+        />
+
+    <xs:include
+        namespace="urn:other.schema.org"
+        schemaLocation="t/other.xsd"
         />
 
     <xs:simpleType name="simpleThing">
@@ -45,6 +51,11 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="localOther">
+        <xs:sequence>
+            <xs:element name="other" type="other:otherComplexThing" minOccurs="1"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:element
@@ -120,6 +131,14 @@
     <xs:element
         name="el8"
         type="tns:localComplexThing"
+        minOccurs="1"
+        maxOccurs="1"
+        nillable="false"
+        default=""
+        />
+    <xs:element
+        name="el9"
+        type="tns:localOther"
         minOccurs="1"
         maxOccurs="1"
         nillable="false"
