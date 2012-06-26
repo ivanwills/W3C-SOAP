@@ -111,6 +111,9 @@ sub written_modules {
     else {
         ok 0, 'Got no object';
     }
+
+    is ref $eg->el4->[0], 'MyApp::Parent::complexThing', 'Get a list of objects';
+
 }
 
 sub written_modules_alias {

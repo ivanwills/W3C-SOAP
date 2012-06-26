@@ -167,36 +167,19 @@ sub to_xml {
         my $xml_name = $att->has_xs_name ? $att->xs_name : $name;
         my $xsd_ns_name = $self->xsd_ns_name;
 
-        my $value = $self->$name;
+        my $value = ref $self->$name eq 'ARRAY' ? $self->$name : [$self->$name];
 
-        if ( ref $value eq 'ARRAY' ) {
-            for my $item (@$value) {
-                my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
-                $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
-
-                if ( blessed($item) && $item->can('to_xml') ) {
-                    $item->xsd_ns_name( $xsd_ns_name ) if !$item->has_xsd_ns_name;
-                    my @children = $item->to_xml($xml);
-                    $tag->appendChild($_) for @children;
-                }
-                else {
-                    $tag->appendChild( $xml->createTextNode("$item") );
-                }
-
-                push @nodes, $tag;
-            }
-        }
-        else {
+        for my $item (@$value) {
             my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
             $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
 
-            if ( blessed($value) && $value->can('to_xml') ) {
-                $value->xsd_ns_name( $xsd_ns_name ) if !$value->has_xsd_ns_name;
-                my @children = $value->to_xml($xml);
+            if ( blessed($item) && $item->can('to_xml') ) {
+                $item->xsd_ns_name( $xsd_ns_name ) if !$item->has_xsd_ns_name;
+                my @children = $item->to_xml($xml);
                 $tag->appendChild($_) for @children;
             }
             else {
-                $tag->appendChild( $xml->createTextNode("$value") );
+                $tag->appendChild( $xml->createTextNode("$item") );
             }
 
             push @nodes, $tag;
@@ -228,20 +211,24 @@ sub to_data {
         my $value = $self->$name;
 
         if ( ref $value eq 'ARRAY' ) {
+            my @elements;
             for my $element (@$value) {
                 if ( blessed($element) && $element->can('to_data') ) {
-                    $element = $element->to_data(%option);
+                    push @elements, $element->to_data(%option);
                 }
             }
+            $nodes{$key_name} = \@elements;
         }
-        elsif ( blessed($value) && $value->can('to_data') ) {
-            $value = $value->to_data(%option);
-        }
-        elsif ($option{stringify}) {
-            $value = defined $value ? "$value" : $value;
-        }
+        else {
+            if ( blessed($value) && $value->can('to_data') ) {
+                $value = $value->to_data(%option);
+            }
+            elsif ($option{stringify}) {
+                $value = defined $value ? "$value" : $value;
+            }
 
-        $nodes{$key_name} = $value;
+            $nodes{$key_name} = $value;
+        }
     }
 
     return \%nodes;
