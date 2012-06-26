@@ -69,16 +69,6 @@ alias [% element.name.replace('^\w+:', '') %] => '[% element.perl_name %]';
 [%         END %]
 [%     END %]
 [% END %]
-around BUILDARGS => sub {
-    my ($orig, $class, @args) = @_;
-    my $args
-        = !@args     ? {}
-        : @args == 1 ? $args[0]
-        :              {@args};
-    warn __PACKAGE__ . ' : ', Dumper $args;
-    return $class->$orig($args);
-};
-
 __PACKAGE__->meta->make_immutable;
 
 1;
