@@ -139,18 +139,43 @@ sub write_modules {
             $type_file = file $type_file;
             mkdir $type_file->parent if !-d $type_file->parent;
 
-            $template->process('xsd_complex_type.pm.tt', {xsd => $xsd, module => $type_module, node => $type}, "$type_file.pm");
-            die "Error in creating $type_file (xsd_complex_type.pm.tt): ". $template->error."\n"
-                if $template->error;
+            my %modules;
+            for my $el (@{ $type->sequence }) {
+                $modules{ $el->type_module }++
+                    if ! $el->simple_type && $el->module ne $module
+            }
+
+            # write the complex type module
+            $self->write_module(
+                'xsd_complex_type.pm.tt',
+                {
+                    xsd     => $xsd,
+                    module  => $type_module,
+                    modules => [ keys %modules ],
+                    node    => $type
+                },
+                "$type_file.pm"
+            );
         }
 
-        $template->process('xsd_base.pm.tt', {xsd => $xsd}, "$file/Base.pm");
-        die "Error in creating $file/Base.pm (xsd_base.pm): ". $template->error."\n"
-            if $template->error;
+        # write the simple types library
+        $self->write_module(
+            'xsd_base.pm.tt',
+            {
+                xsd => $xsd,
+            },
+            "$file/Base.pm"
+        );
 
-        $template->process('xsd.pm.tt', {xsd => $xsd, parents => \@parents}, "$file.pm");
-        die "Error in creating $file (xsd.pm): ". $template->error."\n"
-            if $template->error;
+        # write the "XSD" elements module
+        $self->write_module(
+            'xsd.pm.tt',
+            {
+                xsd => $xsd,
+                parents => \@parents,
+            },
+            "$file.pm"
+        );
 
     }
 
@@ -175,7 +200,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Parser - <One-line description of module's purpose>
+W3C::SOAP::XSD::Parser - Parse an W3C::SOAP::XSD::Document and reate perl modules
 
 =head1 VERSION
 
