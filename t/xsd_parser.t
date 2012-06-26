@@ -114,6 +114,17 @@ sub written_modules {
 
     is ref $eg->el4->[0], 'MyApp::Parent::complexThing', 'Get a list of objects';
 
+    my $xml = XML::LibXML->load_xml(string => <<'XML');
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body/>
+</soapenv:Envelope>
+XML
+
+    my @str = eval { $eg->to_xml($xml) };
+    ok !$@, "Convert to XML ok"
+        or diag $@;
+    like $str[-1]->toString, qr/urn:other.schema.org/, 'Contains a sub namespace reference';
 }
 
 sub written_modules_alias {

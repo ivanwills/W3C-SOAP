@@ -35,6 +35,7 @@ has xsd_ns_name => (
     is         => 'rw',
     isa        => 'Str',
     predicate  => 'has_xsd_ns_name',
+    clearer    => 'clear_xsd_ns_name',
     builder    => '_xsd_ns_name',
     lazy_build => 1,
 );
@@ -153,6 +154,8 @@ sub to_xml {
     my @attributes = $self->get_xml_nodes;
 
     my @nodes;
+    $self->clear_xsd_ns_name;
+    my $xsd_ns_name = $self->xsd_ns_name;
 
     for my $att (@attributes) {
         my $name = $att->name;
@@ -165,7 +168,6 @@ sub to_xml {
         next if !$self->$has;
 
         my $xml_name = $att->has_xs_name ? $att->xs_name : $name;
-        my $xsd_ns_name = $self->xsd_ns_name;
 
         my $value = ref $self->$name eq 'ARRAY' ? $self->$name : [$self->$name];
 

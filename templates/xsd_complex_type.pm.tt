@@ -44,12 +44,14 @@ extends '[% base %]::Base';
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
-[%- IF element_map.$module %]
 
-has '+xsd_element' => (
-    default => '[% element_map.$module %]',
+has '+xsd_ns' => (
+    default => '[% xsd.target_namespace %]',
+    required => 1,
 );
-[%- END -%]
+#has '+xsd_ns_name' => (
+#    default => '[% ns_name %]',
+#);
 
 [% FOREACH element IN node.sequence %]
 [% INCLUDE xsd_element.pm.tt %]
