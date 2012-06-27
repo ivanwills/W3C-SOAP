@@ -164,6 +164,30 @@ sub simple_type {
     return;
 }
 
+sub very_simple_type {
+    my ($self) = @_;
+    $self->document->simple_type;
+    my ($ns, $type) = split_ns($self->type);
+    my $ns_uri = $self->document->get_ns_uri($ns);
+    warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
+        if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
+
+    return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
+
+    my @xsds = ($self->document);
+    while ( my $xsd = shift @xsds ) {
+        my $simple = $xsd->simple_type;
+        if ( !$simple && @{ $xsd->simple_types } ) {
+            $simple = $xsd->simple_type($xsd->_simple_type);
+        }
+
+        return $simple->{$type}->type if $simple && $simple->{$type};
+
+        push @xsds, @{$xsd->imports};
+    }
+    return;
+}
+
 sub moosex_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);

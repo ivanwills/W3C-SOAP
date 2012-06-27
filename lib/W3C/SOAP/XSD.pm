@@ -181,7 +181,12 @@ sub to_xml {
                 $tag->appendChild($_) for @children;
             }
             else {
-                $tag->appendChild( $xml->createTextNode("$item") );
+                local $_ = $item;
+                my $text
+                    = $att->has_xs_searalize
+                    ? $att->xs_searalize->($item)
+                    : "$item";
+                $tag->appendChild( $xml->createTextNode($text) );
             }
 
             push @nodes, $tag;
@@ -226,7 +231,12 @@ sub to_data {
                 $value = $value->to_data(%option);
             }
             elsif ($option{stringify}) {
-                $value = defined $value ? "$value" : $value;
+                local $_ = $value;
+                my $text
+                    = $att->has_xs_searalize
+                    ? $att->xs_searalize->($value)
+                    : "$value";
+                $value = defined $value ? $text : $value;
             }
 
             $nodes{$key_name} = $value;

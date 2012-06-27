@@ -99,11 +99,9 @@ sub written_modules {
         or diag $@;
     isa_ok $eg, 'MyApp::Eg', 'Get an actual object';
 
-    #$test_data{el2_5} = 'true';
+    $test_data{el2_5} = 'true';
     $test_data{el4}   = [$test_data{el4}];
     $test_data{el5}   = [$test_data{el5}];
-    $test_data{el8}{third_thing} = '2012-06-14T00:00:00';
-    $test_data{el8}{fith_thing}  = '2012-06-14T00:00:00';
 
     local $Data::Dumper::Sortkeys = 1;
     if ( $eg ) {
@@ -127,7 +125,7 @@ XML
     ok !$@, "Convert to XML ok"
         or diag $@;
     like $str[-1]->toString, qr/urn:other.schema.org/, 'Contains a sub namespace reference';
-    note join "\n", map {$_->toString} @str;
+    #note join "\n", map {$_->toString} @str;
     is $str[2]->toString,
         '<WSX0:el2_5 xmlns:WSX0="urn:eg.schema.org">true</WSX0:el2_5>',
         'Boolean value is searalized correctly';

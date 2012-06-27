@@ -271,7 +271,7 @@ sub _elements {
 sub _element {
     my ($self) = @_;
     my %element;
-    for my $element (@{ $self->element }) {
+    for my $element (@{ $self->elements }) {
         $element{$element->name} = $element;
     }
     return \%element;

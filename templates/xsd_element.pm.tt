@@ -1,34 +1,44 @@
 [%
     simple = element.simple_type;
+    very_simple = element.very_simple_type;
     is_array = element.max_occurs == 'unbounded'
         || ( element.max_occurs && element.max_occurs > 1 )
         || ( element.min_occurs && element.min_occurs > 1 );
     type_name = simple || element.type_module;
     searalize = '';
 
-    IF simple == 'xs:boolean';
+    IF very_simple == 'xs:boolean';
         searalize = "sub { \$_ ? 'true' : 'false' }";
+    ELSIF very_simple == 'xs:date';
+        searalize = "sub {
+        return \$_->ymd if \$_->time_zone->isa('DateTime::TimeZone::Floating');
+        my \$d = DateTime::Format::Strptime::strftime('%F%z', \$_);
+        \$d =~ s/([+-]\\d\\d)(\\d\\d)\$/\$1:\$2/;
+        return \$d
+    }";
+    ELSIF very_simple == 'xs:time';
+        searalize = "sub { \$_->hms }";
     END;
 %]
 has [% element.perl_name %] => (
-    is             => 'rw',
-    isa            => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %] ),
-    predicate      => 'has_[% element.perl_name %]',
+    is              => 'rw',
+    isa             => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %] ),
+    predicate       => 'has_[% element.perl_name %]',
 [%- IF element.nillable == 'false' %]
-    required       => 1,
+    required        => 1,
 [%- END %]
-    coerce         => 1,
+    coerce          => 1,
 [%- IF config.alias && element.name.replace('^\w+:', '') != element.perl_name %]
-    alias          => '[% element.name.replace('^\w+:', '') %]',
+    alias           => '[% element.name.replace('^\w+:', '') %]',
 [%- END %]
-    traits         => [qw{ W3C::SOAP::XSD }],
+    traits          => [qw{ W3C::SOAP::XSD }],
 [%- IF !simple %]
-    xs_perl_module => '[% element.type_module %]',
+    xs_perl_module  => '[% element.type_module %]',
 [%- END %]
-    xs_name        => '[% element.name        %]',
-    xs_type        => '[% element.type        %]',
-    xs_min_occurs  => '[% element.min_occurs  %]',
-    xs_max_occurs  => '[% element.max_occurs  == 'unbounded' ? 0 : element.max_occurs %]',
+    xs_name         => '[% element.name        %]',
+    xs_type         => '[% element.type        %]',
+    xs_min_occurs   => '[% element.min_occurs  %]',
+    xs_max_occurs   => '[% element.max_occurs  == 'unbounded' ? 0 : element.max_occurs %]',
 [%- IF element.choice_group %]
     xs_choice_group => [% element.choice_group %],
 [%- END %]
