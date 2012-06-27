@@ -20,7 +20,7 @@ use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
+our @EXPORT_OK   = qw/load_xsd/;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
@@ -68,40 +68,12 @@ around BUILDARGS => sub {
 
 sub write_modules {
     my ($self) = @_;
-    my @xsds     = @{ $self->documents };
+    my @xsds     = $self->get_schemas;
     my $template = $self->template;
     my @schemas;
     my $self_module;
     my @parents;
     my @xsd_modules;
-    my %xsd;
-
-    # import all schemas
-    while ( my $xsd = shift @xsds ) {
-        my $target_namespace = $xsd->target_namespace;
-        push @{ $xsd{$target_namespace} }, $xsd;
-
-        for my $import ( @{ $xsd->imports } ) {
-            push @xsds, $import;
-        }
-        for my $include ( @{ $xsd->includes } ) {
-            push @xsds, $include;
-        }
-    }
-
-    # flatten schemas specified more than once
-    for my $ns ( keys %xsd ) {
-        my $xsd = pop @{ $xsd{$ns} };
-        if ( @{ $xsd{$ns} } ) {
-            for my $xsd_repeat ( @{ $xsd{$ns} } ) {
-                push @{ $xsd->simple_types  }, @{ $xsd_repeat->simple_types  };
-                push @{ $xsd->complex_types }, @{ $xsd_repeat->complex_types };
-                push @{ $xsd->elements      }, @{ $xsd_repeat->elements      };
-            }
-        }
-
-        push @xsds, $xsd;
-    }
 
     # process the schemas
     for my $xsd (@xsds) {
@@ -194,6 +166,130 @@ sub write_module {
         if $template->error;
 }
 
+sub get_schemas {
+    my ($self) = @_;
+    my @xsds   = @{ $self->documents };
+    my %xsd;
+
+    # import all schemas
+    while ( my $xsd = shift @xsds ) {
+        my $target_namespace = $xsd->target_namespace;
+        push @{ $xsd{$target_namespace} }, $xsd;
+
+        for my $import ( @{ $xsd->imports } ) {
+            push @xsds, $import;
+        }
+        for my $include ( @{ $xsd->includes } ) {
+            push @xsds, $include;
+        }
+    }
+
+    # flatten schemas specified more than once
+    for my $ns ( keys %xsd ) {
+        my $xsd = pop @{ $xsd{$ns} };
+        if ( @{ $xsd{$ns} } ) {
+            for my $xsd_repeat ( @{ $xsd{$ns} } ) {
+                push @{ $xsd->simple_types  }, @{ $xsd_repeat->simple_types  };
+                push @{ $xsd->complex_types }, @{ $xsd_repeat->complex_types };
+                push @{ $xsd->elements      }, @{ $xsd_repeat->elements      };
+            }
+        }
+
+        push @xsds, $xsd;
+    }
+
+    return @xsds;
+}
+
+sub load_xsd {
+    my ($location) = @_;
+    my $parser = __PACKAGE__->new(
+        location      => $location,
+        ns_module_map => {},
+    );
+
+    return $parser->dynamic_classes;
+}
+
+sub dynamic_classes {
+    my ($self) = @_;
+    my @xsds   = $self->get_schemas;
+    my @packages;
+
+    # construct the in memory module names
+    for my $xsd (@xsds) {
+        my $ns = $xsd->target_namespace;
+        $ns =~ s{://}{::};
+        $ns =~ s{[^\w:]+}{_}g;
+        $self->ns_module_map->{$xsd->target_namespace}
+            = "Dynamic::XSD::$ns";
+    }
+
+    for my $xsd (@xsds) {
+
+        # Create simple types
+        $self->simple_type_package($xsd);
+
+        # Complex types
+        for my $type ( @{ $xsd->complex_types } ) {
+            $self->complex_type_package($xsd, $type);
+        }
+
+        # elements package
+        push @packages, $self->elements_package($xsd);
+    }
+
+    return @packages;
+}
+
+sub simple_type_package {
+    my ($self, $xsd) = @_;
+
+}
+
+sub complex_type_package {
+    my ($self, $xsd, $type) = @_;
+    my @attribs;
+
+    for my $node ( $type->sequence ) {
+        push @attribs,
+            Moose::Meta::Attribute->new(
+                $node->perl_name,
+                is => 'rw',
+            );
+    }
+
+    my $class = Moose::Meta::Class->create(
+        'Foo',
+        attributes => \@attribs,
+        superclasses => [],
+    );
+
+    return $class;
+}
+
+sub elements_package {
+    my ($self, $xsd) = @_;
+    my @attribs;
+
+    for my $node ( $xsd->elements ) {
+        push @attribs,
+            Moose::Meta::Attribute->new(
+                $node->perl_name,
+                is => 'rw',
+            );
+    }
+
+    my $class = Moose::Meta::Class->create(
+        $self->ns_module_map->{$xsd->target_namespace},
+        attributes   => \@attribs,
+        methods      => {},
+        superclasses => [],
+    );
+
+    return $class;
+}
+
 1;
 
 __END__
@@ -221,6 +317,11 @@ This documentation refers to W3C::SOAP::XSD::Parser version 0.1.
 
 =over 4
 
+=item C<load_xsd ($schema_location)>
+
+Loads the schema and dynamically generates the Perl/Moose packages that
+represent the schema.
+
 =item C<write_modules ()>
 
 Uses the supplied documents to write out perl modules to disk that represent
@@ -229,6 +330,10 @@ the XSDs in the documents.
 =item C<write_module ($tt, $data, $file)>
 
 Write the template to disk
+
+=item C<get_schemas ()>
+
+Gets a list of the schemas imported/included from the base XML Schema(s)
 
 =back
 
