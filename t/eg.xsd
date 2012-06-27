@@ -77,6 +77,16 @@
         </xs:simpleType>
     </xs:element>
     <xs:element
+        name="el2_5"
+        minOccurs="0"
+        maxOccurs="1"
+        nillable="true"
+        >
+        <xs:simpleType>
+            <xs:restriction base="xs:boolean"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element
         name="el3"
         minOccurs="0"
         maxOccurs="1"

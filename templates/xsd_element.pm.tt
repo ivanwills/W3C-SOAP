@@ -4,6 +4,11 @@
         || ( element.max_occurs && element.max_occurs > 1 )
         || ( element.min_occurs && element.min_occurs > 1 );
     type_name = simple || element.type_module;
+    searalize = '';
+
+    IF simple == 'xs:boolean';
+        searalize = "sub { \$_ ? 'true' : 'false' }";
+    END;
 %]
 has [% element.perl_name %] => (
     is             => 'rw',
@@ -26,5 +31,8 @@ has [% element.perl_name %] => (
     xs_max_occurs  => '[% element.max_occurs  == 'unbounded' ? 0 : element.max_occurs %]',
 [%- IF element.choice_group %]
     xs_choice_group => [% element.choice_group %],
+[%- END %]
+[%- IF searalize %]
+    xs_searalize    => [% searalize %],
 [%- END %]
 );
