@@ -220,23 +220,36 @@ sub dynamic_classes {
     for my $xsd (@xsds) {
         my $ns = $xsd->target_namespace;
         $ns =~ s{://}{::};
+        $ns =~ s{([^:]:)([^:])}{$1:$2}g;
         $ns =~ s{[^\w:]+}{_}g;
         $self->ns_module_map->{$xsd->target_namespace}
             = "Dynamic::XSD::$ns";
     }
 
     for my $xsd (@xsds) {
+        my $module = $xsd->get_module_base($xsd->target_namespace);
 
         # Create simple types
         $self->simple_type_package($xsd);
 
         # Complex types
         for my $type ( @{ $xsd->complex_types } ) {
-            $self->complex_type_package($xsd, $type);
+            my $type_name = $type->name || $type->parent_node->name;
+            my $type_module = $module . '::' . $type_name;
+
+            my %modules = ( 'W3C::SOAP::XSD' => 1 );
+            for my $el (@{ $type->sequence }) {
+                $modules{ $el->type_module }++
+                    if ! $el->simple_type && $el->module ne $module
+            }
+
+            $self->complex_type_package($xsd, $type, $type_module, [ keys %modules ]);
         }
 
         # elements package
-        push @packages, $self->elements_package($xsd);
+        $self->elements_package($xsd, $module);
+
+        push @packages, $module;
     }
 
     return @packages;
@@ -245,51 +258,120 @@ sub dynamic_classes {
 sub simple_type_package {
     my ($self, $xsd) = @_;
 
+    for my $subtype (@{ $xsd->simple_types }) {
+        next if !$subtype->name;
+
+        # Setup base simple types
+        if ( @{ $subtype->enumeration } ) {
+            enum(
+                $subtype->moose_type
+                => $subtype->enumeration
+            );
+        }
+        else {
+            subtype $subtype->moose_type =>
+                as $subtype->moose_base_type;
+        }
+
+        # Add coercion from XML::LibXML nodes
+        coerce $subtype->moose_type =>
+            from 'xml_node' =>
+            via { $_->textContent };
+    }
+
+    return;
 }
 
 sub complex_type_package {
-    my ($self, $xsd, $type) = @_;
-    my @attribs;
-
-    for my $node ( $type->sequence ) {
-        push @attribs,
-            Moose::Meta::Attribute->new(
-                $node->perl_name,
-                is => 'rw',
-            );
-    }
+    my ($self, $xsd, $type, $class_name, $super) = @_;
 
     my $class = Moose::Meta::Class->create(
-        'Foo',
-        attributes => \@attribs,
-        superclasses => [],
+        $class_name,
+        superclasses => $super,
     );
+
+    for my $node (@{ $type->sequence }) {
+        $self->element_attributes($class, $class_name, $node);
+    }
 
     return $class;
 }
 
 sub elements_package {
-    my ($self, $xsd) = @_;
-    my @attribs;
-
-    for my $node ( $xsd->elements ) {
-        push @attribs,
-            Moose::Meta::Attribute->new(
-                $node->perl_name,
-                is => 'rw',
-            );
-    }
+    my ($self, $xsd, $class_name) = @_;
 
     my $class = Moose::Meta::Class->create(
-        $self->ns_module_map->{$xsd->target_namespace},
-        attributes   => \@attribs,
-        methods      => {},
-        superclasses => [],
+        $class_name,
+        superclasses => [ 'W3C::SOAP::XSD' ],
     );
+
+    $class->add_attribute(
+        '+xsd_ns',
+        default  => $xsd->target_namespace,
+        required => 1,
+    );
+
+    for my $node (@{ $xsd->elements }) {
+        $self->element_attributes($class, $class_name, $node);
+    }
 
     return $class;
 }
 
+sub element_attributes {
+    my ($self, $class, $class_name, $element) = @_;
+
+    my $simple = $element->simple_type;
+    my $very_simple = $element->very_simple_type;
+    my $is_array = $element->max_occurs eq 'unbounded'
+        || ( $element->max_occurs && $element->max_occurs > 1 )
+        || ( $element->min_occurs && $element->min_occurs > 1 );
+    my $type_name = $simple || $element->type_module;
+    my $searalize = '';
+
+    if ( $very_simple ) {
+        warn "Very simple type $very_simple\n";
+        if ( $very_simple eq 'xs:boolean' ) {
+            $searalize = sub { $_ ? 'true' : 'false' };
+        }
+        elsif ( $very_simple eq 'xs:date' ) {
+            $searalize = sub {
+                return $_->ymd if $_->time_zone->isa('DateTime::TimeZone::Floating');
+                my $d = DateTime::Format::Strptime::strftime('%F%z', $_);
+                $d =~ s/([+-]\\d\\d)(\\d\\d)\$/\$1:\$2/;
+                return $d
+            };
+        }
+        elsif ( $very_simple eq 'xs:time' ) {
+            $searalize = sub { $_->hms };
+        }
+    }
+
+    my @extra;
+    push @extra, ( xs_perl_module  => $element->type_module  ) if !$simple;
+    push @extra, ( xs_choice_group => $element->choice_group ) if $element->choice_group;
+    push @extra, ( xs_searalize    => $searalize             ) if $searalize;
+
+    $class->add_attribute(
+        $element->perl_name,
+        is            => 'rw',
+        isa           => $class_name->xsd_subtype(
+            ($simple ? 'parent' : 'module') => $type_name,
+           list => $is_array,
+        ),
+        predicate     => 'has_'. $element->perl_name,
+        required      => 0, # TODO $element->nillable,
+        coerce        => 1,
+    #[%- IF config->alias && element->name.replace('^\w+:', '') != element->perl_name %]
+        #alias         => '[% element->name.replace('^\w+:', '') %]',
+    #[%- END %]
+        traits        => [qw{ W3C::SOAP::XSD }],
+        xs_name       => $element->name,
+        xs_type       => $element->type,
+        xs_min_occurs => $element->min_occurs,
+        xs_max_occurs => $element->max_occurs  eq 'unbounded' ? 0 : $element->max_occurs,
+    );
+}
 1;
 
 __END__
