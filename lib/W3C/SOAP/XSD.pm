@@ -180,6 +180,9 @@ sub to_xml {
                 my @children = $item->to_xml($xml);
                 $tag->appendChild($_) for @children;
             }
+            elsif ( ! defined $item && ! $att->has_xs_searalize ) {
+                $tag->setAttribute('nil', 'true');
+            }
             else {
                 local $_ = $item;
                 my $text
@@ -229,6 +232,8 @@ sub to_data {
         else {
             if ( blessed($value) && $value->can('to_data') ) {
                 $value = $value->to_data(%option);
+            }
+            elsif ( ! defined $value && ! $att->has_xs_searalize ) {
             }
             elsif ($option{stringify}) {
                 local $_ = $value;
