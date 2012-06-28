@@ -23,6 +23,15 @@ Create whole SOAP clients (ala SOAP::Lite)
 
 Helpers to create SOAP servers, Catalyst/Dancer/Mojolicious helpers.
 
+=item Mock services helper
+
+Helper to create mock responces based on requests (dependant on server
+creation). Should be able to work in two different ways eg a recording
+opperation so that a client sends requests which the mock server proxies to
+the real server, stores the results against the request and sends back the
+response. The other method is to look up the request to see if their already
+is a responce and returns that (the true mock opperation).
+
 =item WS-Security
 
 Currently the Username part of the spec has some form of implementation but
