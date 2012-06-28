@@ -97,7 +97,7 @@ sub dynamic_modules {
     local $Data::Dumper::Sortkeys = 1;
     if ( $eg ) {
         is_deeply $eg->to_data(stringify=>1), \%test_data, 'Get out what you put in'
-        #or diag Dumper $eg->to_data(stringify=>1), \%test_data;
+            or diag Dumper $eg->to_data(stringify=>1), \%test_data;
     }
     else {
         ok 0, 'Got no object';

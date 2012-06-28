@@ -290,6 +290,12 @@ sub complex_type_package {
         superclasses => $super,
     );
 
+    $class->add_attribute(
+        '+xsd_ns',
+        default  => $xsd->target_namespace,
+        required => 1,
+    );
+
     for my $node (@{ $type->sequence }) {
         $self->element_attributes($class, $class_name, $node);
     }
@@ -330,7 +336,6 @@ sub element_attributes {
     my $searalize = '';
 
     if ( $very_simple ) {
-        warn "Very simple type $very_simple\n";
         if ( $very_simple eq 'xs:boolean' ) {
             $searalize = sub { $_ ? 'true' : 'false' };
         }
@@ -338,7 +343,7 @@ sub element_attributes {
             $searalize = sub {
                 return $_->ymd if $_->time_zone->isa('DateTime::TimeZone::Floating');
                 my $d = DateTime::Format::Strptime::strftime('%F%z', $_);
-                $d =~ s/([+-]\\d\\d)(\\d\\d)\$/\$1:\$2/;
+                $d =~ s/([+-]\d\d)(\d\d)$/$1:$2/;
                 return $d
             };
         }
@@ -370,7 +375,10 @@ sub element_attributes {
         xs_type       => $element->type,
         xs_min_occurs => $element->min_occurs,
         xs_max_occurs => $element->max_occurs  eq 'unbounded' ? 0 : $element->max_occurs,
+        @extra,
     );
+
+    return;
 }
 1;
 
