@@ -21,7 +21,7 @@ use File::ShareDir qw/dist_dir/;
 
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
+our @EXPORT_OK   = qw/load_wsdl/;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
@@ -85,6 +85,25 @@ sub write_modules {
         $parent = $parent->parent;
     }
     mkdir $_ for reverse @missing;
+    my @modules = $self->get_xsd->write_modules;
+
+    confess "No XSD modules found!\n" unless @modules;
+
+    my $data = {
+        wsdl     => $wsdl,
+        module   => $self->module,
+        xsd      => shift @modules,
+        modules  => \@modules,
+        location => $self->location,
+    };
+    $template->process('wsdl.pm.tt', $data, "$file");
+    die "Error in creating $file (xsd.pm): ". $template->error."\n"
+        if $template->error;
+
+}
+
+sub get_xsd {
+    my ($self, ) = @_;
 
     my $parse = W3C::SOAP::XSD::Parser->new(
         documents     => [],
@@ -102,20 +121,90 @@ sub write_modules {
         $parse->documents->[-1]->target_namespace($self->document->target_namespace)
             if !$parse->documents->[-1]->has_target_namespace;
     }
-    my @modules = $parse->write_modules;
 
-    confess "No XSD modules found!\n" unless @modules;
+    return $parse;
+}
 
-    my $data = {
-        wsdl     => $wsdl,
-        module   => $self->module,
-        xsd      => shift @modules,
-        modules  => \@modules,
-        location => $self->location,
-    };
-    $template->process('wsdl.pm.tt', $data, "$file");
-    die "Error in creating $file (xsd.pm): ". $template->error."\n"
-        if $template->error;
+sub load_wsdl {
+    my ($location) = @_;
+    my $parser = __PACKAGE__->new(
+        location => $location,
+        ns_module_map => {},
+    );
+
+    return $parser->dynamic_classes;
+}
+
+sub dynamic_classes {
+    my ($self) = @_;
+    my @classes = $self->get_xsd->dynamic_classes;
+
+    my $ns = $self->document->target_namespace;
+    $ns =~ s{://}{::};
+    $ns =~ s{([^:]:)([^:])}{$1:$2}g;
+    $ns =~ s{[^\w:]+}{_}g;
+    my $class_name = "Dynamic::XSD::$ns";
+    $self->ns_module_map->{$self->document->target_namespace}
+        = $class_name;
+
+    my $class = Moose::Meta::Class->create(
+        $class_name,
+        superclasses => [ 'W3C::SOAP::WSDL' ],
+    );
+
+    $class->add_attribute(
+        '+location',
+        default  => $self->document->target_namespace,
+        required => 1,
+    );
+
+    my $wsdl = $self->document;
+    for my $service ( $wsdl->services ) {
+        for my $port ( $service->ports ) {
+            for my $operation ( $port->binding->operations ) {
+                my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
+                my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
+                my $in_module  = $in_element->module  if $in_element;
+                my $out_module = $out_element->module if $out_element;
+                my $in_name  = $in_element->name  if $in_element;
+                my $out_name = $out_element->name if $out_element;
+
+                #"".$operation->perl_name =
+                sub {
+                    my $self = shift;
+
+                   if ( $operation->port_type->outputs->[0]->message->element ) {
+
+                        my $xsd = $in_module->new(
+                            $in_name => @_ == 1 ? $_[0] : {@_},
+                        );
+                        my $resp = $self->request( $operation->name => $xsd );
+
+                        return $out_module->new($resp)->$out_name;
+
+                   }
+                   elsif ( $operation->port_type->inputs->[0]->message->element ) {
+
+                        my $xsd = $in_module->new(
+                            $in_name => @_ == 1 ? $_[0] : {@_},
+                        );
+                        my $resp = $self->request( $operation->name > $xsd );
+
+                        return $resp;
+
+                    }
+                    elsif ( $operation->port_type->outputs->[0]->message->type ) {
+                        #$type = $operation->port_type->outputs->[0]->message->type
+
+                        #return $resp->firstChild->toString;
+                    }
+                }
+#[%- if ( config->alias && element->name->replace('^\w+:', '') != element->perl_name %]
+#alias [% element->name->replace('^\w+:', '') %] => '[% element->perl_name %]';
+#[%- END %]
+            }
+        }
+    }
 
 }
 
