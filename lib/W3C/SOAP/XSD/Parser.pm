@@ -37,7 +37,7 @@ has documents => (
 has template => (
     is       => 'rw',
     isa      => 'Template',
-    required => 1,
+    predicate => 'has_template',
 );
 has ns_module_map => (
     is       => 'rw',
@@ -47,7 +47,7 @@ has ns_module_map => (
 has lib => (
     is       => 'rw',
     isa      => 'Str',
-    required => 1,
+    predicate => 'has_lib',
 );
 
 around BUILDARGS => sub {
@@ -68,6 +68,9 @@ around BUILDARGS => sub {
 
 sub write_modules {
     my ($self) = @_;
+    confess "No lib directory setup" if !$self->has_lib;
+    confess "No template object set" if !$self->has_template;
+
     my @xsds     = $self->get_schemas;
     my $template = $self->template;
     my @schemas;

@@ -33,7 +33,7 @@ has document => (
 has template => (
     is       => 'rw',
     isa      => 'Template',
-    required => 1,
+    predicate => 'has_template',
 );
 has ns_module_map => (
     is       => 'rw',
@@ -43,7 +43,7 @@ has ns_module_map => (
 has module => (
     is       => 'rw',
     isa      => 'Str',
-    required => 1,
+    predicate => 'has_module',
 );
 has location => (
     is       => 'rw',
@@ -52,7 +52,7 @@ has location => (
 has lib => (
     is       => 'rw',
     isa      => 'Str',
-    required => 1,
+    predicate => 'has_lib',
 );
 
 around BUILDARGS => sub {
@@ -73,6 +73,10 @@ around BUILDARGS => sub {
 
 sub write_modules {
     my ($self) = @_;
+    confess "No lib directory setup" if !$self->has_lib;
+    confess "No module name setup"   if !$self->has_module;
+    confess "No template object set" if !$self->has_template;
+
     my $wsdl = $self->document;
     my $template = $self->template;
     my $file     = $self->lib . '/' . $self->module . '.pm';
@@ -103,13 +107,16 @@ sub write_modules {
 }
 
 sub get_xsd {
-    my ($self, ) = @_;
+    my ($self) = @_;
+
+    my @args;
+    push @args, ( template      => $self->template ) if $self->has_template;
+    push @args, ( lib           => $self->lib      ) if $self->has_lib     ;
 
     my $parse = W3C::SOAP::XSD::Parser->new(
         documents     => [],
-        template      => $self->template,
-        lib           => $self->lib     ,
         ns_module_map => $self->ns_module_map,
+        @args,
     );
 
     for my $xsd (@{ $self->document->schemas }) {
@@ -125,14 +132,20 @@ sub get_xsd {
     return $parse;
 }
 
+my %cache;
 sub load_wsdl {
     my ($location) = @_;
+
+    return $cache{$location} if $cache{$location};
+
     my $parser = __PACKAGE__->new(
         location => $location,
         ns_module_map => {},
     );
 
-    return $parser->dynamic_classes;
+    my $class = $parser->dynamic_classes;
+
+    return $cache{$location} = $class->new;
 }
 
 sub dynamic_classes {
@@ -147,30 +160,19 @@ sub dynamic_classes {
     $self->ns_module_map->{$self->document->target_namespace}
         = $class_name;
 
-    my $class = Moose::Meta::Class->create(
-        $class_name,
-        superclasses => [ 'W3C::SOAP::WSDL' ],
-    );
-
-    $class->add_attribute(
-        '+location',
-        default  => $self->document->target_namespace,
-        required => 1,
-    );
-
     my $wsdl = $self->document;
-    for my $service ( $wsdl->services ) {
-        for my $port ( $service->ports ) {
-            for my $operation ( $port->binding->operations ) {
+    my %method;
+    for my $service (@{ $wsdl->services }) {
+        for my $port (@{ $service->ports }) {
+            for my $operation (@{ $port->binding->operations }) {
                 my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
-                my $in_module  = $in_element->module  if $in_element;
-                my $out_module = $out_element->module if $out_element;
-                my $in_name  = $in_element->name  if $in_element;
-                my $out_name = $out_element->name if $out_element;
+                my $in_module  = $in_element->module   if $in_element;
+                my $out_module = $out_element->module  if $out_element;
+                my $in_name  = $in_element->perl_name  if $in_element;
+                my $out_name = $out_element->perl_name if $out_element;
 
-                #"".$operation->perl_name =
-                sub {
+                $method{ $operation->perl_name } = sub {
                     my $self = shift;
 
                    if ( $operation->port_type->outputs->[0]->message->element ) {
@@ -198,7 +200,7 @@ sub dynamic_classes {
 
                         #return $resp->firstChild->toString;
                     }
-                }
+                };
 #[%- if ( config->alias && element->name->replace('^\w+:', '') != element->perl_name %]
 #alias [% element->name->replace('^\w+:', '') %] => '[% element->perl_name %]';
 #[%- END %]
@@ -206,6 +208,19 @@ sub dynamic_classes {
         }
     }
 
+    my $class = Moose::Meta::Class->create(
+        $class_name,
+        superclasses => [ 'W3C::SOAP::WSDL' ],
+        methods      => \%method,
+    );
+
+    $class->add_attribute(
+        '+location',
+        default  => $wsdl->services->[0]->ports->[0]->address,
+        required => 1,
+    );
+
+    return $class_name;
 }
 
 1;

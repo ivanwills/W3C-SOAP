@@ -17,6 +17,7 @@ use WWW::Mechanize;
 use TryCatch;
 use XML::LibXML;
 use W3C::SOAP::Exception;
+use W3C::SOAP::Header;
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
@@ -122,7 +123,7 @@ sub send {
 }
 
 sub _header {
-    confess "This builder should be overridden in " . ref $_[0];
+    W3C::SOAP::Header->new;
 }
 
 1;
