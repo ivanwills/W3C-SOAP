@@ -31,8 +31,8 @@ has document => (
     required => 1,
 );
 has template => (
-    is       => 'rw',
-    isa      => 'Template',
+    is        => 'rw',
+    isa       => 'Template',
     predicate => 'has_template',
 );
 has ns_module_map => (
@@ -41,17 +41,17 @@ has ns_module_map => (
     required => 1,
 );
 has module => (
-    is       => 'rw',
-    isa      => 'Str',
+    is        => 'rw',
+    isa       => 'Str',
     predicate => 'has_module',
 );
 has location => (
-    is       => 'rw',
-    isa      => 'Str',
+    is  => 'rw',
+    isa => 'Str',
 );
 has lib => (
-    is       => 'rw',
-    isa      => 'Str',
+    is        => 'rw',
+    isa       => 'Str',
     predicate => 'has_lib',
 );
 

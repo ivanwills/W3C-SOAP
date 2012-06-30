@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N1:definitions
+    name="EgService"
+    targetNamespace="urn:eg.schema.org"
+    xmlns:WL5G3N0="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:WL5G3N1="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:WL5G3N3="urn:eg.schema.org"
+    xmlns:WL5G3N4="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    >
+  <wsp:UsingPolicy WL5G3N1:Required="true"/>
+  <wsp:Policy WL5G3N0:Id="Auth.xml">
+    <wssp:Identity xmlns:wssp="http://www.bea.com/wls90/security/policy">
+      <wssp:SupportedTokens>
+        <wssp:SecurityToken TokenType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">
+          <wssp:UsePassword Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"/>
+        </wssp:SecurityToken>
+      </wssp:SupportedTokens>
+    </wssp:Identity>
+  </wsp:Policy>
+  <WL5G3N1:types>
+    <xsd:schema
+        targetNamespace="urn:eg.schema.org"
+        xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:WL5G3N3="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        >
+      <xsd:include
+          schemaLocation="t/eg.xsd"
+          />
+    </xsd:schema>
+  </WL5G3N1:types>
+  <WL5G3N1:message name="firstActionRequest">
+    <WL5G3N1:part element="WL5G3N3:firstActionRequest" name="firstActionRequestParam"/>
+  </WL5G3N1:message>
+  <WL5G3N1:message name="firstActionResponse">
+    <WL5G3N1:part element="WL5G3N3:firstActionResponse" name="firstActionResponseParam"/>
+  </WL5G3N1:message>
+  <WL5G3N1:portType name="EgService">
+    <WL5G3N1:operation name="firstAction">
+      <WL5G3N1:input message="WL5G3N3:firstActionRequest"/>
+      <WL5G3N1:output message="WL5G3N3:firstActionResponse"/>
+    </WL5G3N1:operation>
+  </WL5G3N1:portType>
+  <WL5G3N1:binding name="EgServiceBinding" type="WL5G3N3:EgService">
+    <WL5G3N4:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N1:operation name="firstAction">
+      <WL5G3N4:operation soapAction="http://localhost:3030/firstAction"/>
+      <WL5G3N1:input>
+        <wsp:Policy>
+          <wsp:PolicyReference URI="#Auth.xml"/>
+        </wsp:Policy>
+        <WL5G3N4:body use="literal"/>
+      </WL5G3N1:input>
+      <WL5G3N1:output>
+        <WL5G3N4:body use="literal"/>
+      </WL5G3N1:output>
+    </WL5G3N1:operation>
+  </WL5G3N1:binding>
+  <WL5G3N1:service name="EgService">
+    <WL5G3N1:port binding="WL5G3N3:EgServiceBinding" name="EgServicePort">
+      <WL5G3N4:address location="http://localhost:3030/"/>
+    </WL5G3N1:port>
+  </WL5G3N1:service>
+</WL5G3N1:definitions>
