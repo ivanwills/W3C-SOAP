@@ -229,7 +229,32 @@ sub dynamic_classes {
             = "Dynamic::XSD::$ns";
     }
 
-    for my $xsd (@xsds) {
+    my %seen;
+    my @ordered_xsds;
+    XSD:
+    while ( my $xsd = shift @xsds ) {
+        my $module = $xsd->get_module_base($xsd->target_namespace);
+
+        # Complex types
+        my @types = @{ $xsd->complex_types };
+        my %local_seen;
+        TYPE:
+        while ( my $type = shift @types ) {
+            my $type_name = $type->name || $type->parent_node->name;
+            my $type_module = $module . '::' . $type_name;
+
+            if ( $type->extension && !$seen{ $type->extension } ) {
+                push @xsds, $xsd;
+                next XSD;
+            }
+            $local_seen{ $type_module }++;
+        }
+
+        %seen = ( %seen, %local_seen );
+        push @ordered_xsds, $xsd;
+    }
+
+    for my $xsd (@ordered_xsds) {
         my $module = $xsd->get_module_base($xsd->target_namespace);
 
         # Create simple types
@@ -244,6 +269,9 @@ sub dynamic_classes {
             for my $el (@{ $type->sequence }) {
                 $modules{ $el->type_module }++
                     if ! $el->simple_type && $el->module ne $module
+            }
+            if ( $type->extension ) {
+                $modules{ $type->extension }++
             }
 
             $self->complex_type_package($xsd, $type, $type_module, [ keys %modules ]);
