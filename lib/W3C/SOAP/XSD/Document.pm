@@ -199,10 +199,30 @@ sub _complex_types {
         my $parent = $node->parentNode;
         if ( $parent->nodeName !~ /\bschema$/ ) {
             if ( $parent->nodeName =~ /\belement/ ) {
+                # check if complexType is in document element
                 for my $element (@{ $self->elements }) {
                     if ( $parent->getAttribute('name') eq $element->name ) {
                         $parent = $element;
                         last;
+                    }
+                }
+
+                # check if we did not found parent in document element parent
+                if ( $parent->isa('XML::LibXML::Element') ) {
+                    # now look in complexTypes
+                    for my $complex_type (@complex_types) {
+                        for my $element (@{ $complex_type->sequence }) {
+                            if ( $parent->getAttribute('name') eq $element->name ) {
+                                $parent = $element;
+                                last;
+                            }
+                        }
+                    }
+                    if ( $parent->isa('XML::LibXML::Element') ) {
+                        W3C::SOAP::Exception->throw(
+                            error => "Could not find the parent elment for complexType "
+                                . $parent->getAttribute('name') . "!",
+                        );
                     }
                 }
             }
@@ -223,11 +243,11 @@ sub _complex_types {
         }
         catch ($e) {
             warn Dumper {
-                ($parent ? (parent_node => $parent) : ()),
+                ($parent ? (parent_node => $parent->toString) : ()),
                 document => $self,
                 node     => $node,
             };
-            die $e;
+            $e->throw;
         }
     }
 

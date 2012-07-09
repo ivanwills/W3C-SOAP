@@ -113,8 +113,16 @@
         >
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="firstThing"   type="xs:string"      minOccurs="1"/>
+                <xs:element name="firstThing"  type="xs:string"      minOccurs="1"/>
                 <xs:element name="secondThing" type="common:simpleEnum" minOccurs="1"/>
+                <xs:element name="subThing" minOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="firstSubThing"   type="xs:string"      minOccurs="1"/>
+                            <xs:element name="secondSubThing"  type="xs:string"      minOccurs="1"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
