@@ -6,18 +6,13 @@ W3C::SOAP tasks still to be done
 
 =over 4
 
-=item Tests for WSDL creation.
+=item Improve test coverage
 
-There are some known issues with generation of WSDL Clients, need to test for
-those and other issues.
+Need many more tests to make sure everything is working as expected
 
-=item In memory XSD object creation
+=item Documentation
 
-Need to dynamically create objects for any XSD found.
-
-=item In memory WSDL object creation (soap client)
-
-Create whole SOAP clients (ala SOAP::Lite)
+Some very basic documentation is done but much more work is needed.
 
 =item Server creation
 
