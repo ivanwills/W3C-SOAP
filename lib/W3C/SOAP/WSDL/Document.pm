@@ -238,7 +238,7 @@ sub xsd_modules {
     for my $service (@{ $self->services }) {
         for my $port (@{ $service->ports }) {
             for my $operation (@{ $port->binding->operations }) {
-                if ( $operation->port_type->outputs->[0]->message->element ) {
+                if ( $operation->port_type->outputs->[0] && $operation->port_type->outputs->[0]->message->element ) {
                     $modules{$operation->port_type->outputs->[0]->message->element->module}++;
                 }
             }
