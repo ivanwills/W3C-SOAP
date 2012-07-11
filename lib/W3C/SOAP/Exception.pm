@@ -1,23 +1,44 @@
 package W3C::SOAP::Exception;
-use strict;
-use warnings;
+use Moose;
+extends 'MooseX::Exception::Base';
 
-use Exception::Class (
-    'W3C::SOAP::Exception' => {
-        fields => [ qw{ faultcode message } ],
-    },
-    'W3C::SOAP::Exception::HTTP' => {
-        isa => 'W3C::SOAP::Exception',
-        fields => [ qw{ faultcode message error } ],
-    },
+has faultcode => (
+    is   => 'rw',
+    isa  => 'Str',
+);
+has faultstring => (
+    is   => 'rw',
+    isa  => 'Str',
+    traits => [qw{MooseX::Exception::Stringify}],
+);
+has faultactor => (
+    is   => 'rw',
+    isa  => 'Str',
+);
+has detail => (
+    is   => 'rw',
+    isa  => 'Str',
+);
 
-    'W3C::SOAP::Exception::Doomed' => {
-        isa => 'W3C::SOAP::Exception',
-    },
+package W3C::SOAP::Exception::HTTP;
+use Moose;
+extends 'W3C::SOAP::Exception';
 
-    'W3C::SOAP::Exception::BadInput' => {
-        fields => [ qw{ param message } ],
-    },
+package W3C::SOAP::Exception::Doomed;
+use Moose;
+extends 'W3C::SOAP::Exception';
+
+package W3C::SOAP::Exception::BadInput;
+use Moose;
+extends 'MooseX::Exception::Base';
+has param => (
+    is   => 'rw',
+    isa  => 'Str',
+);
+has message => (
+    is   => 'rw',
+    isa  => 'Str',
+    traits => [qw{MooseX::Exception::Stringify}],
 );
 
 
