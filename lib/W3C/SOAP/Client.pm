@@ -103,23 +103,46 @@ sub send {
         );
     }
     catch ($e) {
-        W3C::SOAP::Exception::HTTP->throw(
-            faultcode => $self->mech->res->code,
-            message   => $self->mech->res->message,
-            error     => $e,
-        );
+        my $xml_error = eval { XML::LibXML->load_xml( string => $self->mech->res->content ) };
+        my $ns        = $self->_envelope_ns($xml_error);
+
+        if ( $xml_error ) {
+            my ($code  ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultcode");
+            my ($string) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultstring");
+            my ($actor ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultactor");
+            my ($detail) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/detail");
+            W3C::SOAP::Exception->throw(
+                faultcode   => $code   && $code->textContent,
+                faultstring => $string && $string->textContent,
+                faultactor  => $actor  && $actor->textContent,
+                detail      => $detail && $detail->textContent,
+            );
+        }
+        else {
+            W3C::SOAP::Exception::HTTP->throw(
+                faultcode => $self->mech->res->code,
+                message   => $self->mech->res->message,
+                error     => $e,
+            );
+        }
     };
 
     my $xml_responce = XML::LibXML->load_xml( string => $self->mech->content );
-    my %map
-        = map {$_->name =~ /^xmlns:?(.*)$/; ($_->value => $1)}
-        grep { $_->name =~ /^xmlns/ }
-        $xml_responce->firstChild->getAttributes;
-    my $ns = $map{'http://schemas.xmlsoap.org/soap/envelope/'};
+    my $ns = $self->_envelope_ns($xml_responce);
 
     my ($node) = $xml_responce->findnodes("//$ns\:Body");
 
     return $node;
+}
+
+sub _envelope_ns {
+    my ($self, $xml) = @_;
+    my %map
+        = map {$_->name =~ /^xmlns:?(.*)$/; ($_->value => $1)}
+        grep { $_->name =~ /^xmlns/ }
+        $xml->firstChild->getAttributes;
+
+    return $map{'http://schemas.xmlsoap.org/soap/envelope/'};
 }
 
 sub _header {
