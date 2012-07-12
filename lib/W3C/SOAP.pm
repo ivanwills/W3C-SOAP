@@ -66,7 +66,7 @@ See L<W3C::SOAP::WSDL::Parser> for more details.
 =item C<load_xsd ($xsd_location)>
 
 Loads an XML Schema (.xsd) file, parses is and generates dynamic Moose objects
-that represening that schema and any other included/imported XML Schema
+that representing that schema and any other included/imported XML Schema
 content that it refers to.
 
 See L<W3C::SOAP::XSD::Parser> for more details.

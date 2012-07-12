@@ -417,7 +417,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Parser - Parse an W3C::SOAP::XSD::Document and reate perl modules
+W3C::SOAP::XSD::Parser - Parse an W3C::SOAP::XSD::Document and create perl modules
 
 =head1 VERSION
 
