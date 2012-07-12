@@ -4,20 +4,21 @@ extends 'MooseX::Exception::Base';
 
 has faultcode => (
     is   => 'rw',
-    isa  => 'Str',
+    isa  => 'Maybe[Str]',
 );
 has faultstring => (
     is   => 'rw',
-    isa  => 'Str',
+    isa  => 'Maybe[Str]',
     traits => [qw{MooseX::Exception::Stringify}],
 );
 has faultactor => (
     is   => 'rw',
-    isa  => 'Str',
+    isa  => 'Maybe[Str]',
 );
 has detail => (
     is   => 'rw',
-    isa  => 'Str',
+    isa  => 'Maybe[Str]',
+    traits => [qw{MooseX::Exception::Stringify}],
 );
 
 package W3C::SOAP::Exception::HTTP;
