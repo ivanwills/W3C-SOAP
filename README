@@ -21,7 +21,7 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc W3C::SOAP::XSD
+    perldoc W3C::SOAP
 
 You can also look for information at:
 
