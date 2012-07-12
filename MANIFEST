@@ -23,6 +23,7 @@ t/pod-coverage.t
 t/pod.t
 t/perlcriticrc
 t/spelling.t
+t/wsdl_parser.t
 templates/xsd.pm.tt
 templates/xsd_base.pm.tt
 templates/xsd_element.pm.tt
@@ -32,6 +33,7 @@ templates/wsdl.pm.tt
 templates/config.tt
 META.json
 bin/wsdl-parser
+lib/W3C/SOAP.pm
 lib/W3C/SOAP/Client.pm
 lib/W3C/SOAP/Document.pm
 lib/W3C/SOAP/Document/Node.pm
@@ -54,5 +56,6 @@ lib/W3C/SOAP/Manual/XSD.pod
 lib/W3C/SOAP/Utils.pm
 lib/W3C/SOAP/XSD/Document/Type.pm
 t/eg.xsd
+t/eg.wsdl
 t/parent.xsd
-
+t/other.xsd
