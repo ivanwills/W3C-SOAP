@@ -431,7 +431,6 @@ This documentation refers to W3C::SOAP::XSD::Parser version 0.1.
    # This section will be as far as many users bother reading, so make it as
    # educational and exemplary as possible.
 
-
 =head1 DESCRIPTION
 
 =head1 SUBROUTINES/METHODS
@@ -455,6 +454,26 @@ Write the template to disk
 =item C<get_schemas ()>
 
 Gets a list of the schemas imported/included from the base XML Schema(s)
+
+=item C<complex_type_package ( $xsd, $type, $class_name, $super)>
+
+Creates the complex types
+
+=item C<$wsdl->dynamic_classes ()>
+
+Creates a dynamic XSD objects that represent the XML Schema files imported.
+
+=item C<element_attributes ( $class, $class_name, $element )>
+
+Sets up all the attributes for a single element
+
+=item C<elements_package ( $xsd, $class_name )>
+
+Creates the package that represents top level elements in the XSD
+
+=item C<simple_type_package ( $xsd )>
+
+Creates all the simple types for the C<$xsd>
 
 =back
 
