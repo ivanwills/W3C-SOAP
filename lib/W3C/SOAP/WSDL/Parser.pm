@@ -237,28 +237,106 @@ This documentation refers to W3C::SOAP::WSDL::Parser version 0.1.
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Parser;
+   use W3C::SOAP::WSDL::Parser qw/load_wsdl?;
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
+   # quick/simple usage
+   # create a SOAP client
+   $url = 'http://example.com/soap.wsdl';
+   my $client = load_wsdl($url);
+   my $result = $client->some_action(...);
 
+   # Create a new object
+   my $wsdl = W3C::SOAP::WSDL::Parser->new(
+       location => $url,
+       module   => 'MyApp::WSDL',
+       lib      => './lib',
+       template => Template->new(...),
+       ns_module_map => {
+           'http://example.com/xsd/namespace' => 'MyAPP::XSD::Example',
+           'some.other.namespace'             => 'MyApp::XSD::SomeOther',
+       },
+   );
+
+   # Write the generated WSDL module to disk
+   $wsdl->write_modules();
+   # would generate files
+   #   lib/MyApp/WSDL.pm
+   #   lib/MyApp/XSD/Example.pm
+   #   lib/MyApp/XSD/SomeOther.pm
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
+This module parses a WSDL file so that it can produce a client to talk to the
+SOAP service.
 
 =head1 SUBROUTINES/METHODS
 
+=head2 EXPORTED SUBROUTINES
+
 =over 4
 
-=item C<write_modules ()>
+=item C<load_wsdl ($location)>
+
+Helper method that takes the supplied location and creates the dynamic WSDL
+client object.
+
+=back
+
+=head2 CLASS METHODS
+
+=over 4
+
+=item C<new (%args)>
+
+Create the new object C<new> accepts the following arguments:
+
+=over 4
+
+=item location
+
+This is the location of the WSDL file, it may be a local file or a URL
+
+=item module
+
+This is the name of the module to be generated, it is required when writing
+the SOAP client to disk, the dynamic client generator creates a semi random
+namespace.
+
+=item lib
+
+The library directory where modules should be stored. only required when
+calling C<write_modules>
+
+=item template
+
+The Template Toolkit object used for the generation of on disk modules
+
+=item ns_module_map
+
+The mapping of XSD namespaces to perl Modules.
+
+=back
+
+=back
+
+=head2 OBJECT METHODS
+
+=over 4
+
+=item C<$wsdl->write_modules ()>
 
 Writes out a module that is a SOAP Client to interface with the contained
 WSDL document, also writes any referenced XSDs.
+
+=item C<$wsdl->dynamic_classes ()>
+
+Creates a dynamic SOAP client object to talk to the WSDL this object was
+created for
+
+=item C<$wsdl->get_xsd ()>
+
+Creates the L<W3C::SOAP::XSD::Parser> object that represents the XSDs that
+are used by the specified WSDL file.
 
 =back
 
