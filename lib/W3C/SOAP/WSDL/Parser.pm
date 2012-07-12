@@ -167,10 +167,10 @@ sub dynamic_classes {
             for my $operation (@{ $port->binding->operations }) {
                 my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
-                my $in_module  = $in_element->module   if $in_element;
-                my $out_module = $out_element->module  if $out_element;
-                my $in_name  = $in_element->perl_name  if $in_element;
-                my $out_name = $out_element->perl_name if $out_element;
+                my $in_module  = $in_element  ? $in_element->module     : undef;
+                my $out_module = $out_element ? $out_element->module    : undef;
+                my $in_name    = $in_element  ? $in_element->perl_name  : undef;
+                my $out_name   = $out_element ? $out_element->perl_name : undef;
 
                 $method{ $operation->perl_name } = sub {
                     my $self = shift;
