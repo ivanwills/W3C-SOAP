@@ -19,9 +19,6 @@ use W3C::SOAP::Utils qw/split_ns/;
 extends 'W3C::SOAP::XSD::Document::Type';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 has complex_type => (
     is     => 'rw',

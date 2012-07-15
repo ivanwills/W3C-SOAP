@@ -24,9 +24,6 @@ Moose::Exporter->setup_import_methods(
 );
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw/load_wsdl/;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 has document => (
     is       => 'rw',

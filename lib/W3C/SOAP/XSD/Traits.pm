@@ -16,9 +16,6 @@ use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 Moose::Util::meta_attribute_alias('W3C::SOAP::XSD');
 

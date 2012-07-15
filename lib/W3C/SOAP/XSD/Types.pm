@@ -33,9 +33,6 @@ use DateTime::Format::Strptime qw/strptime/;
 use Math::BigFloat;
 
 our $VERSION     = version->new('0.0.1');
-#our @EXPORT_OK   = qw//;
-#our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 my $sig_warn = $SIG{__WARN__};
 $SIG{__WARN__} = sub {};

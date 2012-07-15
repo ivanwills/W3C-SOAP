@@ -20,9 +20,6 @@ use English qw/ -no_match_vars /;
 extends 'W3C::SOAP::Header::Security';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 my $id = 0;
 
 has username => (

@@ -42,8 +42,6 @@ extends '[% base %]::Base';
 [%- END %]
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
 
 has '+xsd_ns' => (
     default => '[% xsd.target_namespace %]',

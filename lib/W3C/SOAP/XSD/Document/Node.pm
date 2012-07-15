@@ -13,9 +13,6 @@ use English qw/ -no_match_vars /;
 extends 'W3C::SOAP::Document::Node';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 has '+parent_node' => (
     isa    => 'Maybe[W3C::SOAP::XSD::Document::Node]',

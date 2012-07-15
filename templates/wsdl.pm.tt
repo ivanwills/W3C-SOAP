@@ -23,8 +23,6 @@ use [% schema %];
 extends '[% config.wsdl.parent_module %]';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
 
 has '+location' => (
     default => '[% wsdl.services.0.ports.0.address %]',

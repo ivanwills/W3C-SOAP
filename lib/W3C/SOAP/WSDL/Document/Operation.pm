@@ -19,9 +19,6 @@ use W3C::SOAP::WSDL::Document::InOutPuts;
 extends 'W3C::SOAP::Document::Node';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 has style => (
     is         => 'rw',

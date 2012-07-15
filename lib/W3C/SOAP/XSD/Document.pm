@@ -25,9 +25,6 @@ use W3C::SOAP::XSD::Document::SimpleType;
 extends 'W3C::SOAP::Document';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 has imports => (
     is         => 'rw',
