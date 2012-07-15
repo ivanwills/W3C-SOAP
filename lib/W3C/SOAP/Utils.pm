@@ -17,6 +17,8 @@ use English qw/ -no_match_vars /;
 use base qw/Exporter/;
 
 our $VERSION     = version->new('0.0.1');
+our @EXPORT_OK   = qw/split_ns/;
+our %EXPORT_TAGS = ();
 
 sub split_ns {
     my ($tag) = @_;
