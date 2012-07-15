@@ -19,7 +19,34 @@ extends 'W3C::SOAP::Client';
 
 our $VERSION     = version->new('0.0.1');
 
+sub _request {
+    my ($self, $action, @args) = @_;
+    my $meta       = $self->meta;
+    my $method     = $meta->get_method($action);
+    my $opperation = $method->wsdl_opperation;
+    my $resp;
 
+    if ( $method->has_in_class && $method->has_in_attribute ) {
+        my $class = $method->in_class;
+        my $att   = $method->in_attribute;
+        my $xsd   = $class->new(
+            $att => @args == 1 ? $args[0] : @args,
+        );
+        $resp = $self->request( $opperation => $xsd );
+    }
+    else {
+        $resp = $self->request( $opperation, @args );
+    }
+
+    if ( $method->has_out_class && $method->has_out_attribute ) {
+        my $class = $method->out_class;
+        my $att   = $method->out_attribute;
+        return $class->new($resp)->$att;
+    }
+    else {
+        return $resp;
+    }
+}
 
 1;
 

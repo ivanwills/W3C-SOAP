@@ -17,6 +17,7 @@ use English qw/ -no_match_vars /;
 use Path::Class;
 use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WSDL::Document;
+use W3C::SOAP::WSDL::Meta::Method;
 use File::ShareDir qw/dist_dir/;
 
 Moose::Exporter->setup_import_methods(
@@ -167,43 +168,17 @@ sub dynamic_classes {
             for my $operation (@{ $port->binding->operations }) {
                 my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
-                my $in_module  = $in_element  ? $in_element->module     : undef;
-                my $out_module = $out_element ? $out_element->module    : undef;
-                my $in_name    = $in_element  ? $in_element->perl_name  : undef;
-                my $out_name   = $out_element ? $out_element->perl_name : undef;
 
-                $method{ $operation->perl_name } = sub {
-                    my $self = shift;
-
-                   if ( $operation->port_type->outputs->[0]->message->element ) {
-
-                        my $xsd = $in_module->new(
-                            $in_name => @_ == 1 ? $_[0] : {@_},
-                        );
-                        my $resp = $self->request( $operation->name => $xsd );
-
-                        return $out_module->new($resp)->$out_name;
-
-                   }
-                   elsif ( $operation->port_type->inputs->[0]->message->element ) {
-
-                        my $xsd = $in_module->new(
-                            $in_name => @_ == 1 ? $_[0] : {@_},
-                        );
-                        my $resp = $self->request( $operation->name > $xsd );
-
-                        return $resp;
-
-                    }
-                    elsif ( $operation->port_type->outputs->[0]->message->type ) {
-                        #$type = $operation->port_type->outputs->[0]->message->type
-
-                        #return $resp->firstChild->toString;
-                    }
-                };
-#[%- if ( config->alias && element->name->replace('^\w+:', '') != element->perl_name %]
-#alias [% element->name->replace('^\w+:', '') %] => '[% element->perl_name %]';
-#[%- END %]
+                $method{ $operation->perl_name } = W3C::SOAP::WSDL::Meta::Method->wrap(
+                    body            => sub { shift->_request($operation->perl_name => @_) },
+                    package_name    => $class_name,
+                    name            => $operation->perl_name,
+                    wsdl_opperation => $operation->name,
+                    $in_element  ? ( in_class      => $in_element->module     ) : (),
+                    $in_element  ? ( in_attribute  => $in_element->perl_name  ) : (),
+                    $out_element ? ( out_class     => $out_element->module    ) : (),
+                    $out_element ? ( out_attribute => $out_element->perl_name ) : (),
+                );
             }
         }
     }
