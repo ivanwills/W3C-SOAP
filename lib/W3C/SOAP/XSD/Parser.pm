@@ -19,10 +19,11 @@ use W3C::SOAP::XSD::Document;
 use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
 
+Moose::Exporter->setup_import_methods(
+    as_is => ['load_xsd'],
+);
+
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw/load_xsd/;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 subtype xsd_documents =>
     as 'ArrayRef[W3C::SOAP::XSD::Document]';

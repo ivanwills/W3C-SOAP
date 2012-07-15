@@ -17,10 +17,11 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::XSD::Parser qw/load_xsd/;
 use W3C::SOAP::WSDL::Parser qw/load_wsdl/;
 
+Moose::Exporter->setup_import_methods(
+    as_is => [qw/load_wsdl load_xsd/],
+);
+
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw/load_wsdl load_xsd/;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 1;
 

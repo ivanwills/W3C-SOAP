@@ -19,6 +19,9 @@ use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WSDL::Document;
 use File::ShareDir qw/dist_dir/;
 
+Moose::Exporter->setup_import_methods(
+    as_is => ['load_wsdl'],
+);
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw/load_wsdl/;
