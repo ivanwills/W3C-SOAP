@@ -2,6 +2,9 @@ package W3C::SOAP::Exception;
 use Moose;
 extends 'MooseX::Exception::Base';
 
+has '+_verbose' => (
+    default => 2,
+);
 has faultcode => (
     is   => 'rw',
     isa  => 'Maybe[Str]',
