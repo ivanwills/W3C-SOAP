@@ -26,11 +26,12 @@ our $VERSION = version->new('0.0.1');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
-    lib     => 'lib',
-    verbose => 0,
-    man     => 0,
-    help    => 0,
-    VERSION => 0,
+    lib           => 'lib',
+    ns_module_map => {},
+    verbose       => 0,
+    man           => 0,
+    help          => 0,
+    VERSION       => 0,
 );
 
 if ( !@ARGV ) {
@@ -152,29 +153,37 @@ __DATA__
 
 =head1 NAME
 
-bin/wsdl-parser - <One-line description of commands purpose>
+wsdl-parser - <One-line description of commands purpose>
 
 =head1 VERSION
 
-This documentation refers to bin/wsdl-parser version 0.1.
+This documentation refers to wsdl-parser version 0.1.
 
 =head1 SYNOPSIS
 
-   bin/wsdl-parser [option]
+   wsdl-parser [option] package wsdl_file_or_url
 
  OPTIONS:
-  -o --other         other option
+  -s --show     Show some info about the passed WSDL file
+  -n --namespace-map ns=package
+                A mapping of XSD namespaces (ns) to perl package names, it
+                is required when writing XSD files
+  -f --map-file[=]file
+                File that contains mappings of name
+  -l --lib[=]dir
+                Directory where generated modules should be writted, the
+                default is ./lib
+  -p --path[=]str
+                Extra template toolkit directories if you want to override
+                default templates.
 
-  -v --verbose       Show more detailed option
-     --version       Prints the version information
-     --help          Prints this help information
-     --man           Prints the full documentation for bin/wsdl-parser
+  -v --verbose  Show more detailed option
+     --version  Prints the version information
+     --help     Prints this help information
+     --man      Prints the full documentation for wsdl-parser
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
 
 
 =head1 SUBROUTINES/METHODS
