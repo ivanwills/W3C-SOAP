@@ -18,6 +18,7 @@ use Path::Class;
 use W3C::SOAP::XSD::Document;
 use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
+use W3C::SOAP::Utils qw/split_ns/;
 
 Moose::Exporter->setup_import_methods(
     as_is => ['load_xsd'],
@@ -119,6 +120,13 @@ sub write_modules {
             for my $el (@{ $type->sequence }) {
                 $modules{ $el->type_module }++
                     if ! $el->simple_type && $el->module ne $module
+            }
+            for my $element (@{ $type->sequence }) {
+                next if $element->simple_type;
+                my ($ns) = split_ns($element->type);
+                my $ns_uri = $element->document->get_ns_uri($ns);
+                $modules{ $type->document->get_module_base($ns_uri) }++
+                    if $ns_uri && $ns_uri ne $type->document->target_namespace;
             }
 
             # write the complex type module
