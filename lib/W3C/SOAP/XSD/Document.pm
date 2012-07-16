@@ -182,7 +182,6 @@ sub _simple_type {
         die "No name for simple type ".$type->node->parentNode->toString if !$name;
         $simple_type{$name} = $type;
     }
-    #warn "created: $self\n\t", join "\t", sort keys %simple_type;
 
     return \%simple_type;
 }
@@ -224,7 +223,7 @@ sub _complex_types {
                 }
             }
             else {
-                warn "?????? ". $parent->nodeName;
+                warn "Don't know how to handle ". $parent->nodeName . " in " . $node->nodeName;
             }
         }
         else {

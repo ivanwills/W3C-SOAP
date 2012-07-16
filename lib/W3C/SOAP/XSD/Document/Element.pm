@@ -114,10 +114,8 @@ sub _nillble {
 
 sub module {
     my ($self) = @_;
-    my ($ns, $type) = split_ns($self->type);
-    my $ns_uri = $self->document->get_ns_uri($ns);
 
-    return $self->document->get_module_base( $ns_uri );
+    return $self->document->get_module_base( $self->document->target_namespace );
 }
 
 sub type_module {
