@@ -8,6 +8,7 @@ use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::WSDL::Parser;
+use MechMock;
 
 my $dir = file($0)->parent;
 
@@ -19,6 +20,7 @@ my $template = Template->new(
     INTERPOLATE  => 0,
     EVAL_PERL    => 1,
 );
+my $mech = MechMock->new;
 # create the parser object
 my $parser = W3C::SOAP::WSDL::Parser->new(
     location      => $dir->file('eg.wsdl').'',
@@ -38,7 +40,22 @@ exit;
 
 sub dynamic_modules {
     note my ($class) = @_;
-    can_ok $class, 'first_action';
-    $class->first_action;
+    my $wsdl = $class->new;
+    $wsdl->mech($mech);
+    can_ok $wsdl, 'first_action';
+    my $action = $wsdl->meta->get_method('first_action');
+    is $action->wsdl_opperation, 'firstAction', 'Have an opperation';
+    is $action->in_class, 'Dynamic::XSD::urn::eg_schema_org', 'Input class is correct';
+
+    $mech->content(<<"XML");
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body xmlns:eg="urn:eg.schema.org">
+        <eg:el2>2</eg:el2>
+    </soapenv:Body>
+</soapenv:Envelope>
+XML
+    my $resp = $wsdl->first_action(first_thing => 'test');
+    is $resp, 2, "get result back";
 }
 

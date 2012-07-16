@@ -75,10 +75,10 @@ XML
         }
     }
     else {
-        W3C::SOAP::Exception::Input->throw(
+        W3C::SOAP::Exception::BadInput->throw(
             faultcode => 'UNKNOWN SOAP BODY',
             message   => "Don't know how to process ". (ref $body) ."\n",
-            error     => undef,
+            error     => '',
         );
     }
 
@@ -87,18 +87,10 @@ XML
 
 sub send {
     my ($self, $action, $xml) = @_;
-
-    my $url = $self->location;
+    my $content;
 
     try {
-        $self->mech->post(
-            $url,
-            'Content-Type'     => 'text/xml;charset=UTF-8',
-            'SOAPAction'       => qq{"$action"},
-            'Proxy-Connection' => 'Keep-Alive',
-            'Accept-Encoding'  => 'gzip, deflate',
-            Content            => $xml->toString,
-        );
+        $content = $self->_post($action, $xml);
     }
     catch ($e) {
         my $xml_error = eval { XML::LibXML->load_xml( string => $self->mech->res->content ) };
@@ -125,12 +117,28 @@ sub send {
         }
     };
 
-    my $xml_responce = XML::LibXML->load_xml( string => $self->mech->content );
+    my $xml_responce = XML::LibXML->load_xml( string => $content );
     my $ns = $self->_envelope_ns($xml_responce);
 
     my ($node) = $xml_responce->findnodes("//$ns\:Body");
 
     return $node;
+}
+
+sub _post {
+    my ($self, $action, $xml) = @_;
+    my $url = $self->location;
+
+    $self->mech->post(
+        $url,
+        'Content-Type'     => 'text/xml;charset=UTF-8',
+        'SOAPAction'       => qq{"$action"},
+        'Proxy-Connection' => 'Keep-Alive',
+        'Accept-Encoding'  => 'gzip, deflate',
+        Content            => $xml->toString,
+    );
+
+    return $self->mech->content;
 }
 
 sub _envelope_ns {

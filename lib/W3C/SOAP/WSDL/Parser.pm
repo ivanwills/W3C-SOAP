@@ -157,9 +157,7 @@ sub dynamic_classes {
     $ns =~ s{://}{::};
     $ns =~ s{([^:]:)([^:])}{$1:$2}g;
     $ns =~ s{[^\w:]+}{_}g;
-    my $class_name = "Dynamic::XSD::$ns";
-    $self->ns_module_map->{$self->document->target_namespace}
-        = $class_name;
+    my $class_name = "Dynamic::WSDL::$ns";
 
     my $wsdl = $self->document;
     my %method;

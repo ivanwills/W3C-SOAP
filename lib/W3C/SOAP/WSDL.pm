@@ -30,7 +30,7 @@ sub _request {
         my $class = $method->in_class;
         my $att   = $method->in_attribute;
         my $xsd   = $class->new(
-            $att => @args == 1 ? $args[0] : @args,
+            $att => @args == 1 ? $args[0] : {@args},
         );
         $resp = $self->request( $opperation => $xsd );
     }
