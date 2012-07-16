@@ -205,12 +205,23 @@ sub written_modules_alias {
 }
 
 sub cleanup {
-    unlink $dir->file('lib/MyApp/Eg.pm');
-    unlink $dir->file('lib/MyApp/Eg/Types.pm');
-    unlink $dir->file('lib/MyApp/Eg/Base.pm');
-    rmdir  $dir->file('lib/MyApp/Eg');
-    unlink $dir->file('lib/MyApp/Parent.pm');
-    unlink $dir->file('lib/MyApp/Parent/Types.pm');
-    unlink $dir->file('lib/MyApp/Parent/Base.pm');
-    rmdir  $dir->file('lib/MyApp/Parent');
+    unlink $dir->file('lib/MyApp/Eg/Anon0.pm')                or note 'Could not remove lib/MyApp/Eg/Anon0.pm';
+    unlink $dir->file('lib/MyApp/Eg/Anon1.pm')                or note 'Could not remove lib/MyApp/Eg/Anon1.pm';
+    unlink $dir->file('lib/MyApp/Eg/Anon2.pm')                or note 'Could not remove lib/MyApp/Eg/Anon2.pm';
+    unlink $dir->file('lib/MyApp/Eg/Base.pm')                 or note 'Could not remove lib/MyApp/Eg/Base.pm';
+    unlink $dir->file('lib/MyApp/Eg/localComplexThing.pm')    or note 'Could not remove lib/MyApp/Eg/localComplexThing.pm';
+    unlink $dir->file('lib/MyApp/Eg/localOther.pm')           or note 'Could not remove lib/MyApp/Eg/localOther.pm';
+    unlink $dir->file('lib/MyApp/Eg.pm')                      or note 'Could not remove lib/MyApp/Eg.pm';
+    unlink $dir->file('lib/MyApp/Other/Base.pm')              or note 'Could not remove lib/MyApp/Other/Base.pm';
+    unlink $dir->file('lib/MyApp/Other/otherComplexThing.pm') or note 'Could not remove lib/MyApp/Other/otherComplexThing.pm';
+    unlink $dir->file('lib/MyApp/Other.pm')                   or note 'Could not remove lib/MyApp/Other.pm';
+    unlink $dir->file('lib/MyApp/Parent/Base.pm')             or note 'Could not remove lib/MyApp/Parent/Base.pm';
+    unlink $dir->file('lib/MyApp/Parent/complexThing.pm')     or note 'Could not remove lib/MyApp/Parent/complexThing.pm';
+    unlink $dir->file('lib/MyApp/Parent/moreComplexThing.pm') or note 'Could not remove lib/MyApp/Parent/moreComplexThing.pm';
+    unlink $dir->file('lib/MyApp/Parent.pm')                  or note 'Could not remove lib/MyApp/Parent.pm';
+
+    rmdir  $dir->file('lib/MyApp/Parent') or note 'Could not remove lib/MyApp/Parent';;
+    rmdir  $dir->file('lib/MyApp/Other')  or note 'Could not remove lib/MyApp/Other';
+    rmdir  $dir->file('lib/MyApp/Eg')     or note 'Could not remove lib/MyApp/Eg';
+    rmdir  $dir->file('lib/MyApp')        or note 'Could not remove lib/MyApp';
 }

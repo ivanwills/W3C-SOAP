@@ -8,6 +8,7 @@ use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::WSDL::Parser;
+use lib file($0)->parent->subdir('lib').'';
 use MechMock;
 
 my $dir = file($0)->parent;
