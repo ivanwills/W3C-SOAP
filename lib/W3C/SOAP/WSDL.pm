@@ -21,7 +21,20 @@ our $VERSION     = version->new('0.0.1');
 
 sub _request {
     my ($self, $action, @args) = @_;
-    my $meta       = $self->meta;
+    my $meta = $self->meta;
+
+    if ( !$meta->get_method($action) ) {
+        # find a parent with the $action method
+        my @supers = $meta->superclasses;
+        while ( my $super = shift @supers ) {
+            if ( $super->meta->get_method($action) ) {
+                $meta = $super->meta;
+                last;
+            }
+            push @supers, $super->superclasses;
+        }
+    }
+
     my $method     = $meta->get_method($action);
     my $opperation = $method->wsdl_opperation;
     my $resp;
