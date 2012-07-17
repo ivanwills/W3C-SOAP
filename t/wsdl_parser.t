@@ -8,6 +8,8 @@ use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::WSDL::Parser;
+use lib file($0)->parent->subdir('lib').'';
+use MechMock;
 
 my $dir = file($0)->parent;
 
@@ -19,6 +21,7 @@ my $template = Template->new(
     INTERPOLATE  => 0,
     EVAL_PERL    => 1,
 );
+my $mech = MechMock->new;
 # create the parser object
 my $parser = W3C::SOAP::WSDL::Parser->new(
     location      => $dir->file('eg.wsdl').'',
@@ -35,7 +38,7 @@ my $parser = W3C::SOAP::WSDL::Parser->new(
 parser();
 $parser->write_modules;
 written_modules();
-#cleanup();
+cleanup();
 done_testing();
 exit;
 
@@ -51,8 +54,20 @@ sub written_modules {
     push @INC, $dir->subdir('lib').'';
     require_ok('MyApp::WsdlEg');
     my $eg = MyApp::WsdlEg->new;
+    $eg->mech($mech);
 
     isa_ok $eg, 'MyApp::WsdlEg', 'Create the object correctly';
+
+    $mech->content(<<"XML");
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body xmlns:eg="urn:eg.schema.org">
+        <eg:el2>2</eg:el2>
+    </soapenv:Body>
+</soapenv:Envelope>
+XML
+    my $resp = $eg->first_action(first_thing => 'test');
+    is $resp, 2, "get result back";
 }
 
 sub cleanup {
