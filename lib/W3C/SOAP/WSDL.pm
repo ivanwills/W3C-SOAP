@@ -21,21 +21,8 @@ our $VERSION     = version->new('0.0.1');
 
 sub _request {
     my ($self, $action, @args) = @_;
-    my $meta = $self->meta;
-
-    if ( !$meta->get_method($action) ) {
-        # find a parent with the $action method
-        my @supers = $meta->superclasses;
-        while ( my $super = shift @supers ) {
-            if ( $super->meta->get_method($action) ) {
-                $meta = $super->meta;
-                last;
-            }
-            push @supers, $super->superclasses;
-        }
-    }
-
-    my $method     = $meta->get_method($action);
+    my $meta       = $self->meta;
+    my $method     = $self->_get_operation_method($action);
     my $opperation = $method->wsdl_opperation;
     my $resp;
 
@@ -59,6 +46,21 @@ sub _request {
     else {
         return $resp;
     }
+}
+
+sub _get_operation_method {
+    my ($self, $action) = @_;
+
+    my $method = $self->meta->get_method($action);
+    return $method if $method && $method->meta->name eq 'W3C::SOAP::WSDL::Meta::Method';
+
+    for my $super ( $self->meta->superclasses ) {
+        next unless $super->can('_get_operation_method');
+        $method = $super->_get_operation_method($action);
+        return $method if $method && $method->meta->name eq 'W3C::SOAP::WSDL::Meta::Method';
+    }
+
+    confess "Could not find any methods called $action!";
 }
 
 1;
