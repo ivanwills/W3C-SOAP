@@ -14,17 +14,34 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use base qw/Exporter/;
+use W3C::SOAP::WSDL::Meta::Method;
+
+Moose::Exporter->setup_import_methods(
+    as_is     => ['split_ns'],
+    with_meta => ['operation'],
+);
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw/split_ns/;
-our %EXPORT_TAGS = ();
 
 sub split_ns {
     my ($tag) = @_;
     confess "No XML tag passed to split!\n" unless defined $tag;
     my ($ns, $name) = split /:/, $tag, 2;
     return $name ? ($ns, $name) : ('', $ns);
+}
+
+sub operation {
+    my ( $meta, $name, %options ) = @_;
+    $meta->add_method(
+        $name,
+        W3C::SOAP::WSDL::Meta::Method->wrap(
+            body            => sub { shift->_request($name => @_) },
+            package_name    => $meta->name,
+            name            => $name,
+            %options,
+        )
+    );
+    return;
 }
 
 1;

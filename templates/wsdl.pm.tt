@@ -12,6 +12,7 @@ use warnings;
 use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
+use W3C::SOAP::Utils;
 [%- IF config.alias %]
 use MooseX::Aliases;
 [%- END %]
@@ -29,38 +30,21 @@ has '+location' => (
 );
 [% FOR service IN wsdl.services;
     FOR port IN service.ports;
-        FOR operation IN port.binding.operations %]
-sub [% operation.perl_name %] {
-    my $self = shift;
-
-[%-
-           IF operation.port_type.outputs.0.message.element;
-                in_element = operation.port_type.inputs.0.message.element;
-                out_element = operation.port_type.outputs.0.message.element;
-%]
-    my $xsd = [% in_element.module %]->new(
-        [% in_element.perl_name %] => @_ == 1 ? $_[0] : {@_},
-    );
-    my $resp = $self->request( [% operation.name %] => $xsd );
-
-    return [% out_element.module %]->new($resp)->[% out_element.perl_name %];
-[%-
-           ELSIF operation.port_type.inputs.0.message.element;
-                in_element = operation.port_type.inputs.0.message.element;
-%]
-    my $xsd = [% in_element.module %]->new(
-        [% in_element.perl_name %] => @_ == 1 ? $_[0] : {@_},
-    );
-    my $resp = $self->request( [% operation.name %] => $xsd );
-
-    return $resp;
-[%-
-            ELSIF operation.port_type.outputs.0.message.type;
-                type = operation.port_type.outputs.0.message.type
-%]
-    return $resp->firstChild->toString;
-[%-         END %]
-}
+        FOR operation IN port.binding.operations;
+            in_element = operation.port_type.inputs.0.message.element;
+            out_element = operation.port_type.outputs.0.message.element;
+ %]
+operation [% operation.perl_name %] => (
+    wsdl_opperation => '[% operation.name %]',
+[%- IF in_element %]
+    in_class        => '[% in_element.module %]',
+    in_attribute    => '[% in_element.perl_name %]',
+[%- END %]
+[%- IF out_element %]
+    out_class       => '[% out_element.module %]',
+    out_attribute   => '[% out_element.perl_name %]',
+[%- END %]
+);
 [%- IF config.alias && element.name.replace('^\w+:', '') != element.perl_name %]
 alias [% element.name.replace('^\w+:', '') %] => '[% element.perl_name %]';
 [%- END %]
