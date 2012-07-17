@@ -94,9 +94,9 @@ sub send {
     }
     catch ($e) {
         my $xml_error = eval { XML::LibXML->load_xml( string => $self->mech->res->content ) };
-        my $ns        = $self->_envelope_ns($xml_error);
 
         if ( $xml_error ) {
+            my $ns       = $self->_envelope_ns($xml_error);
             my ($code  ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultcode");
             my ($string) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultstring");
             my ($actor ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultactor");
