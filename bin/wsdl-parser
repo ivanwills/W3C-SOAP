@@ -51,6 +51,7 @@ sub main {
         'lib|l=s',
         'show|s',
         'path|p=s',
+        'save|S',
         'verbose|v+',
         'man',
         'help',
@@ -98,6 +99,21 @@ sub main {
             %option,
         );
         $wsdl->write_modules;
+
+        if ( $option{save} ) {
+            my $file = $map{$module};
+            $file =~ s{[/:?&]}{_}g;
+            my $fh = file("$file.wsdl")->openw;
+            print {$fh} $wsdl->document->xml->toString();
+
+            for my $schema ($wsdl->get_xsd->get_schemas) {
+                next if ! $schema->location;
+                my $file = $schema->location;
+                $file =~ s{[/:?&]}{_}g;
+                my $fh = file("$file.xsd")->openw;
+                print {$fh} $schema->xml->toString();
+            }
+        }
     }
 
     return;
