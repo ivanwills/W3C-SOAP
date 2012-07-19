@@ -17,7 +17,7 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::WSDL::Meta::Method;
 
 Moose::Exporter->setup_import_methods(
-    as_is     => ['split_ns'],
+    as_is     => ['split_ns', 'xml_error'],
     with_meta => ['operation'],
 );
 
@@ -28,6 +28,20 @@ sub split_ns {
     confess "No XML tag passed to split!\n" unless defined $tag;
     my ($ns, $name) = split /:/, $tag, 2;
     return $name ? ($ns, $name) : ('', $ns);
+}
+
+sub xml_error {
+    my ($node) = @_;
+    my @lines  = split /\r?\n/, $node->toString;
+    my $indent = '';
+    if ( $lines[0] !~ /^\s+/ && $lines[-1] =~ /^(\s+)/ ) {
+        $indent = $1;
+    }
+    my $error = $indent . $node->toString."\n at ";
+    $error .= "line - ".$node->line_number.' ' if $node->line_number;
+    $error .= "path - ".$node->nodePath;
+
+    return $error;
 }
 
 sub operation {

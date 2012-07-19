@@ -14,7 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use W3C::SOAP::Utils qw/split_ns/;
+use W3C::SOAP::Utils qw/split_ns xml_error/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
@@ -131,7 +131,7 @@ sub simple_type {
     $self->document->simple_type;
     my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->document->get_ns_uri($ns);
-    warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
+    warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
     return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
@@ -156,7 +156,7 @@ sub very_simple_type {
     $self->document->simple_type;
     my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->document->get_ns_uri($ns);
-    warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
+    warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
     return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
@@ -179,7 +179,7 @@ sub moosex_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->document->get_ns_uri($ns);
-    warn "Simple type missing a type for '".$self->type."'\n".$self->node->toString."\n"
+    warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
     return "'xs:$type'" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';
