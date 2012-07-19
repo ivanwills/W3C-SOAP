@@ -2,6 +2,8 @@ package W3C::SOAP::Exception;
 use Moose;
 extends 'MooseX::Exception::Base';
 
+our $VERSION = version->new('0.0.1');
+
 has '+_verbose' => (
     default => 2,
 );
@@ -28,13 +30,20 @@ package W3C::SOAP::Exception::HTTP;
 use Moose;
 extends 'W3C::SOAP::Exception';
 
+our $VERSION = version->new('0.0.1');
+
 package W3C::SOAP::Exception::Doomed;
 use Moose;
 extends 'W3C::SOAP::Exception';
 
+our $VERSION = version->new('0.0.1');
+
 package W3C::SOAP::Exception::BadInput;
 use Moose;
 extends 'MooseX::Exception::Base';
+
+our $VERSION = version->new('0.0.1');
+
 has param => (
     is   => 'rw',
     isa  => 'Str',
