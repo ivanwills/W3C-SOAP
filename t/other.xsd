@@ -11,6 +11,11 @@
         <xs:sequence>
             <xs:element name="otherOne" type="xs:string"  minOccurs="1"/>
             <xs:element name="otherTwo" type="xs:int"     minOccurs="1"/>
+            <xs:element name="el10">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 

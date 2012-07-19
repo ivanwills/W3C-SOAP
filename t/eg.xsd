@@ -162,4 +162,9 @@
         nillable="false"
         default=""
         />
+    <xs:element name="el10">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
 </xs:schema>
