@@ -314,8 +314,9 @@ sub simple_type_package {
         }
 
         # Add coercion from XML::LibXML nodes
+        warn $subtype->moose_type;
         coerce $subtype->moose_type =>
-            from 'xml_node' =>
+            from 'XML::LibXML::Node' =>
             via { $_->textContent };
     }
 
@@ -325,10 +326,16 @@ sub simple_type_package {
 sub complex_type_package {
     my ($self, $xsd, $type, $class_name, $super) = @_;
 
-    my $class = Moose::Meta::Class->create(
+    warn Dumper $class_name, $super;
+    my $class = eval { Moose::Meta::Class->create(
         $class_name,
         superclasses => $super,
-    );
+    )};
+    if ($@) {
+        warn $@;
+        exit;
+    }
+    warn $class_name;
 
     $class->add_attribute(
         '+xsd_ns',

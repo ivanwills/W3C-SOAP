@@ -78,6 +78,26 @@ sub _type {
     my $type = $self->node->getAttribute('type');
     return $type if $type;
 
+    my $simple = $self->document->simple_type;
+    TYPE:
+    for my $type (keys %{$simple}) {
+        my $node = $simple->{$type}->node;
+        my  $type_name = $node->parentNode->getAttribute('name');
+        if ( $type_name && $type_name eq $self->name ) {
+            my @children = $node->findnodes('xs:restriction', $node);
+            last if @children != 1;
+
+            my $child = $children[0]->firstChild;
+            while ($child) {
+                last TYPE if $child->nodeName !~ /^#/;
+                $child = $child->nextSibling;
+            }
+
+            return $children[0]->getAttribute('base');
+        }
+        $type_name ||= '';
+    }
+
     return $self->has_anonymous;
 }
 

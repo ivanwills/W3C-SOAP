@@ -13,7 +13,15 @@
             <xs:element name="otherTwo" type="xs:int"     minOccurs="1"/>
             <xs:element name="el10">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string"/>
+                    <xs:restriction base="xs:string">
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="el11">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="4"/>
+                    </xs:restriction>
                 </xs:simpleType>
             </xs:element>
         </xs:sequence>
