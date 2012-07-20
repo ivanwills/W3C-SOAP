@@ -36,7 +36,7 @@ done_testing();
 exit;
 
 sub dynamic_modules {
-    note my ($class) = @_;
+    my ($class) = @_;
     $class = 'Dynamic::XSD::urn::eg_schema_org';
 
     my %test_data = (
@@ -123,7 +123,7 @@ XML
 }
 
 sub dynamic_modules_alias {
-    note my ($class) = @_;
+    my ($class) = @_;
     $class = 'Dynamic::XSD::urn::eg_schema_org';
 
     my %test_data = (
