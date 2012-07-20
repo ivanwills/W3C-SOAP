@@ -19,12 +19,12 @@ extends 'W3C::SOAP::Document::Node';
 
 our $VERSION     = version->new('0.0.1');
 
-has sec_id => {
+has sec_id => (
     is      => 'rw',
     isa     => 'Str',
     builder => '_sec_id',
 );
-has policy_type => {
+has policy_type => (
     is      => 'rw',
     isa     => 'Str',
     builder => '_policy_type',
@@ -33,13 +33,13 @@ has policy_type => {
 sub _sec_id {
     my ($self) = @_;
     my @attributes = $self->node->getAttributes();
-    
+
 }
 
 sub _policy_type {
     my ($self) = @_;
     my @nodes = $self->document->xpc->findnodes('wsdl:operation', $self->node);
-    
+
 }
 
 1;
