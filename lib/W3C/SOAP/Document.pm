@@ -69,6 +69,7 @@ sub _xpc {
     $xpc->registerNs(xsd  => 'http://www.w3.org/2001/XMLSchema');
     $xpc->registerNs(wsdl => 'http://schemas.xmlsoap.org/wsdl/');
     $xpc->registerNs(wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy');
+    $xpc->registerNs(wssp => 'http://www.bea.com/wls90/security/policy');
     $xpc->registerNs(soap => 'http://schemas.xmlsoap.org/wsdl/soap/');
 
     return $xpc;
