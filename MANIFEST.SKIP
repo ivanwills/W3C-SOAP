@@ -69,3 +69,4 @@ t/xsd
 t/lib/MyApp
 .prove
 TODO
+tmp
