@@ -1,5 +1,38 @@
 Revision history for W3C-SOAP
 
-0.0.1   2012-05-28
+0.0.2   2012-07-21
+        Added documentation about xml_error sub
+        Added in new files
+        Fixed spelling
+        Removed unused file
+        Got test working, removed debugging
+        Fixed wrong bracked
+        Trying to work out bug
+        Started on policy work
+        Added policy ns
+        Added missing version info
+        Added xml_error helper sub
+        Added more complexity to XSDs
+        Added option to save downloaded files (helps with debugging)
+        Added documentation about operation Moose helper
+        Fixed walking through inheritance tree
+        Fixed issue with not checking inheritance
+        Created helper method so that operation's now look/act like data
+        Made static test perform a request
+        Fixed error handling
+        Fixed removing of temporary files
+        Fixed not loading all required modules for a complex type
+        Fixed dynamic WSDL creation, got tests working for example data
+        Fixed getting an elements mobile
+        Worked on documentation
+        Increased the default verbosity for soap errprs
+        Starting on abstracting action methods
+        Fixed excessibly removed export
+        Removed non-Moose export mechanisims
+        Fixed exporting load_wsdl & load_xsd
+        Fixed package module
+        Improved POD, added missing sub definitions
+
+0.0.1   2012-07-12
         First version, released on an unsuspecting world.
 
