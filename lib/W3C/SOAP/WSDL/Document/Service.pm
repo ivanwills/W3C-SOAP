@@ -18,7 +18,7 @@ use W3C::SOAP::WSDL::Document::Port;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION     = version->new('0.0.2');
 
 has ports => (
     is         => 'rw',
@@ -52,7 +52,7 @@ W3C::SOAP::WSDL::Document::Service - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Service version 0.1.
+This documentation refers to W3C::SOAP::WSDL::Document::Service version 0.0.2.
 
 
 =head1 SYNOPSIS

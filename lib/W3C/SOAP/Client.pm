@@ -19,7 +19,7 @@ use XML::LibXML;
 use W3C::SOAP::Exception;
 use W3C::SOAP::Header;
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION     = version->new('0.0.2');
 
 has location => (
     is       => 'rw',
@@ -165,7 +165,7 @@ W3C::SOAP::Client - Client to talk SOAP to a server.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Client version 0.1.
+This documentation refers to W3C::SOAP::Client version 0.0.2.
 
 =head1 SYNOPSIS
 

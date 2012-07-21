@@ -17,7 +17,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::XSD::Document::Node';
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION     = version->new('0.0.2');
 
 has documentation => (
     is     => 'rw',
@@ -48,7 +48,7 @@ W3C::SOAP::XSD::Document::Type - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::Type version 0.1.
+This documentation refers to W3C::SOAP::XSD::Document::Type version 0.0.2.
 
 
 =head1 SYNOPSIS
