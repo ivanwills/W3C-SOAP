@@ -100,6 +100,10 @@ Utility Functions
 
 Splits an XML tag's namespace from the tag name
 
+=item C<xml_error ($xml_node)>
+
+Pretty format the C<$xml_node> for an error message
+
 =back
 
 =head1 MOOSE HELPERS
