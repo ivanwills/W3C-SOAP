@@ -124,7 +124,7 @@ The name of the XSD generated module that the inputs should be made against
 
 =item C<in_attribute>
 
-The particular elment form the C<in_class> XSD
+The particular element form the C<in_class> XSD
 
 =item C<out_class>
 
@@ -132,7 +132,7 @@ The name of the XSD generated module that the outputs should be passed to
 
 =item C<out_attribute>
 
-The particular elment form the C<out_class> XSD that contains the results.
+The particular element form the C<out_class> XSD that contains the results.
 
 =back
 

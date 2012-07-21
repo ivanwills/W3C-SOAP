@@ -42,5 +42,6 @@ add_stopwords(qw/
     TagName
     DateTime
     WSDL
+    wsdl
 /);
 all_pod_files_spelling_ok();
