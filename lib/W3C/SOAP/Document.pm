@@ -77,7 +77,7 @@ sub _xpc {
 
 sub _target_namespace {
     my ($self) = @_;
-    my $ns  = $self->xml->firstChild->getAttribute('targetNamespace');
+    my $ns  = $self->xml->getDocumentElement->getAttribute('targetNamespace');
     my $xpc  = $self->xpc;
     $xpc->registerNs(ns   => $ns) if $ns;
 
