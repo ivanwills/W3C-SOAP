@@ -24,6 +24,32 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
+            <xs:element name="el13">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="el13_1" type="xs:string"  minOccurs="1"/>
+                        <xs:element name="el13_2" type="xs:int"     minOccurs="1"/>
+                        <xs:element name="el13_3">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="el13_4">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="el13_4_1">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
