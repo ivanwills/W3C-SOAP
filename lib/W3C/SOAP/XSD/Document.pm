@@ -212,13 +212,9 @@ sub _complex_types {
 
     # now itterate over all document level elements and elements of complex types
     my @elements = ( @{ $self->elements }, map {@{ $_->sequence }} @complex_types );
-    my $i = -1;
 
-    while ( ++$i < @elements ) {
-        my $element = $elements[$i];
-        # TODO can't see why this would ever not work but assuming an element
-        # should only ever have one sub complex type (may have sub sub etc
-        # complex types though)
+    while ( my $element = shift @elements ) {
+        # Get the elements first sub complex type (if any)
         my ($node) = $self->xpc->findnodes('xsd:complexType', $element->node);
         next unless $node;
 
@@ -301,7 +297,10 @@ sub _ns_map {
     my %map
         = map {$_->name =~ /^xmlns:?(.*)$/; ($1 => $_->value)}
         grep { $_->name =~ /^xmlns/ }
-        $self->xml->firstChild->getAttributes;
+        $self->xml->getDocumentElement->getAttributes;
+
+    my %rev = reverse %map;
+    $map{$self->target_namespace} = $self->target_namespace if !$rev{$self->target_namespace};
 
     return \%map;
 }

@@ -125,6 +125,7 @@ sub write_modules {
             for my $element (@{ $type->sequence }) {
                 next if $element->simple_type;
                 my ($ns) = split_ns($element->type);
+                $ns ||= $element->document->target_namespace;
                 my $ns_uri = $element->document->get_ns_uri($ns);
                 $modules{ $type->document->get_module_base($ns_uri) }++
                     if $ns_uri && $ns_uri ne $type->document->target_namespace;

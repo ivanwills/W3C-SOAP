@@ -83,7 +83,7 @@ sub _type {
     for my $type (keys %{$simple}) {
         my $node = $simple->{$type}->node;
         my  $type_name = $node->parentNode->getAttribute('name');
-        if ( $type_name && $type_name eq $self->name ) {
+        if ( $type_name && $self->name && $type_name eq $self->name ) {
             my @children = $node->findnodes('xs:restriction', $node);
             last if @children != 1;
 
@@ -105,6 +105,7 @@ sub _package {
     my ($self) = @_;
     my $type = $self->type;
     my ($ns, $name) = split_ns($type);
+    $ns ||= $self->document->target_namespace;
     my $ns_uri = $name ? $self->document->get_ns_uri($ns) : '';
     $name ||= $ns;
 
@@ -141,6 +142,7 @@ sub module {
 sub type_module {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
+    $ns ||= $self->document->target_namespace;
     my $ns_uri = $self->document->get_ns_uri($ns);
 
     return $self->simple_type || $self->document->get_module_base( $ns_uri ) . '::' . $type;
@@ -150,6 +152,9 @@ sub simple_type {
     my ($self) = @_;
     $self->document->simple_type();
     my ($ns, $type) = split_ns($self->type);
+    $ns ||= $self->document->target_namespace;
+    return "xs:$type" if $self->document->ns_map->{$ns} && $self->document->ns_map->{$ns} eq 'http://www.w3.org/2001/XMLSchema';
+
     my $ns_uri = $self->document->get_ns_uri($ns);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
@@ -173,8 +178,11 @@ sub simple_type {
 
 sub very_simple_type {
     my ($self) = @_;
-    $self->document->simple_type;
+    $self->document->simple_type();
     my ($ns, $type) = split_ns($self->type);
+    $ns ||= $self->document->target_namespace;
+    return "xs:$type" if $self->document->ns_map->{$ns} && $self->document->ns_map->{$ns} eq 'http://www.w3.org/2001/XMLSchema';
+
     my $ns_uri = $self->document->get_ns_uri($ns);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
@@ -198,6 +206,7 @@ sub very_simple_type {
 sub moosex_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
+    $ns ||= $self->document->target_namespace;
     my $ns_uri = $self->document->get_ns_uri($ns);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
@@ -226,7 +235,7 @@ sub has_anonymous {
     my $simple = $self->document->simple_type;
     for my $type (keys %{$simple}) {
         my  $type_name = $simple->{$type}->node->parentNode->getAttribute('name');
-        if ( $type_name && $type_name eq $self->name ) {
+        if ( $type_name && $self->name && $type_name eq $self->name ) {
             my %map = reverse %{ $self->document->ns_map };
             return $map{$self->document->target_namespace} . ':' . $type;
         }
@@ -236,14 +245,14 @@ sub has_anonymous {
     my $complex = $self->document->complex_type;
     for my $type (keys %{$complex}) {
         my  $type_name = $complex->{$type}->node->parentNode->getAttribute('name');
-        if ( $type_name && $type_name eq $self->name ) {
+        if ( $type_name && $self->name && $type_name eq $self->name ) {
             my %map = reverse %{ $self->document->ns_map };
             return $map{$self->document->target_namespace} . ':' . $type;
         }
         $type_name ||= '';
     }
 
-    return;
+    return 'xs:string';
 }
 
 1;

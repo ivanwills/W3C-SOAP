@@ -102,6 +102,9 @@ sub moose_type {
 sub moose_base_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
+    $ns ||= $self->document->target_namespace;
+    return "xs:$type" if $self->document->ns_map->{$ns} && $self->document->ns_map->{$ns} eq 'http://www.w3.org/2001/XMLSchema';
+
     my $ns_uri = $self->document->get_ns_uri($ns);
 
     return "xs:$type" if $ns_uri eq 'http://www.w3.org/2001/XMLSchema';

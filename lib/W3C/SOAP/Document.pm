@@ -75,13 +75,14 @@ sub _xpc {
     return $xpc;
 }
 
+my $anon = 0;
 sub _target_namespace {
     my ($self) = @_;
     my $ns  = $self->xml->getDocumentElement->getAttribute('targetNamespace');
-    my $xpc  = $self->xpc;
-    $xpc->registerNs(ns   => $ns) if $ns;
+    my $xpc = $self->xpc;
+    $xpc->registerNs(ns => $ns) if $ns;
 
-    return $ns;
+    return $ns || $self->location || 'NsAnon' . $anon++;
 }
 
 1;
