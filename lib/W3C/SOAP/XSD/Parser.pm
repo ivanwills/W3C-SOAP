@@ -173,7 +173,11 @@ my %written;
 sub write_module {
     my ($self, $tt, $data, $file) = @_;
     my $template = $self->template;
-    confess "Already written $file!\n" if $written{$file}++;
+
+     if ($written{$file}++) {
+        warn "Already written $file!\n";
+        return;
+    }
 
     $template->process($tt, $data, "$file");
     die "Error in creating $file (via $tt): ". $template->error."\n"
