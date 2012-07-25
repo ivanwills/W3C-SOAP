@@ -148,7 +148,7 @@ sub type_module {
 
 sub simple_type {
     my ($self) = @_;
-    $self->document->simple_type;
+    $self->document->simple_type();
     my ($ns, $type) = split_ns($self->type);
     my $ns_uri = $self->document->get_ns_uri($ns);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"

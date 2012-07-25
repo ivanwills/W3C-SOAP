@@ -18,6 +18,7 @@ use Path::Class;
 use XML::LibXML;
 use WWW::Mechanize;
 use TryCatch;
+use W3C::SOAP::Exception;
 use W3C::SOAP::XSD::Document::Element;
 use W3C::SOAP::XSD::Document::ComplexType;
 use W3C::SOAP::XSD::Document::SimpleType;
@@ -189,61 +190,53 @@ sub _simple_type {
 sub _complex_types {
     my ($self) = @_;
     my @complex_types;
-    my @nodes = $self->xpc->findnodes('//xsd:complexType');
+    my @nodes = $self->xpc->findnodes('/*/xsd:complexType');
 
     for my $node (@nodes) {
-        my $parent = $node->parentNode;
-        if ( $parent->nodeName !~ /\bschema$/ ) {
-            if ( $parent->nodeName =~ /\belement/ ) {
-                # check if complexType is in document element
-                for my $element (@{ $self->elements }) {
-                    if ( $parent->getAttribute('name') eq $element->name ) {
-                        $parent = $element;
-                        last;
-                    }
-                }
-
-                # check if we did not found parent in document element parent
-                if ( $parent->isa('XML::LibXML::Element') ) {
-                    # now look in complexTypes
-                    for my $complex_type (@complex_types) {
-                        for my $element (@{ $complex_type->sequence }) {
-                            if ( $parent->getAttribute('name') eq $element->name ) {
-                                $parent = $element;
-                                last;
-                            }
-                        }
-                    }
-                    if ( $parent->isa('XML::LibXML::Element') ) {
-                        W3C::SOAP::Exception->throw(
-                            error => "Could not find the parent elment for complexType "
-                                . $parent->getAttribute('name') . "!",
-                        );
-                    }
-                }
-            }
-            else {
-                warn "Don't know how to handle ". $parent->nodeName . " in " . $node->nodeName;
-            }
-        }
-        else {
-            $parent = undef;
-        }
-
+        # get all top level complex types
         try {
             push @complex_types, W3C::SOAP::XSD::Document::ComplexType->new(
-                ($parent ? (parent_node => $parent) : ()),
                 document => $self,
                 node     => $node,
             );
         }
         catch ($e) {
             warn Dumper {
-                ($parent ? (parent_node => $parent->toString) : ()),
                 document => $self,
                 node     => $node,
             };
-            $e->throw;
+            die $e;
+        }
+
+    }
+
+    # now itterate over all document level elements and elements of complex types
+    my @elements = ( @{ $self->elements }, map {@{ $_->sequence }} @complex_types );
+    my $i = -1;
+
+    while ( ++$i < @elements ) {
+        my $element = $elements[$i];
+        # TODO can't see why this would ever not work but assuming an element
+        # should only ever have one sub complex type (may have sub sub etc
+        # complex types though)
+        my ($node) = $self->xpc->findnodes('xsd:complexType', $element->node);
+        next unless $node;
+
+        try {
+            push @complex_types, W3C::SOAP::XSD::Document::ComplexType->new(
+                parent_node => $element,
+                document    => $self,
+                node        => $node,
+            );
+            push @elements, @{ $complex_types[-1]->sequence };
+        }
+        catch ($e) {
+            warn Dumper {
+                parent_node => $element->node->toString,
+                document    => $self,
+                node        => $node,
+            };
+            die $e;
         }
     }
 
