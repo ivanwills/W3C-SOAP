@@ -116,7 +116,13 @@ sub _imports {
 
     for my $import (@nodes) {
         my $location = $import->getAttribute('schemaLocation');
-        push @imports, __PACKAGE__->new( location => $location, ns_module_map => $self->ns_module_map );
+        confess "No schemaLocation specified for ".$import->toString
+            if !$location;
+
+        push @imports, __PACKAGE__->new(
+            location      => $location,
+            ns_module_map => $self->ns_module_map,
+        );
     }
 
     return \@imports;
@@ -138,7 +144,13 @@ sub _includes {
 
     for my $include (@nodes) {
         my $location = $include->getAttribute('schemaLocation');
-        push @includes, __PACKAGE__->new( location => $location, ns_module_map => $self->ns_module_map );
+        confess "No schemaLocation specified for ".$include->toString
+            if !$location;
+
+        push @includes, __PACKAGE__->new(
+            location      => $location,
+            ns_module_map => $self->ns_module_map,
+        );
     }
 
     return \@includes;
