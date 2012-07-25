@@ -7,6 +7,7 @@ package W3C::SOAP::XSD::Document::Node;
 # $Revision$, $Source$, $Date$
 
 use Moose;
+use warnings;
 use version;
 use English qw/ -no_match_vars /;
 

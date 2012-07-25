@@ -7,6 +7,7 @@ package W3C::SOAP::Client;
 # $Revision$, $Source$, $Date$
 
 use Moose;
+use warnings;
 use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
