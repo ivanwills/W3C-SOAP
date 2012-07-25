@@ -243,9 +243,17 @@ sub _schemas {
     my @nodes = $self->xpc->findnodes('//wsdl:types/*');
 
     for my $node (@nodes) {
+        # merge document namespaces into the schema's tags
+        my $doc = $self->xml->getDocumentElement;
+        my @attribs = $doc->getAttributes;
+        for my $ns ( grep {$_->name =~ /^xmlns:/ && !$node->getAttribute($_->name)} @attribs ) {
+            $node->setAttribute( $ns->name, 'value' );
+            $node->setAttribute( $ns->name, $ns->value );
+        }
+
         push @complex_types, W3C::SOAP::XSD::Document->new(
             string        => $node->toString,
-            ns_module_map => $self->ns_module_map ,
+            ns_module_map => $self->ns_module_map,
         );
     }
 
