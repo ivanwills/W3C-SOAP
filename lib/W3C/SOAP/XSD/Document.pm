@@ -19,6 +19,7 @@ use Path::Class;
 use XML::LibXML;
 use WWW::Mechanize;
 use TryCatch;
+use URI;
 use W3C::SOAP::Exception;
 use W3C::SOAP::XSD::Document::Element;
 use W3C::SOAP::XSD::Document::ComplexType;
@@ -119,6 +120,10 @@ sub _imports {
         confess "No schemaLocation specified for ".$import->toString
             if !$location;
 
+        if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
+            $location = URI->new_abs($location, $self->location)->to_string;
+        }
+
         push @imports, __PACKAGE__->new(
             location      => $location,
             ns_module_map => $self->ns_module_map,
@@ -146,6 +151,10 @@ sub _includes {
         my $location = $include->getAttribute('schemaLocation');
         confess "No schemaLocation specified for ".$include->toString
             if !$location;
+
+        if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
+            $location = URI->new_abs($location, $self->location)->to_string;
+        }
 
         push @includes, __PACKAGE__->new(
             location      => $location,
