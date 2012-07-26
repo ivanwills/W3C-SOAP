@@ -259,7 +259,7 @@ sub dynamic_classes {
             my $type_name = $type->name || $type->parent_node->name;
             my $type_module = $module . '::' . $type_name;
 
-            if ( $type->extension && !$seen{ $type->extension } ) {
+            if ( $type->extension && !$seen{ $type->extension }++ ) {
                 push @xsds, $xsd;
                 next XSD;
             }
