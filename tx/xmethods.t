@@ -22,7 +22,6 @@ my $count = 1;
 
 while (my $wsdl = <$wsdls>) {
     next if $wsdl =~ /^#/;
-    note $wsdl;
     chomp $wsdl;
     eval {
         $mech->get($wsdl);
@@ -37,6 +36,7 @@ sub test_wsdl {
 
     # create the parser object
     my @cmd = ( qw/perl -MW3C::SOAP=load_wsdl -e/, "load_wsdl(q{$wsdl})" );
+    note join ' ', @cmd, "\n";
     my $error = system @cmd;
     ok !$error, "Loaded $wsdl";
     return;
