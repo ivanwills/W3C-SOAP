@@ -169,7 +169,7 @@ __DATA__
 
 =head1 NAME
 
-wsdl-parser - <One-line description of commands purpose>
+wsdl-parser - Parses a WSDL file to generate a SOAP client
 
 =head1 VERSION
 
@@ -192,6 +192,7 @@ This documentation refers to wsdl-parser version 0.0.2.
   -p --path[=]str
                 Extra template toolkit directories if you want to override
                 default templates.
+  -S --save     Save all downloaded WSDLs & XSDs
 
   -v --verbose  Show more detailed option
      --version  Prints the version information
