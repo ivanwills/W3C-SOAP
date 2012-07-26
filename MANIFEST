@@ -29,6 +29,7 @@ templates/xsd_base.pm.tt
 templates/xsd_element.pm.tt
 templates/xsd_element.pod.tt
 templates/xsd_complex_type.pm.tt
+templates/pod.tt
 templates/wsdl.pm.tt
 templates/config.tt
 META.json
@@ -63,4 +64,6 @@ t/parent.xsd
 t/other.xsd
 t/lib/MechMock.pm
 t/wsdl_parser_dynamic.t
-
+tx/wsdls.txt
+tx/xmethods.pl
+tx/xmethods.t
