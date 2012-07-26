@@ -276,10 +276,12 @@ sub xsd_subtype {
     my ($self, %args) = @_;
     my $parent_type = $args{module} || $args{parent};
     # upgrade dates
-    $parent_type = 'xsd:date'     if $parent_type eq 'xs:date';
-    $parent_type = 'xsd:dateTime' if $parent_type eq 'xs:dateTime';
-    $parent_type = 'xsd:boolean'  if $parent_type eq 'xs:boolean';
-    $parent_type = 'xsd:double'   if $parent_type eq 'xs:double';
+    $parent_type
+        = $parent_type eq 'xs:date'     ? 'xsd:date'
+        : $parent_type eq 'xs:dateTime' ? 'xsd:dateTime'
+        : $parent_type eq 'xs:boolean'  ? 'xsd:boolean'
+        : $parent_type eq 'xs:double'   ? 'xsd:double'
+        :                                 $parent_type;
 
     my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
     my $subtype = $parent_type =~ /^xsd:\w/ && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);
