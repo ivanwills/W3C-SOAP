@@ -116,7 +116,8 @@ sub _imports {
     my @nodes = $self->xpc->findnodes('//xsd:import');
 
     for my $import (@nodes) {
-        my $location = $import->getAttribute('schemaLocation');
+        my $location = $import->getAttribute('schemaLocation')
+            || $import->getAttribute('namespace');
         confess "No schemaLocation specified for ".$import->toString
             if !$location;
 
@@ -148,7 +149,8 @@ sub _includes {
     my @nodes = $self->xpc->findnodes('//xsd:include');
 
     for my $include (@nodes) {
-        my $location = $include->getAttribute('schemaLocation');
+        my $location = $include->getAttribute('schemaLocation')
+            || $include->getAttribute('namespace');
         confess "No schemaLocation specified for ".$include->toString
             if !$location;
 
