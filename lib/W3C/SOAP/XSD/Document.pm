@@ -65,6 +65,13 @@ has simple_type => (
     builder    => '_simple_type',
     lazy_build => 0,
 );
+has anon_simple_type_count => (
+    is      => 'ro',
+    isa     => 'Int',
+    traits  => [qw/Counter/],
+    default => -1,
+    handles => { simple_type_count => 'inc' },
+);
 has complex_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::ComplexType]',
@@ -76,6 +83,13 @@ has complex_type => (
     isa        => 'HashRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_type',
     lazy_build => 0,
+);
+has anon_complex_type_count => (
+    is      => 'ro',
+    isa     => 'Int',
+    traits  => [qw/Counter/],
+    default => -1,
+    handles => { complex_type_count => 'inc' },
 );
 has elements => (
     is         => 'rw',
@@ -191,7 +205,6 @@ sub _simple_types {
     return \@simple_types;
 }
 
-my $simple_type_count = 0;
 sub _simple_type {
     my ($self) = @_;
     my %simple_type;
@@ -201,7 +214,7 @@ sub _simple_type {
         if ( !$name ) {
             my $parent = $type->node->parentNode;
             $name = $parent->getAttribute('name');
-            $name = $name ? 'anon'.$simple_type_count++ : $name;
+            $name = $name ? $name . '_type' : 'anon'.$self->simple_type_count;
             $type->name($name);
         }
         die "No name for simple type ".$type->node->parentNode->toString if !$name;
@@ -263,7 +276,6 @@ sub _complex_types {
     return \@complex_types;
 }
 
-my $complex_type_count = 0;
 sub _complex_type {
     my ($self) = @_;
     my %complex_type;
@@ -272,7 +284,7 @@ sub _complex_type {
         if ( !$name ) {
             my $parent = $type->node->parentNode;
             $name = $parent->getAttribute('name');
-            $name = $name ? 'Anon'.$complex_type_count++ : $name;
+            $name = $name ? $name . 'Type' : 'Anon'.$self->complex_type_count;
             $type->name($name);
         }
         die "No name for complex type ".$type->node->parentNode->toString if !$name;
