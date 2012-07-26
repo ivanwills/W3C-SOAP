@@ -122,7 +122,7 @@ sub _imports {
             if !$location;
 
         if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
-            $location = URI->new_abs($location, $self->location)->to_string;
+            $location = URI->new_abs($location, $self->location) . '';
         }
 
         push @imports, __PACKAGE__->new(
@@ -155,7 +155,7 @@ sub _includes {
             if !$location;
 
         if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
-            $location = URI->new_abs($location, $self->location)->to_string;
+            $location = URI->new_abs($location, $self->location) . '';
         }
 
         push @includes, __PACKAGE__->new(
