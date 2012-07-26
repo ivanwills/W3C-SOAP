@@ -127,7 +127,7 @@ sub write_modules {
                 next if $element->simple_type;
                 my ($ns) = split_ns($element->type);
                 $ns ||= $element->document->target_namespace;
-                my $ns_uri = $element->document->get_ns_uri($ns);
+                my $ns_uri = $element->document->get_ns_uri($ns, $element->node);
                 $modules{ $type->document->get_module_base($ns_uri) }++
                     if $ns_uri && $ns_uri ne $type->document->target_namespace;
             }

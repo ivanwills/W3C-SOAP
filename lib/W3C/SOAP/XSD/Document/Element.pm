@@ -107,7 +107,7 @@ sub _package {
     my $type = $self->type;
     my ($ns, $name) = split_ns($type);
     $ns ||= $self->document->target_namespace;
-    my $ns_uri = $name ? $self->document->get_ns_uri($ns) : '';
+    my $ns_uri = $name ? $self->document->get_ns_uri($ns, $self->node) : '';
     $name ||= $ns;
 
     if ( $ns_uri eq 'http://www.w3.org/2001/XMLSchema' ) {
@@ -144,7 +144,7 @@ sub type_module {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
     $ns ||= $self->document->target_namespace;
-    my $ns_uri = $self->document->get_ns_uri($ns);
+    my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
 
     return $self->simple_type || $self->document->get_module_base( $ns_uri ) . '::' . $type;
 }
@@ -156,7 +156,7 @@ sub simple_type {
     $ns ||= $self->document->target_namespace;
     return "xs:$type" if $self->document->ns_map->{$ns} && $self->document->ns_map->{$ns} eq 'http://www.w3.org/2001/XMLSchema';
 
-    my $ns_uri = $self->document->get_ns_uri($ns);
+    my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
@@ -184,7 +184,7 @@ sub very_simple_type {
     $ns ||= $self->document->target_namespace;
     return "xs:$type" if $self->document->ns_map->{$ns} && $self->document->ns_map->{$ns} eq 'http://www.w3.org/2001/XMLSchema';
 
-    my $ns_uri = $self->document->get_ns_uri($ns);
+    my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 
@@ -208,7 +208,7 @@ sub moosex_type {
     my ($self) = @_;
     my ($ns, $type) = split_ns($self->type);
     $ns ||= $self->document->target_namespace;
-    my $ns_uri = $self->document->get_ns_uri($ns);
+    my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
         if !$ns && $ns_uri ne 'http://www.w3.org/2001/XMLSchema';
 

@@ -342,8 +342,17 @@ sub _ns_map {
 }
 
 sub get_ns_uri {
-    my ($self, $ns_name) = @_;
+    my ($self, $ns_name, $node) = @_;
     confess "No namespace passed when trying to map a namespace uri!\n" if !defined $ns_name;
+
+    return $self->ns_map->{$ns_name} if $self->ns_map->{$ns_name};
+
+    while ($node) {
+        my $ns = $node->getAttribute("xmlns:$ns_name");
+        return $ns if $ns;
+        $node = $node->parentNode;
+    }
+
     confess "Couldn't find the namespace '$ns_name' to map\nMap has:\n", Dumper $self->ns_map if !$self->ns_map->{$ns_name};
 
     return $self->ns_map->{$ns_name};
