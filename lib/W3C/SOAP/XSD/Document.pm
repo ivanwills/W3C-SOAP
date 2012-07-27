@@ -321,8 +321,8 @@ sub _element {
 sub _module {
     my ($self) = @_;
 
-    die "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    die "No mapping specified for the namespace ", $self->target_namespace, "!\n" if !$self->ns_module_map->{$self->target_namespace};
+    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
+    confess "No mapping specified for the namespace ", $self->target_namespace, "!\n" if !$self->ns_module_map->{$self->target_namespace};
 
     return $self->ns_module_map->{$self->target_namespace};
 }
@@ -361,8 +361,8 @@ sub get_ns_uri {
 sub get_module_base {
     my ($self, $ns) = @_;
 
-    die "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    die "No mapping specified for the namespace $ns!\n"        if !$self->ns_module_map->{$ns};
+    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
+    confess "No mapping specified for the namespace $ns!\n"        if !$self->ns_module_map->{$ns};
 
     return $self->ns_module_map->{$ns};
 }

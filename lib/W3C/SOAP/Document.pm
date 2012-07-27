@@ -14,7 +14,7 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-
+use TryCatch;
 
 our $VERSION     = version->new('0.0.2');
 
@@ -55,10 +55,22 @@ around BUILDARGS => sub {
         :              {@args};
 
     if ( $args->{string} ) {
-        $args->{xml} = XML::LibXML->load_xml(string => $args->{string});
+        try {
+            $args->{xml} = XML::LibXML->load_xml(string => $args->{string});
+        }
+        catch($e) {
+            chomp $e;
+            W3C::SOAP::Exception::XML->throw( error => $e, faultstring => $e );
+        }
     }
     elsif ( $args->{location} ) {
-        $args->{xml} = XML::LibXML->load_xml(location => $args->{location});
+        try {
+            $args->{xml} = XML::LibXML->load_xml(location => $args->{location});
+        }
+        catch($e) {
+            chomp $e;
+            W3C::SOAP::Exception::XML->throw( error => $e, faultstring => $args->{location} );
+        }
     }
 
     return $class->$orig($args);
