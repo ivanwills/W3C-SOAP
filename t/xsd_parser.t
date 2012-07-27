@@ -34,7 +34,7 @@ my $parser = W3C::SOAP::XSD::Parser->new(
 parser();
 $parser->write_modules;
 written_modules();
-#cleanup();
+cleanup();
 done_testing();
 exit;
 
@@ -206,14 +206,16 @@ sub written_modules_alias {
 }
 
 sub cleanup {
-    unlink $dir->file('lib/MyApp/Eg/Anon0.pm')                or note 'Could not remove lib/MyApp/Eg/Anon0.pm';
-    unlink $dir->file('lib/MyApp/Eg/Anon1.pm')                or note 'Could not remove lib/MyApp/Eg/Anon1.pm';
-    unlink $dir->file('lib/MyApp/Eg/Anon2.pm')                or note 'Could not remove lib/MyApp/Eg/Anon2.pm';
     unlink $dir->file('lib/MyApp/Eg/Base.pm')                 or note 'Could not remove lib/MyApp/Eg/Base.pm';
+    unlink $dir->file('lib/MyApp/Eg/el5Type.pm')              or note 'Could not remove lib/MyApp/Eg/el5Type.pm';
+    unlink $dir->file('lib/MyApp/Eg/el6Type.pm')              or note 'Could not remove lib/MyApp/Eg/el6Type.pm';
     unlink $dir->file('lib/MyApp/Eg/localComplexThing.pm')    or note 'Could not remove lib/MyApp/Eg/localComplexThing.pm';
     unlink $dir->file('lib/MyApp/Eg/localOther.pm')           or note 'Could not remove lib/MyApp/Eg/localOther.pm';
     unlink $dir->file('lib/MyApp/Eg.pm')                      or note 'Could not remove lib/MyApp/Eg.pm';
+    unlink $dir->file('lib/MyApp/Eg/subThingType.pm')         or note 'Could not remove lib/MyApp/Eg/subThingType.pm';
     unlink $dir->file('lib/MyApp/Other/Base.pm')              or note 'Could not remove lib/MyApp/Other/Base.pm';
+    unlink $dir->file('lib/MyApp/Other/el13_4Type.pm')        or note 'Could not remove lib/MyApp/Other/el13_4Type.pm';
+    unlink $dir->file('lib/MyApp/Other/el13Type.pm')          or note 'Could not remove lib/MyApp/Other/el13Type.pm';
     unlink $dir->file('lib/MyApp/Other/otherComplexThing.pm') or note 'Could not remove lib/MyApp/Other/otherComplexThing.pm';
     unlink $dir->file('lib/MyApp/Other.pm')                   or note 'Could not remove lib/MyApp/Other.pm';
     unlink $dir->file('lib/MyApp/Parent/Base.pm')             or note 'Could not remove lib/MyApp/Parent/Base.pm';
