@@ -255,6 +255,7 @@ sub _schemas {
             string        => $node->toString,
             ns_module_map => $self->ns_module_map,
         );
+        $complex_types[-1]->location($self->location);
     }
 
     return \@complex_types;
