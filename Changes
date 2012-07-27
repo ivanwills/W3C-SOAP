@@ -1,5 +1,43 @@
 Revision history for W3C-SOAP
 
+0.0.3   2012-07-27
+        Fixed test cleanup
+        Changed version to 0.0.3
+        Removed sites that either don't connect or XML::LibXML can't parse
+        Cleaned up some exceptions
+        Fixed not using the XPathContext object to search
+        Fixed namespace name in XPath
+        Added setting the location so that relative links can work
+        Fixed issue with getting namespace uri when it's not defined in the root element
+        Made type upgrade logic more sane
+        Changed to using [aA]non for simple/complex type names only if their parent has no name
+        New script to help with downloading of resources for debugging
+        Cleaned debug messages
+        Changed  to auto stringification as some versions of URI don't seem to have to_string method
+        Fixed never "seeing" extensions
+        Changed getting the schema location to fall back to using the namespace attribute when schemaLocation is not specified
+        Improved the documentation
+        Added in new files
+        Added new tests that would take too long to run under normal conditions (also currently fail ~50% of the WSDLs)
+        Changed to loading linked XSDs to make user that they are absolute
+        Made errors more obvious to their cause
+        Changed schema object creation to merge in the WSDLs namespaces into the XMLSchemas tag
+        Added use warnings to all modules
+        Changed error to a warning and return
+        Changed elements to default to xs:string if no types can be found, if no namespace is found using $self->location instead, fixed lots of warnings
+        Fixed generating deeply nested complex types and elements
+        Added more complex type nesting
+        Moved copyright POD to own file, removed the optus mentions
+        Fixed when firstChild is a comment (from Danny Thomas)
+        Added more recommends
+        Added release change log
+        Upped version number
+        Upped version number
+        Added documentation about xml_error sub
+        Added in new files
+        Fixed spelling
+        Removed unused file
+
 0.0.2   2012-07-21
         Added documentation about xml_error sub
         Added in new files
