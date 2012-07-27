@@ -16,7 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use TryCatch;
 
-our $VERSION     = version->new('0.0.2');
+our $VERSION     = version->new('0.0.3');
 
 has string => (
     is         => 'rw',
@@ -108,7 +108,7 @@ W3C::SOAP::Document - Object to represent an XML Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Document version 0.0.2.
+This documentation refers to W3C::SOAP::Document version 0.0.3.
 
 =head1 SYNOPSIS
 

@@ -17,7 +17,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 
-our $VERSION     = version->new('0.0.2');
+our $VERSION     = version->new('0.0.3');
 
 has security => (
     is        => 'rw',
@@ -47,7 +47,7 @@ W3C::SOAP::Header - Object to create SOAP headers
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Header version 0.0.2.
+This documentation refers to W3C::SOAP::Header version 0.0.3.
 
 =head1 SYNOPSIS
 

@@ -27,7 +27,7 @@ use W3C::SOAP::XSD::Document::SimpleType;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION     = version->new('0.0.2');
+our $VERSION     = version->new('0.0.3');
 
 has imports => (
     is         => 'rw',
@@ -377,7 +377,7 @@ W3C::SOAP::XSD::Document - Represents a XMLSchema Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document version 0.0.2.
+This documentation refers to W3C::SOAP::XSD::Document version 0.0.3.
 
 =head1 SYNOPSIS
 

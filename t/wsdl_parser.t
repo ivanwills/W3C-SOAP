@@ -38,7 +38,7 @@ my $parser = W3C::SOAP::WSDL::Parser->new(
 parser();
 $parser->write_modules;
 written_modules();
-cleanup();
+#cleanup();
 done_testing();
 exit;
 

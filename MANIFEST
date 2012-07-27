@@ -6,6 +6,7 @@ MANIFEST.SKIP
 META.yml
 Makefile.PL
 README
+bin/get-xml-resources
 bin/xsd-parser
 lib/W3C/SOAP/XSD.pm
 lib/W3C/SOAP/XSD/Document.pm

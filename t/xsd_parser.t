@@ -34,7 +34,7 @@ my $parser = W3C::SOAP::XSD::Parser->new(
 parser();
 $parser->write_modules;
 written_modules();
-cleanup();
+#cleanup();
 done_testing();
 exit;
 
