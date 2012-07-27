@@ -85,7 +85,7 @@ sub _type {
         my $node = $simple->{$type}->node;
         my  $type_name = $node->parentNode->getAttribute('name');
         if ( $type_name && $self->name && $type_name eq $self->name ) {
-            my @children = $node->findnodes('xsd:restriction', $node);
+            my @children = $self->document->xpc->findnodes('xsd:restriction', $node);
             last if @children != 1;
 
             my $child = $children[0]->firstChild;
