@@ -27,7 +27,7 @@ while (my $wsdl = <$wsdls>) {
         $mech->get($wsdl);
         test_wsdl($wsdl);
     };
-    last if $count++ > 40;
+    last if $count++ > 90;
 }
 done_testing;
 
@@ -38,6 +38,7 @@ sub test_wsdl {
     my @cmd = ( qw/perl -MW3C::SOAP=load_wsdl -e/, "load_wsdl(q{$wsdl})" );
     note join ' ', @cmd, "\n";
     my $error = system @cmd;
-    ok !$error, "Loaded $wsdl";
+    ok !$error, "Loaded $wsdl"
+        or BAIL_OUT("Error: $error");
     return;
 }

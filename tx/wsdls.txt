@@ -20,7 +20,7 @@ http://ws.xwebservices.com/XWebACHDirectory/V1/XWebACHDirectory.wsdl
 #http://www.xignite.com/xBATSLastSale.asmx?WSDL
 #http://www.xignite.com/xNASDAQLastSale.asmx?WSDL
 #http://www.aswinanand.com/sendsms.php?wsdl
-http://www.konakart.com/konakart/services/KKWebServiceEng?wsdl
+#http://www.konakart.com/konakart/services/KKWebServiceEng?wsdl
 http://e-services.doh.go.th/dohweb/dohwebservice.asmx?wsdl
 #http://www.ecubicle.net/gsearch_rss.asmx?WSDL
 #http://www50.brinkster.com/vbfacileinpt/np.asmx?wsdl
@@ -32,15 +32,14 @@ http://www.esendex.com/secure/messenger/soap/SendService.asmx?wsdl
 http://ws2.fraudlabs.com/mailboxvalidator.asmx?wsdl
 #http://ws.strikeiron.com/Graphing?WSDL
 #http://webservices.bafactory.net/xemailwebservice.asmx?WSDL
-https://api.postalmethods.com/PostalWS.asmx?WSDL
-https://api.postalmethods.com/PostalWS.asmx?WSDL
+#https://api.postalmethods.com/PostalWS.asmx?WSDL
 http://ws.fraudlabs.com/browserobjectwebservice.asmx?wsdl
 http://ws.fraudlabs.com/areacodeworldwebservice.asmx?wsdl
 http://ws.fraudlabs.com/postalcodeworldMexico_webservice.asmx?wsdl
 http://ws.fraudlabs.com/postalcodeworldMexico_webservice.asmx?wsdl
 http://ws.fraudlabs.com/zipcodeworldUS_webservice.asmx?wsdl
 http://ws.fraudlabs.com/ip2proxywebservice.asmx?wsdl
-http://ws.cdyne.com/ProfanityWS/Profanity.asmx?wsdl
+#http://ws.cdyne.com/ProfanityWS/Profanity.asmx?wsdl
 #http://www.xignite.com/xOutlook.asmx?WSDL
 #http://www.xignite.com/xMoneyMarkets.asmx?WSDL
 #http://www.xignite.com/xInterBanks.asmx?WSDL
@@ -48,7 +47,7 @@ http://ws.cdyne.com/ProfanityWS/Profanity.asmx?wsdl
 #http://www.xignite.com/xenergy.asmx?WSDL
 #http://www.xignite.com/xEstimates.asmx?WSDL
 #http://www.xignite.com/xAnalysts.asmx?WSDL
-http://ws.cdyne.com/WeatherWS/Weather.asmx?wsdl
+#http://ws.cdyne.com/WeatherWS/Weather.asmx?wsdl
 #http://www.ecubicle.net/whois_service.asmx?WSDL
 http://ws.strikeiron.com/CorteraCreditPulse?WSDL
 #http://ws.strikeiron.com/CorteraBusinessVitals?WSDL
@@ -66,7 +65,7 @@ http://ws.cdyne.com/SmsWS/SMS.asmx?wsdl
 #http://ws.strikeiron.com/WSHRealTimeCompanyEarnings?WSDL
 #http://www.infoaccelerator.net/net/infoaccelerator/pointCalc/PointCalculator.cfc?wsdl
 http://ws.soatrader.com/easycfm.com/1.0/Captcha?WSDL
-http://ws.cisa.ca/WehireWS/JobsWs.asmx?WSDL
+#http://ws.cisa.ca/WehireWS/JobsWs.asmx?WSDL
 http://ws.soatrader.com/delimiterbob.com/0.1/YellowPages?WSDL
 http://ws.strikeiron.com/MapQuestBasicMap?WSDL
 http://service.ecocoma.com/marketing/google.asmx?WSDL
