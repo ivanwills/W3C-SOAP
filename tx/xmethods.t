@@ -22,6 +22,8 @@ my $count = 1;
 
 while (my $wsdl = <$wsdls>) {
     next if $wsdl =~ /^#/;
+    next if $ENV{SKIP} && $ENV{SKIP}--;
+
     chomp $wsdl;
     eval {
         $mech->get($wsdl);
