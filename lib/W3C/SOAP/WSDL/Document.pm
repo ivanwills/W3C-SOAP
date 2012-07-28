@@ -114,17 +114,17 @@ has ns_module_map => (
 
 sub _messages {
     my ($self) = @_;
-    my @complex_types;
+    my @messages;
     my @nodes = $self->xpc->findnodes('//wsdl:message');
 
     for my $node (@nodes) {
-        push @complex_types, W3C::SOAP::WSDL::Document::Message->new(
+        push @messages, W3C::SOAP::WSDL::Document::Message->new(
             document => $self,
             node   => $node,
         );
     }
 
-    return \@complex_types;
+    return \@messages;
 }
 
 sub _message {
@@ -139,17 +139,17 @@ sub _message {
 
 sub _port_types {
     my ($self) = @_;
-    my @complex_types;
+    my @port_types;
     my @nodes = $self->xpc->findnodes('//wsdl:portType');
 
     for my $node (@nodes) {
-        push @complex_types, W3C::SOAP::WSDL::Document::PortType->new(
+        push @port_types, W3C::SOAP::WSDL::Document::PortType->new(
             document => $self,
             node   => $node,
         );
     }
 
-    return \@complex_types;
+    return \@port_types;
 }
 
 sub _port_type {
@@ -164,17 +164,17 @@ sub _port_type {
 
 sub _bindings {
     my ($self) = @_;
-    my @complex_types;
+    my @bindings;
     my @nodes = $self->xpc->findnodes('//wsdl:binding');
 
     for my $node (@nodes) {
-        push @complex_types, W3C::SOAP::WSDL::Document::Binding->new(
+        push @bindings, W3C::SOAP::WSDL::Document::Binding->new(
             document => $self,
             node   => $node,
         );
     }
 
-    return \@complex_types;
+    return \@bindings;
 }
 
 sub _binding {
@@ -189,17 +189,17 @@ sub _binding {
 
 sub _services {
     my ($self) = @_;
-    my @complex_types;
+    my @services;
     my @nodes = $self->xpc->findnodes('//wsdl:service');
 
     for my $node (@nodes) {
-        push @complex_types, W3C::SOAP::WSDL::Document::Service->new(
+        push @services, W3C::SOAP::WSDL::Document::Service->new(
             document => $self,
             node   => $node,
         );
     }
 
-    return \@complex_types;
+    return \@services;
 }
 
 sub _service {
@@ -214,17 +214,17 @@ sub _service {
 
 sub _policies {
     my ($self) = @_;
-    my @complex_types;
+    my @policies;
     my @nodes = $self->xpc->findnodes('/*/wsp:Policy');
 
     for my $node (@nodes) {
-        push @complex_types, W3C::SOAP::WSDL::Document::Policy->new(
+        push @policies, W3C::SOAP::WSDL::Document::Policy->new(
             document => $self,
             node     => $node,
         );
     }
 
-    return \@complex_types;
+    return \@policies;
 }
 
 sub _policy {
@@ -239,7 +239,7 @@ sub _policy {
 
 sub _schemas {
     my ($self) = @_;
-    my @complex_types;
+    my @schemas;
     my @nodes = $self->xpc->findnodes('//wsdl:types/*');
 
     for my $node (@nodes) {
@@ -251,14 +251,15 @@ sub _schemas {
             $node->setAttribute( $ns->name, $ns->value );
         }
 
-        push @complex_types, W3C::SOAP::XSD::Document->new(
+        push @schemas, W3C::SOAP::XSD::Document->new(
             string        => $node->toString,
             ns_module_map => $self->ns_module_map,
         );
-        $complex_types[-1]->location($self->location);
+        $schemas[-1]->location($self->location);
+        $schemas[-1]->target_namespace;
     }
 
-    return \@complex_types;
+    return \@schemas;
 }
 
 sub _schema {
