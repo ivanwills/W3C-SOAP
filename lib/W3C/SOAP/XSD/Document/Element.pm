@@ -154,7 +154,9 @@ sub simple_type {
     $self->document->simple_type();
     my ($ns, $type) = split_ns($self->type);
     $ns ||= $self->document->target_namespace;
-    return "xs:$type" if $self->document->ns_map->{$ns} && $self->document->ns_map->{$ns} eq 'http://www.w3.org/2001/XMLSchema';
+    return "xs:$type"
+        if $self->document->ns_map->{$ns}
+            && $self->document->ns_map->{$ns} eq 'http://www.w3.org/2001/XMLSchema';
 
     my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
     warn "Simple type missing a type for '".$self->type."'\n".xml_error($self->node)."\n"
@@ -253,6 +255,7 @@ sub has_anonymous {
         $type_name ||= '';
     }
 
+    $self->document->ns_map->{xs} ||= 'http://www.w3.org/2001/XMLSchema';
     return 'xs:string';
 }
 

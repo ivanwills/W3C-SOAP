@@ -79,6 +79,7 @@ around BUILDARGS => sub {
 sub _xpc {
     my ($self) = @_;
     my $xpc = XML::LibXML::XPathContext->new($self->xml);
+    $xpc->registerNs(xs   => 'http://www.w3.org/2001/XMLSchema');
     $xpc->registerNs(xsd  => 'http://www.w3.org/2001/XMLSchema');
     $xpc->registerNs(wsdl => 'http://schemas.xmlsoap.org/wsdl/');
     $xpc->registerNs(wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy');

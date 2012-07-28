@@ -351,6 +351,7 @@ sub get_ns_uri {
         my $ns = $node->getAttribute("xmlns:$ns_name");
         return $ns if $ns;
         $node = $node->parentNode;
+        last if ref $node eq 'XML::LibXML::Document';
     }
 
     confess "Couldn't find the namespace '$ns_name' to map\nMap has:\n", Dumper $self->ns_map if !$self->ns_map->{$ns_name};
