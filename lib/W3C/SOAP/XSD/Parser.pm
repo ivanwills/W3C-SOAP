@@ -12,7 +12,7 @@ use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
-#use List::MoreUtils;
+use List::MoreUtils qw/all/;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Path::Class;
@@ -181,7 +181,7 @@ sub write_module {
     }
 
     $template->process($tt, $data, "$file");
-    die "Error in creating $file (via $tt): ". $template->error."\n"
+    confess "Error in creating $file (via $tt): ". $template->error."\n"
         if $template->error;
 }
 
@@ -270,6 +270,7 @@ sub dynamic_classes {
         push @ordered_xsds, $xsd;
     }
 
+    my %complex_seen = ( 'W3C::SOAP::XSD' => 1 );
     for my $xsd (@ordered_xsds) {
         my $module = $xsd->get_module_base($xsd->target_namespace);
 
@@ -277,7 +278,8 @@ sub dynamic_classes {
         $self->simple_type_package($xsd);
 
         # Complex types
-        for my $type ( @{ $xsd->complex_types } ) {
+        my @complex_types = @{ $xsd->complex_types };
+        while ( my $type = shift @complex_types ) {
             my $type_name = $type->name || $type->parent_node->name;
             my $type_module = $module . '::' . $type_name;
 
@@ -290,6 +292,12 @@ sub dynamic_classes {
                 $modules{ $type->extension }++
             }
 
+            if ( !all {$complex_seen{$_}} keys %modules ) {
+                push @complex_types, $type;
+                next;
+            }
+
+            $complex_seen{$type_module}++;
             $self->complex_type_package($xsd, $type, $type_module, [ keys %modules ]);
         }
 
