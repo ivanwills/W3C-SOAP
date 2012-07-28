@@ -26,6 +26,7 @@ my $builder = Module::Build->new(
         'DateTime::Format::Strptime'   => 0,
         'MooseX::Types'                => 0,
         'namespace::autoclean'         => 0,
+        'URI'                          => 0,
     },
     build_requires => {
         'Test::More'       => 0,
