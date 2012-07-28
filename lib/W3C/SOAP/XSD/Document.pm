@@ -217,7 +217,7 @@ sub _simple_type {
             $name = $name ? $name . '_type' : 'anon'.$self->simple_type_count;
             $type->name($name);
         }
-        die "No name for simple type ".$type->node->parentNode->toString if !$name;
+        confess "No name for simple type ".$type->node->parentNode->toString if !$name;
         $simple_type{$name} = $type;
     }
 
@@ -287,7 +287,7 @@ sub _complex_type {
             $name = $name ? $name . 'Type' : 'Anon'.$self->complex_type_count;
             $type->name($name);
         }
-        die "No name for complex type ".$type->node->parentNode->toString if !$name;
+        confess "No name for complex type ".$type->node->parentNode->toString if !$name;
         $complex_type{$name} = $type;
     }
 

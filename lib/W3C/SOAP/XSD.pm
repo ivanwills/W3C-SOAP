@@ -100,7 +100,7 @@ sub _xsd_ns_name {
 sub _from_xml {
     my ($class, $type) = @_;
     my $xml = $_;
-    die "Unknown conversion " . ( (ref $xml) || $xml )
+    confess "Unknown conversion " . ( (ref $xml) || $xml )
         if !$xml || !blessed $xml || !$xml->isa('XML::LibXML::Node');
 
     try {
