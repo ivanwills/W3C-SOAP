@@ -243,6 +243,8 @@ sub _schemas {
     my @nodes = $self->xpc->findnodes('//wsdl:types/*');
 
     for my $node (@nodes) {
+        next if $node->getAttribute('namespace') && $node->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
+
         # merge document namespaces into the schema's tags
         my $doc = $self->xml->getDocumentElement;
         my @attribs = $doc->getAttributes;

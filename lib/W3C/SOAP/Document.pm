@@ -15,6 +15,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use TryCatch;
+use URI;
 
 our $VERSION     = version->new('0.0.3');
 
@@ -96,7 +97,10 @@ sub _target_namespace {
     my $xpc = $self->xpc;
     $xpc->registerNs(ns => $ns) if $ns;
 
-    return $ns || $self->location || 'NsAnon' . $anon++;
+    my $uri = URI->new($ns || $self->location || 'NsAnon' . $anon++);
+    $uri->host( lc $uri->host ) if $uri->can('host') && $uri->host;
+
+    return "$uri";
 }
 
 1;

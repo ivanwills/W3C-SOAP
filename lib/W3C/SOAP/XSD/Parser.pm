@@ -412,6 +412,7 @@ sub element_attributes {
     push @extra, ( xs_choice_group => $element->choice_group ) if $element->choice_group;
     push @extra, ( xs_searalize    => $searalize             ) if $searalize;
 
+    confess "No perl name!\n".$element->node->parentNode->toString if !$element->perl_name;
     $class->add_attribute(
         $element->perl_name,
         is            => 'rw',

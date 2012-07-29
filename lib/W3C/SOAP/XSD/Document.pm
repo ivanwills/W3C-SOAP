@@ -130,6 +130,8 @@ sub _imports {
     my @nodes = $self->xpc->findnodes('//xsd:import');
 
     for my $import (@nodes) {
+        next if $import->getAttribute('namespace') && $import->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
+
         my $location = $import->getAttribute('schemaLocation')
             || $import->getAttribute('namespace');
         confess "No schemaLocation specified for ".$import->toString
@@ -163,6 +165,8 @@ sub _includes {
     my @nodes = $self->xpc->findnodes('//xsd:include');
 
     for my $include (@nodes) {
+        next if $include->getAttribute('namespace') && $include->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
+
         my $location = $include->getAttribute('schemaLocation')
             || $include->getAttribute('namespace');
         confess "No schemaLocation specified for ".$include->toString
@@ -361,6 +365,8 @@ sub get_ns_uri {
 
 sub get_module_base {
     my ($self, $ns) = @_;
+    $ns = URI->new($ns);
+    $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
     confess "No mapping specified for the namespace $ns!\n"        if !$self->ns_module_map->{$ns};
