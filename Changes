@@ -1,5 +1,43 @@
 Revision history for W3C-SOAP
 
+0.0.4   2012-07-31
+        Fixed undef warnings
+        Moved more WSDLs to end of test data not sure they are valid and/or useful
+        Uppded version number
+        Uncommented out WSDLs that previously failed to load as xmethods.t test can now cope with that, moved to the end of file WSDLs with unsupported XSD features
+        Better fix of issue due to no namespace name
+        Fixed issue due to no namespace name
+        Changed so that wsdls that can't be tested now have a skip called on them rather than silently being skipped
+        Added getting default namespace name
+        Updated changed file name
+        Fixed issue with generated namespace name
+        Fixed calls to get_module_base when module would be simpler
+        Removed completed items, added new tasks
+        Fixed calls to get_module_base when module would be simpler
+        Made deciding on weather to run tests against a WSDL smarter to reduce the number of false negatives
+        Moved some WSDLs to the end of the file so that they can be worked on later
+        Added skipping passing "http://www.w3.org/2001/XMLSchema", Added normalising namespace hostnames
+        Renamed script to more accurately reflect its function
+        Fixed minimum perl version (looks like the code itself can run in perl 5.6), added more missing modules
+        Commented out more sites where the WSDLs are not valid
+        Fixed missing prereq
+        Fixed issue with default type
+        Added skipping initial tests
+        Changed die()s to confess()es
+        Added making sure complex types are loaded after the types they depend on
+        Cleaned up variable names
+        Updated changes
+        Fixed test cleanup
+        Changed version to 0.0.3
+        Removed sites that either don't connect or XML::LibXML can't parse
+        Cleaned up some exceptions
+        Fixed not using the XPathContext object to search
+        Fixed namespace name in XPath
+        Added setting the location so that relative links can work
+        Fixed issue with getting namespace uri when it's not defined in the root element
+        Made type upgrade logic more sane
+        Changed to using [aA]non for simple/complex type names only if their parent has no name
+
 0.0.3   2012-07-27
         Fixed test cleanup
         Changed version to 0.0.3
