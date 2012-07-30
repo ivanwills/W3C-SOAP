@@ -342,6 +342,7 @@ sub _module {
 sub _ns_name {
     my ($self) = @_;
     my %rev = reverse %{ $self->ns_map };
+    confess "No ns name\n".Dumper \%rev, $self->target_namespace if !$rev{$self->target_namespace};
     return $rev{$self->target_namespace};
 }
 
@@ -353,7 +354,14 @@ sub _ns_map {
         grep { $_->name =~ /^xmlns/ }
         $self->xml->getDocumentElement->getAttributes;
 
-    my %rev = reverse %map;
+    my %rev;
+    for my $name ( keys %map ) {
+        $rev{$map{$name}} ||= $name;
+    }
+    if ( $rev{$self->target_namespace} && $map{''} ) {
+        delete $map{''};
+    }
+
     my $ns = $self->target_namespace;
     $ns =~ s/:/_/g;
     $map{$ns} = $self->target_namespace if !$rev{$self->target_namespace};
