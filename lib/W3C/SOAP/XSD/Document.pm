@@ -358,7 +358,7 @@ sub _ns_map {
     for my $name ( keys %map ) {
         $rev{$map{$name}} ||= $name;
     }
-    if ( $rev{$self->target_namespace} && $map{''} ) {
+    if ( $rev{$self->target_namespace} && $map{''} eq $self->target_namespace ) {
         delete $map{''};
     }
 
