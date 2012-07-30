@@ -84,7 +84,7 @@ sub write_modules {
 
     # process the schemas
     for my $xsd (@xsds) {
-        my $module = $xsd->get_module_base($xsd->target_namespace);
+        my $module = $xsd->module;
         push @xsd_modules, $module;
         $self_module ||= $module;
         my $file   = $self->lib . '/' . $module;
@@ -249,7 +249,7 @@ sub dynamic_classes {
     my @ordered_xsds;
     XSD:
     while ( my $xsd = shift @xsds ) {
-        my $module = $xsd->get_module_base($xsd->target_namespace);
+        my $module = $xsd->module;
 
         # Complex types
         my @types = @{ $xsd->complex_types };
@@ -272,7 +272,7 @@ sub dynamic_classes {
 
     my %complex_seen = ( 'W3C::SOAP::XSD' => 1 );
     for my $xsd (@ordered_xsds) {
-        my $module = $xsd->get_module_base($xsd->target_namespace);
+        my $module = $xsd->module;
 
         # Create simple types
         $self->simple_type_package($xsd);

@@ -137,7 +137,7 @@ sub _nillble {
 sub module {
     my ($self) = @_;
 
-    return $self->document->get_module_base( $self->document->target_namespace );
+    return $self->document->module;
 }
 
 sub type_module {

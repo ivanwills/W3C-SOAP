@@ -324,11 +324,13 @@ sub _element {
 
 sub _module {
     my ($self) = @_;
+    my $ns = URI->new($self->target_namespace);
+    $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    confess "No mapping specified for the namespace ", $self->target_namespace, "!\n" if !$self->ns_module_map->{$self->target_namespace};
+    confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{$ns};
 
-    return $self->ns_module_map->{$self->target_namespace};
+    return $self->ns_module_map->{$ns};
 }
 
 sub _ns_map {
