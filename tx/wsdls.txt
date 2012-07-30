@@ -261,8 +261,6 @@ http://slashdemocracy.org/links/ws4gotze.wsdl
 http://trial.serviceobjects.com/pa/PhoneAppend.asmx?WSDL
 http://www.chatlog.net/wsdl.xml
 http://www.aspiringgeek.com/cfc/keyword/sekeyword.cfc?wsdl
-http://www.barnaland.is/dev/personlookup.asmx?WSDL
-http://www.barnaland.is/dev/phonebook.asmx?WSDL
 http://www.barnaland.is/dev/sms.asmx?WSDL
 http://www.swanandmokashi.com/HomePage/WebServices/QuoteOfTheDay.asmx?WSDL
 http://tstsvr.achworks.com/testexec/achtstsoapbz.tss/wsdl/IACHSOAP
@@ -394,3 +392,6 @@ http://ws.acrosscommunications.com/SMS.asmx?WSDL
 http://ws.acrosscommunications.com/Fax.asmx?WSDL
 # uses attributes which aren't currently handled
 http://ws.xwebservices.com/XWebCheckOut/V2/XWebCheckOut.wsdl
+# need to work out what to do with no address
+http://www.barnaland.is/dev/personlookup.asmx?WSDL
+http://www.barnaland.is/dev/phonebook.asmx?WSDL
