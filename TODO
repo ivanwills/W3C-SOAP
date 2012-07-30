@@ -6,6 +6,42 @@ W3C::SOAP tasks still to be done
 
 =over 4
 
+=item Improve XML Schema support
+
+Currently I can't pass http://www.w3.org/2001/XMLSchema.xsd due to
+not supporting unions and lists. Support for arrays probably is
+also needed. The following schemas should all be abled to be passed
+with out error
+
+=over 4
+
+=item *
+
+http://www.w3.org/2001/XMLSchema.xsd
+
+=item *
+
+http://schemas.xmlsoap.org/wsdl/
+
+=item *
+
+http://schemas.xmlsoap.org/wsdl/html/
+
+=item *
+
+http://schemas.xmlsoap.org/wsdl/soap/
+
+=item *
+
+http://schemas.xmlsoap.org/ws/2004/09/policy
+
+=back
+
+=item WSDL's with multiple inputs and outputs
+
+The current code only allows for one input and zero or one output.
+It looks like support for zero or more for each is required.
+
 =item Improve test coverage
 
 Need many more tests to make sure everything is working as expected
@@ -17,50 +53,6 @@ Some very basic documentation is done but much more work is needed.
 =item Server creation
 
 Helpers to create SOAP servers, Catalyst/Dancer/Mojolicious helpers.
-
-=item WSDL meta data
-
-Need a way to workout how to handle the WSDL method metadata. This is needed
-for two reasons: 1. so WS-Security parameters can be handled and 2. so that
-dynamic WSDL generation baised on the methods would be possible.
-
-=over 4
-
-=item Moose helper
-
-Need to create a class that exports C<action> which is like Moose's C<has>
-but creates action methods with extra info including the inputs & outputs.
-The method object will inherit L<W3C::SOAP::WSDL::Meta::Method>
-
-=item W3C::SOAP::WSDL::Meta::Method
-
-A new class that overloads L<Moose::Meta::Mehtod> and adds 4 extra attributes
-
-=over 4
-
-=item *
-
-input_class - The name of the input class
-
-=item *
-
-input_attribute - The name of the input attribute of that class
-
-=item *
-
-output_class - The name of the output class (if one exists)
-
-=item *
-
-output_attribute - The name of the attribute where the output will be found
-
-=item *
-
-security - Specifies the type of security the method requires.
-
-=back
-
-=back
 
 =item Mock services helper
 
@@ -76,11 +68,6 @@ is a responce and returns that (the true mock opperation).
 Currently the Username part of the spec has some form of implementation but
 their doesn't exist a way of auto generating this or other security forms
 from the WSDL.
-
-=item Dynamic WSDL & XSD creation
-
-The code should be able to generate WSDL and XMLSchema document files based
-on meta data in each.
 
 =back
 
