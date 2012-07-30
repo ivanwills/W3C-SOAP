@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Client';
 
-our $VERSION     = version->new('0.0.3');
+our $VERSION     = version->new('0.0.4');
 
 sub _request {
     my ($self, $action, @args) = @_;
@@ -74,7 +74,7 @@ W3C::SOAP::WSDL - A SOAP WSDL Client object
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL version 0.0.3.
+This documentation refers to W3C::SOAP::WSDL version 0.0.4.
 
 
 =head1 SYNOPSIS
