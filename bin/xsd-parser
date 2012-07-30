@@ -91,7 +91,7 @@ sub show {
 
     while ( my $xsd = shift @xsd ) {
         print "Namespace = " . $xsd->target_namespace . "\n";
-        my $module = $xsd->get_module_base($xsd->target_namespace);
+        my $module = $xsd->module;
         my $file   = "$option{lib}/" . $module;
         $file =~ s{::}{/}g;
         $file = file $file;
@@ -108,13 +108,13 @@ sub show {
         for my $import ( @{ $xsd->imports } ) {
             print "\t", $import->target_namespace, "\n";
             push @xsd, $import;
-            push @parents, $xsd->get_module_base($import->target_namespace);
+            push @parents, $import->module;
         }
         print "Includes:\n";
         for my $include ( @{ $xsd->includes } ) {
             print "\t", $include->target_namespace, "\n";
             push @xsd, $include;
-            push @parents, $xsd->get_module_base($include->target_namespace);
+            push @parents, $include->module;
         }
         print "Simple Types:\n";
         for my $stype ( @{ $xsd->simple_types } ) {
