@@ -109,6 +109,12 @@ has module => (
     builder   => '_module',
     lazy_build => 1,
 );
+has ns_name => (
+    is        => 'rw',
+    isa       => 'Str',
+    builder   => '_ns_name',
+    lazy_build => 1,
+);
 has ns_map => (
     is         => 'rw',
     isa        => 'HashRef[Str]',
@@ -331,6 +337,12 @@ sub _module {
     confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{$ns};
 
     return $self->ns_module_map->{$ns};
+}
+
+sub _ns_name {
+    my ($self) = @_;
+    my %rev = reverse %{ $self->ns_map };
+    return $rev{$self->target_namespace};
 }
 
 sub _ns_map {
