@@ -235,11 +235,12 @@ sub has_anonymous {
     my ($self) = @_;
     return if $self->has_type && $self->type;
 
+    my %map = reverse %{ $self->document->ns_map };
+
     my $simple = $self->document->simple_type;
     for my $type (keys %{$simple}) {
         my  $type_name = $simple->{$type}->node->parentNode->getAttribute('name');
         if ( $type_name && $self->name && $type_name eq $self->name ) {
-            my %map = reverse %{ $self->document->ns_map };
             return $map{$self->document->target_namespace} . ':' . $type;
         }
         $type_name ||= '';
@@ -249,7 +250,6 @@ sub has_anonymous {
     for my $type (keys %{$complex}) {
         my  $type_name = $complex->{$type}->node->parentNode->getAttribute('name');
         if ( $type_name && $self->name && $type_name eq $self->name ) {
-            my %map = reverse %{ $self->document->ns_map };
             return $map{$self->document->target_namespace} . ':' . $type;
         }
         $type_name ||= '';

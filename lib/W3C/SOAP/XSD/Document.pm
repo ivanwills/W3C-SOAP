@@ -342,7 +342,9 @@ sub _ns_map {
         $self->xml->getDocumentElement->getAttributes;
 
     my %rev = reverse %map;
-    $map{$self->target_namespace} = $self->target_namespace if !$rev{$self->target_namespace};
+    my $ns = $self->target_namespace;
+    $ns =~ s/:/_/g;
+    $map{$ns} = $self->target_namespace if !$rev{$self->target_namespace};
 
     return \%map;
 }
