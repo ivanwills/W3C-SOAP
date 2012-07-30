@@ -35,14 +35,16 @@ while (my $wsdl = <$wsdls>) {
     next if $ENV{SKIP} && $ENV{SKIP}--;
 
     chomp $wsdl;
-    eval {
-        $skipped++;
-        get_dependencies($wsdl);
-        test_wsdl($wsdl);
-        $skipped = 0;
+    SKIP: {
+        eval {
+            $skipped++;
+            get_dependencies($wsdl);
+            test_wsdl($wsdl);
+            $skipped = 0;
+        };
+        skip "The WSDL ($wsdl) can't be retreived or is not valid", 1
+            if $@;
     };
-    note "Skipped 10" if $skipped && $skipped % 5 == 0;
-    last if $count++ > 90;
 }
 done_testing;
 
