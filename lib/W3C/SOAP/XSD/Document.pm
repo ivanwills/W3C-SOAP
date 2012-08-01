@@ -330,8 +330,12 @@ sub _element {
 
 sub _module {
     my ($self) = @_;
-    my $ns = URI->new($self->target_namespace);
-    $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
+    my $ns = $self->target_namespace;
+    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
+        $ns = URI->new($ns);
+        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
+        $ns = $ns->to_string;
+    }
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
     confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{$ns};
@@ -389,8 +393,11 @@ sub get_ns_uri {
 
 sub get_module_base {
     my ($self, $ns) = @_;
-    $ns = URI->new($ns);
-    $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
+    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
+        $ns = URI->new($ns);
+        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
+        $ns = $ns->to_string;
+    }
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
     confess "No mapping specified for the namespace $ns!\n"        if !$self->ns_module_map->{$ns};

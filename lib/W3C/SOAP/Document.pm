@@ -97,10 +97,14 @@ sub _target_namespace {
     my $xpc = $self->xpc;
     $xpc->registerNs(ns => $ns) if $ns;
 
-    my $uri = URI->new($ns || $self->location || 'NsAnon' . $anon++);
-    $uri->host( lc $uri->host ) if $uri->can('host') && $uri->host;
+    $ns ||= $self->location || 'NsAnon' . $anon++;
+    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
+        $ns = URI->new($ns);
+        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
+        $ns = $ns->to_string;
+    }
 
-    return "$uri";
+    return $ns;
 }
 
 1;
