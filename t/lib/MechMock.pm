@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use parent qw/WWW::Mechanize/;
 
+our $VERSION = 0.0001;
+
 sub post {
     return;
 }
