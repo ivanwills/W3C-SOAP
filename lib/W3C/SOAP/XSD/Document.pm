@@ -143,6 +143,7 @@ sub _imports {
         push @imports, __PACKAGE__->new(
             location      => $location,
             ns_module_map => $self->ns_module_map,
+            module_base   => $self->module_base,
         );
     }
 
@@ -178,6 +179,7 @@ sub _includes {
         push @includes, __PACKAGE__->new(
             location      => $location,
             ns_module_map => $self->ns_module_map,
+            module_base   => $self->module_base,
         );
     }
 

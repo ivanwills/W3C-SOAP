@@ -109,6 +109,12 @@ sub get_xsd {
     my @args;
     push @args, ( template      => $self->template ) if $self->has_template;
     push @args, ( lib           => $self->lib      ) if $self->has_lib     ;
+    if ( $self->has_module_base ) {
+        my $base = $self->module_base;
+        $base =~ s/WSDL/XSD/;
+        $base .= '::XSD' if ! $base =~ /XSD/;
+        push @args, ( module_base => $base );
+    }
 
     my $parse = W3C::SOAP::XSD::Parser->new(
         documents     => [],

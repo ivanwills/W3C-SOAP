@@ -237,7 +237,6 @@ sub dynamic_classes {
 
     # construct the in memory module names
     for my $xsd (@xsds) {
-        $xsd->auto_module(1);
         $xsd->module_base('Dynamic::XSD');
     }
 

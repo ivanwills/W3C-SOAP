@@ -248,9 +248,18 @@ sub _schemas {
             $node->setAttribute( $ns->name, $ns->value );
         }
 
+        my @args;
+        if ( $self->has_module_base ) {
+            my $base = $self->module_base;
+            $base =~ s/WSDL/XSD/;
+            $base .= '::XSD' if ! $base =~ /XSD/;
+            push @args, ( module_base => $base );
+        }
+        else { warn "No module_base" }
         push @schemas, W3C::SOAP::XSD::Document->new(
             string        => $node->toString,
             ns_module_map => $self->ns_module_map,
+            @args,
         );
         $schemas[-1]->location($self->location);
         $schemas[-1]->target_namespace;

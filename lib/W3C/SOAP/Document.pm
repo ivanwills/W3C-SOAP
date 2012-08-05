@@ -60,11 +60,6 @@ has module => (
     builder   => '_module',
     lazy_build => 1,
 );
-has auto_module => (
-    is      => 'rw',
-    isa     => 'Bool',
-    default => undef,
-);
 has module_base => (
     is        => 'rw',
     isa       => 'Str',
@@ -77,6 +72,8 @@ around BUILDARGS => sub {
         = !@args     ? {}
         : @args == 1 ? $args[0]
         :              {@args};
+
+    delete $args->{module_base} if ! defined $args->{module_base};
 
     if ( $args->{string} ) {
         try {
@@ -139,7 +136,7 @@ sub _module {
         $ns = $ns->as_string;
     }
 
-    if ( $self->auto_module && $self->has_module_base ) {
+    if ( $self->has_module_base ) {
         my $ns = $self->target_namespace;
         $ns =~ s{://}{::};
         $ns =~ s{([^:]:)([^:])}{$1:$2}g;
