@@ -101,7 +101,7 @@ sub _target_namespace {
     if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
         $ns = URI->new($ns);
         $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
-        $ns = $ns->to_string;
+        $ns = $ns->as_string;
     }
 
     return $ns;

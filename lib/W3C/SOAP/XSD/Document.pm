@@ -144,7 +144,7 @@ sub _imports {
             if !$location;
 
         if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
-            $location = URI->new_abs($location, $self->location)->to_string;
+            $location = URI->new_abs($location, $self->location)->as_string;
         }
 
         push @imports, __PACKAGE__->new(
@@ -179,7 +179,7 @@ sub _includes {
             if !$location;
 
         if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
-            $location = URI->new_abs($location, $self->location)->to_string;
+            $location = URI->new_abs($location, $self->location)->as_string;
         }
 
         push @includes, __PACKAGE__->new(
@@ -334,7 +334,7 @@ sub _module {
     if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
         $ns = URI->new($ns);
         $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
-        $ns = $ns->to_string;
+        $ns = $ns->as_string;
     }
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
@@ -396,7 +396,7 @@ sub get_module_base {
     if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
         $ns = URI->new($ns);
         $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
-        $ns = $ns->to_string;
+        $ns = $ns->as_string;
     }
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
