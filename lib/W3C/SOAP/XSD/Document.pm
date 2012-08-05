@@ -122,13 +122,6 @@ has ns_map => (
     builder    => '_ns_map',
     lazy_build => 1,
 );
-has ns_module_map => (
-    is        => 'rw',
-    isa       => 'HashRef[Str]',
-    #default   => sub {{}},
-    required  => 1,
-    predicate => 'has_ns_module_map',
-);
 
 sub _imports {
     my ($self) = @_;
@@ -326,21 +319,6 @@ sub _element {
         $element{$element->name} = $element;
     }
     return \%element;
-}
-
-sub _module {
-    my ($self) = @_;
-    my $ns = $self->target_namespace;
-    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
-        $ns = URI->new($ns);
-        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
-        $ns = $ns->as_string;
-    }
-
-    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{$ns};
-
-    return $self->ns_module_map->{$ns};
 }
 
 sub _ns_name {

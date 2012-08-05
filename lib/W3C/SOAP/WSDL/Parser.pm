@@ -31,21 +31,16 @@ has document => (
     is       => 'rw',
     isa      => 'W3C::SOAP::WSDL::Document',
     required => 1,
+    handles  => {
+        module        => 'module',
+        has_module    => 'has_module',
+        ns_module_map => 'ns_module_map',
+    },
 );
 has template => (
     is        => 'rw',
     isa       => 'Template',
     predicate => 'has_template',
-);
-has ns_module_map => (
-    is       => 'rw',
-    isa      => 'HashRef[Str]',
-    required => 1,
-);
-has module => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_module',
 );
 has location => (
     is  => 'rw',

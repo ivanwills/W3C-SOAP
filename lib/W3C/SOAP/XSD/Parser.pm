@@ -237,12 +237,8 @@ sub dynamic_classes {
 
     # construct the in memory module names
     for my $xsd (@xsds) {
-        my $ns = $xsd->target_namespace;
-        $ns =~ s{://}{::};
-        $ns =~ s{([^:]:)([^:])}{$1:$2}g;
-        $ns =~ s{[^\w:]+}{_}g;
-        $self->ns_module_map->{$xsd->target_namespace}
-            = "Dynamic::XSD::$ns";
+        $xsd->auto_module(1);
+        $xsd->module_base('Dynamic::XSD');
     }
 
     my %seen;

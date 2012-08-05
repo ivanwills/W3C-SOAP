@@ -47,6 +47,29 @@ has target_namespace => (
     predicate  => 'has_target_namespace',
     lazy_build => 1,
 );
+has ns_module_map => (
+    is        => 'rw',
+    isa       => 'HashRef[Str]',
+    required  => 1,
+    predicate => 'has_ns_module_map',
+);
+has module => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_module',
+    builder   => '_module',
+    lazy_build => 1,
+);
+has auto_module => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => undef,
+);
+has module_base => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_module_base',
+);
 
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
@@ -105,6 +128,30 @@ sub _target_namespace {
     }
 
     return $ns;
+}
+
+sub _module {
+    my ($self) = @_;
+    my $ns = $self->target_namespace;
+    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
+        $ns = URI->new($ns);
+        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
+        $ns = $ns->as_string;
+    }
+
+    if ( $self->auto_module && $self->has_module_base ) {
+        my $ns = $self->target_namespace;
+        $ns =~ s{://}{::};
+        $ns =~ s{([^:]:)([^:])}{$1:$2}g;
+        $ns =~ s{[^\w:]+}{_}g;
+        $self->ns_module_map->{$self->target_namespace}
+            = $self->module_base . "::$ns";
+    }
+
+    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
+    confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{$ns};
+
+    return $self->ns_module_map->{$ns};
 }
 
 1;

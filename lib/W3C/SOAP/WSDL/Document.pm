@@ -106,11 +106,6 @@ has schema => (
     lazy_build => 1,
     weak_ref   => 1,
 );
-has ns_module_map => (
-    is       => 'rw',
-    isa      => 'HashRef[Str]',
-    required => 1,
-);
 
 sub _messages {
     my ($self) = @_;
