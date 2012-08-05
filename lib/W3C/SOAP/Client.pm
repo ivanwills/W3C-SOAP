@@ -46,7 +46,7 @@ sub request {
 
     if ( $self->has_header ) {
         my $node = $self->header->to_xml($xml);
-        $xml->firstChild->insertBefore($node, $xml->firstChild->firstChild);
+        $xml->firstChild->insertBefore($node, $xml->getDocumentElement->firstChild);
     }
 
     return $self->send($action, $xml);
