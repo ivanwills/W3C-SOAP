@@ -62,7 +62,7 @@ around BUILDARGS => sub {
         :              {@args};
 
     for my $arg ( keys %$args ) {
-        if ( $arg eq 'location' || $arg eq 'strign' ) {
+        if ( $arg eq 'location' || $arg eq 'string' ) {
             $args->{document} = W3C::SOAP::WSDL::Document->new($args);
         }
     }
