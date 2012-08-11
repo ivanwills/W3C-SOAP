@@ -255,7 +255,7 @@ sub _schemas {
             $base .= '::XSD' if ! $base =~ /XSD/;
             push @args, ( module_base => $base );
         }
-        else { warn "No module_base" }
+
         push @schemas, W3C::SOAP::XSD::Document->new(
             string        => $node->toString,
             ns_module_map => $self->ns_module_map,

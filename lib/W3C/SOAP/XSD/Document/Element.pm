@@ -131,7 +131,12 @@ sub _min_occurs {
 
 sub _nillable {
     my ($self) = @_;
-    return $self->node->getAttribute('nillable') || 0;
+    my $nillable = $self->node->getAttribute('nillable');
+
+    return !$nillable          ? 1
+        : $nillable eq 'true'  ? 1
+        : $nillable eq 'false' ? 0
+        :                        die "Unknown value for attribute nillable in ".$self->node->toString;
 }
 
 sub module {

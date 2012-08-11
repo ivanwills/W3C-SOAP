@@ -24,8 +24,9 @@ has [% element.perl_name %] => (
     is              => 'rw',
     isa             => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %] ),
     predicate       => 'has_[% element.perl_name %]',
-[%- IF element.nillable == 'false' %]
-    required        => 1,
+[%- IF !element.nillable && 0 %]
+[%# TODO nillable should be handled by type not attribute %]
+    required        => 1, #[%- element.nillable %]
 [%- END %]
     coerce          => 1,
 [%- IF config.alias && element.name.replace('^\w+:', '') != element.perl_name %]

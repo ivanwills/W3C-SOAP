@@ -416,7 +416,8 @@ sub element_attributes {
            list => $is_array,
         ),
         predicate     => 'has_'. $element->perl_name,
-        required      => 0, # TODO $element->nillable,
+        # TODO handle nillable correctly  should be a Maybe type
+        #required      => !$element->nillable,
         coerce        => 1,
     #[%- IF config->alias && element->name.replace('^\w+:', '') != element->perl_name %]
         #alias         => '[% element->name.replace('^\w+:', '') %]',
