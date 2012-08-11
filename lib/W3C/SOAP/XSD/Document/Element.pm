@@ -52,10 +52,10 @@ has min_occurs => (
     builder => '_min_occurs',
     lazy_build => 1,
 );
-has nillble => (
+has nillable => (
     is     => 'rw',
     isa    => 'Bool',
-    builder => '_nillble',
+    builder => '_nillable',
     lazy_build => 1,
 );
 has choice_group => (
@@ -129,9 +129,9 @@ sub _min_occurs {
     return $self->node->getAttribute('minOccurs') || 0;
 }
 
-sub _nillble {
+sub _nillable {
     my ($self) = @_;
-    return $self->node->getAttribute('nillble') || 0;
+    return $self->node->getAttribute('nillable') || 0;
 }
 
 sub module {
