@@ -3,8 +3,8 @@
         xsd  => {
         },
         wsdl => {
-            parent_module => 'W3C::SOAP::WSDL',
+            parent_module => config.wsdl.parent_module || 'W3C::SOAP::WSDL',
         },
-        alias => 0,
+        alias => config.alias || 0,
     };
 -%]
