@@ -37,6 +37,7 @@ has type => (
 sub _element {
     my ($self) = @_;
     my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
+    return unless $part;
     my $element = $part->getAttribute('element');
     return unless $element;
 
@@ -61,6 +62,7 @@ sub _element {
 sub _type {
     my ($self) = @_;
     my ($part) = $self->document->xpc->findnodes("wsdl:part", $self->node);
+    return unless $part;
     my $type = $part->getAttribute('type');
     return unless $type;
 
