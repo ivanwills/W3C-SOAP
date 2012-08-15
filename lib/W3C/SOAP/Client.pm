@@ -21,6 +21,7 @@ use W3C::SOAP::Exception;
 use W3C::SOAP::Header;
 
 our $VERSION     = version->new('0.0.4');
+our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
 has location => (
     is       => 'rw',
@@ -36,8 +37,7 @@ has header => (
 has mech => (
     is      => 'rw',
     isa     => 'WWW::Mechanize',
-    default => sub { WWW::Mechanize->new },
-    init_arg => undef,
+    builder => '_mech',
 );
 
 sub request {
@@ -156,6 +156,21 @@ sub _header {
     W3C::SOAP::Header->new;
 }
 
+{
+    my $mech;
+    sub _mech {
+        return $mech if $mech;
+        $mech = WWW::Mechanize->new;
+
+        if ($DEBUG_REQUEST_RESPONSE) {
+            $mech->add_handler("request_send",  sub { shift->dump; return });
+            $mech->add_handler("response_done", sub { shift->dump; return });
+        }
+
+        return $mech;
+    }
+}
+
 1;
 
 __END__
@@ -204,6 +219,9 @@ Sends the XML (C<$xml>) to the SOAP Server
 =head1 DIAGNOSTICS
 
 =head1 CONFIGURATION AND ENVIRONMENT
+
+The environment variable C<W3C_SOAP_DEBUG_CLIENT> can be used to show
+request and response XML.
 
 =head1 DEPENDENCIES
 
