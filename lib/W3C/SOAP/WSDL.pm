@@ -33,7 +33,10 @@ sub _request {
         my $xsd   = $class->new(
             $att => @args == 1 ? $args[0] : {@args},
         );
-        $resp = $self->request( $operation => $xsd );
+        my $xsd_ns = $xsd->xsd_ns;
+        $xsd_ns .= '/'
+            unless ($xsd_ns =~ /\/$/);
+        $resp = $self->request( "$xsd_ns$operation" => $xsd );
     }
     else {
         $resp = $self->request( $operation, @args );
