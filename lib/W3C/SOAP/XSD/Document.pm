@@ -131,20 +131,19 @@ sub _imports {
     for my $import (@nodes) {
         next if $import->getAttribute('namespace') && $import->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
 
-        my $location = $import->getAttribute('schemaLocation')
-            || $import->getAttribute('namespace');
-        confess "No schemaLocation specified for ".$import->toString
-            if !$location;
+        my $location = $import->getAttribute('schemaLocation');
+        if ($location) {
 
-        if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
-            $location = URI->new_abs($location, $self->location)->as_string;
+            if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
+                $location = URI->new_abs($location, $self->location)->as_string;
+            }
+
+            push @imports, __PACKAGE__->new(
+                location      => $location,
+                ns_module_map => $self->ns_module_map,
+                module_base   => $self->module_base,
+            );
         }
-
-        push @imports, __PACKAGE__->new(
-            location      => $location,
-            ns_module_map => $self->ns_module_map,
-            module_base   => $self->module_base,
-        );
     }
 
     return \@imports;
