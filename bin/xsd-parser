@@ -47,6 +47,7 @@ sub main {
     GetOptions(
         \%option,
         'ns_module_map|ns|namespace-map|n=s%',
+        'module_base|module-base|b=s',
         'lib|l=s',
         'show|s',
         'path|p=s',
@@ -74,6 +75,7 @@ sub main {
         INTERPOLATE  => 0,
         EVAL_PERL    => 1,
     );
+    $option{module_base} = 'Static::XSD' if $option{show} && !$option{module_base};
     my $parser = W3C::SOAP::XSD::Parser->new(
         location => $file,
         template => $template,
@@ -164,12 +166,16 @@ This documentation refers to xsd-parser version 0.0.4.
    xsd-parser [option]
 
  OPTIONS:
+  -s --show         Show details about found XSDs rather than creating files
+  -b --module-base[=]str
+                    Let the program auto generate package names with this value
+                    as the base of the module name. (Note packages will be valid
+                    but not pretty)
   -n --namespace-map uri=module
                     Map of XML namespace URIs to Perl Modules
   -l --lib[=]path   The default path where outputted xml files should be placed
   -p --path[=]path  Extra path where overridded template toolkit files can be
                     found.
-  -s --show         Show details about found XSDs rather than creating files
 
   -v --verbose      Show more detailed option
      --version      Prints the version information
@@ -230,4 +236,3 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.
 
 =cut
-

@@ -48,6 +48,7 @@ sub main {
         \%option,
         'ns_module_map|ns|namespace-map|n=s%',
         'ns_module_map_file|map-file|f=s',
+        'module_base|module-base|b=s',
         'lib|l=s',
         'show|s',
         'path|p=s',
@@ -80,6 +81,7 @@ sub main {
         }
     }
     #warn Dumper $option{ns_module_map}, $option{ns_module_map_file};
+    $option{module_base} = 'Static::WSDL' if $option{show} && !$option{module_base};
 
     return show() if $option{show};
 
@@ -121,7 +123,7 @@ sub main {
 
 sub show {
     # do stuff here
-    my %map = @ARGV;
+    my %map = $option{module_base} ? ($option{module_base} => @ARGV) : @ARGV;
     for my $module (keys %map) {
         my $wsdl = W3C::SOAP::WSDL::Document->new(
             %option,
@@ -181,6 +183,10 @@ This documentation refers to wsdl-parser version 0.0.4.
 
  OPTIONS:
   -s --show     Show some info about the passed WSDL file
+  -b --module-base[=]str
+                    Let the program auto generate package names with this value
+                    as the base of the module name. (Note packages will be valid
+                    but not pretty)
   -n --namespace-map ns=package
                 A mapping of XSD namespaces (ns) to perl package names, it
                 is required when writing XSD files
