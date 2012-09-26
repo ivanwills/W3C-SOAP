@@ -20,11 +20,11 @@ extends 'Moose::Meta::Method';
 
 our $VERSION     = version->new('0.0.4');
 
-has wsdl_opperation => (
+has wsdl_operation => (
     is        => 'rw',
     isa       => 'Str',
     required  => 1,
-    predicate => 'has_wsdl_opperation',
+    predicate => 'has_wsdl_operation',
 );
 has in_class => (
     is        => 'rw',

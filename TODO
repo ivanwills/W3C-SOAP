@@ -61,12 +61,12 @@ Helpers to create SOAP servers, Catalyst/Dancer/Mojolicious helpers.
 
 =item Mock services helper
 
-Helper to create mock responces based on requests (dependant on server
+Helper to create mock responses based on requests (dependant on server
 creation). Should be able to work in two different ways eg a recording
-opperation so that a client sends requests which the mock server proxies to
+operation so that a client sends requests which the mock server proxies to
 the real server, stores the results against the request and sends back the
 response. The other method is to look up the request to see if their already
-is a responce and returns that (the true mock opperation).
+is a response and returns that (the true mock operation).
 
 =item WS-Security
 

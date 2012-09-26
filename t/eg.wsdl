@@ -33,7 +33,7 @@
     <wsdl:part element="eg:el2" name="firstActionResponseParam"/>
   </wsdl:message>
   <wsdl:portType name="EgService">
-    <wsdl:operation name="firstAction">
+    <wsdl:operation name="firstAction" style="document">
       <wsdl:input message="eg:firstActionRequest"/>
       <wsdl:output message="eg:firstActionResponse"/>
     </wsdl:operation>

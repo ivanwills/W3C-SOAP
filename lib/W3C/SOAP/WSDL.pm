@@ -22,9 +22,9 @@ our $VERSION     = version->new('0.0.4');
 
 sub _request {
     my ($self, $action, @args) = @_;
-    my $meta       = $self->meta;
-    my $method     = $self->_get_operation_method($action);
-    my $opperation = $method->wsdl_opperation;
+    my $meta      = $self->meta;
+    my $method    = $self->_get_operation_method($action);
+    my $operation = $method->wsdl_operation;
     my $resp;
 
     if ( $method->has_in_class && $method->has_in_attribute ) {
@@ -33,10 +33,10 @@ sub _request {
         my $xsd   = $class->new(
             $att => @args == 1 ? $args[0] : {@args},
         );
-        $resp = $self->request( $opperation => $xsd );
+        $resp = $self->request( $operation => $xsd );
     }
     else {
-        $resp = $self->request( $opperation, @args );
+        $resp = $self->request( $operation, @args );
     }
 
     if ( $method->has_out_class && $method->has_out_attribute ) {

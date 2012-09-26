@@ -85,7 +85,7 @@ This documentation refers to W3C::SOAP::Utils version 0.0.4.
        in_class       +> 'MyApp::Some::XSD',
        in_attribute   +> 'wsdl_op_request',
        out_class      +> 'MyApp::Some::XSD',
-       out_attribute  +> 'wsdl_op_responce',
+       out_attribute  +> 'wsdl_op_response',
    );
 
 =head1 DESCRIPTION

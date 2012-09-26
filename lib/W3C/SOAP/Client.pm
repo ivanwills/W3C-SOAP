@@ -118,10 +118,10 @@ sub send {
         }
     };
 
-    my $xml_responce = XML::LibXML->load_xml( string => $content );
-    my $ns = $self->_envelope_ns($xml_responce);
+    my $xml_response = XML::LibXML->load_xml( string => $content );
+    my $ns = $self->_envelope_ns($xml_response);
 
-    my ($node) = $xml_responce->findnodes("//$ns\:Body");
+    my ($node) = $xml_response->findnodes("//$ns\:Body");
 
     return $node;
 }

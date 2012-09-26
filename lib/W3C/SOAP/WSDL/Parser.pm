@@ -172,10 +172,10 @@ sub dynamic_classes {
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
 
                 $method{ $operation->perl_name } = W3C::SOAP::WSDL::Meta::Method->wrap(
-                    body            => sub { shift->_request($operation->perl_name => @_) },
-                    package_name    => $class_name,
-                    name            => $operation->perl_name,
-                    wsdl_opperation => $operation->name,
+                    body           => sub { shift->_request($operation->perl_name => @_) },
+                    package_name   => $class_name,
+                    name           => $operation->perl_name,
+                    wsdl_operation => $operation->name,
                     $in_element  ? ( in_class      => $in_element->module     ) : (),
                     $in_element  ? ( in_attribute  => $in_element->perl_name  ) : (),
                     $out_element ? ( out_class     => $out_element->module    ) : (),

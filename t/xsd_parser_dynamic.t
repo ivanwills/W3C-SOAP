@@ -119,7 +119,7 @@ XML
     #note join "\n", map {$_->toString} @str;
     is $str[2]->toString,
         '<WSX0:el2_5 xmlns:WSX0="urn:eg.schema.org">true</WSX0:el2_5>',
-        'Boolean value is searalized correctly';
+        'Boolean value is serialized correctly';
 }
 
 sub dynamic_modules_alias {

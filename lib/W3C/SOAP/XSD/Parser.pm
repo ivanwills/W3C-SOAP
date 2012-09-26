@@ -383,14 +383,14 @@ sub element_attributes {
         || ( $element->max_occurs && $element->max_occurs > 1 )
         || ( $element->min_occurs && $element->min_occurs > 1 );
     my $type_name = $simple || $element->type_module;
-    my $searalize = '';
+    my $serialize = '';
 
     if ( $very_simple ) {
         if ( $very_simple eq 'xs:boolean' ) {
-            $searalize = sub { $_ ? 'true' : 'false' };
+            $serialize = sub { $_ ? 'true' : 'false' };
         }
         elsif ( $very_simple eq 'xs:date' ) {
-            $searalize = sub {
+            $serialize = sub {
                 return $_->ymd if $_->time_zone->isa('DateTime::TimeZone::Floating');
                 my $d = DateTime::Format::Strptime::strftime('%F%z', $_);
                 $d =~ s/([+-]\d\d)(\d\d)$/$1:$2/;
@@ -398,14 +398,14 @@ sub element_attributes {
             };
         }
         elsif ( $very_simple eq 'xs:time' ) {
-            $searalize = sub { $_->hms };
+            $serialize = sub { $_->hms };
         }
     }
 
     my @extra;
     push @extra, ( xs_perl_module  => $element->type_module  ) if !$simple;
     push @extra, ( xs_choice_group => $element->choice_group ) if $element->choice_group;
-    push @extra, ( xs_searalize    => $searalize             ) if $searalize;
+    push @extra, ( xs_serialize    => $serialize             ) if $serialize;
 
     confess "No perl name!\n".$element->node->parentNode->toString if !$element->perl_name;
     $class->add_attribute(

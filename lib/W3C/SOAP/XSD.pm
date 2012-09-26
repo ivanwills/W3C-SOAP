@@ -178,14 +178,14 @@ sub to_xml {
                 my @children = $item->to_xml($xml);
                 $tag->appendChild($_) for @children;
             }
-            elsif ( ! defined $item && ! $att->has_xs_searalize ) {
+            elsif ( ! defined $item && ! $att->has_xs_serialize ) {
                 $tag->setAttribute('nil', 'true');
             }
             else {
                 local $_ = $item;
                 my $text
-                    = $att->has_xs_searalize
-                    ? $att->xs_searalize->($item)
+                    = $att->has_xs_serialize
+                    ? $att->xs_serialize->($item)
                     : "$item";
                 $tag->appendChild( $xml->createTextNode($text) );
             }
@@ -231,13 +231,13 @@ sub to_data {
             if ( blessed($value) && $value->can('to_data') ) {
                 $value = $value->to_data(%option);
             }
-            elsif ( ! defined $value && ! $att->has_xs_searalize ) {
+            elsif ( ! defined $value && ! $att->has_xs_serialize ) {
             }
             elsif ($option{stringify}) {
                 local $_ = $value;
                 my $text
-                    = $att->has_xs_searalize
-                    ? $att->xs_searalize->($value)
+                    = $att->has_xs_serialize
+                    ? $att->xs_serialize->($value)
                     : "$value";
                 $value = defined $value ? $text : $value;
             }

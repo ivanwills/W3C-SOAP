@@ -35,14 +35,14 @@ has '+location' => (
             out_element = operation.port_type.outputs.0.message.element;
  %]
 operation [% operation.perl_name %] => (
-    wsdl_opperation => '[% operation.name %]',
+    wsdl_operation => '[% operation.name %]',
 [%- IF in_element %]
-    in_class        => '[% in_element.module %]',
-    in_attribute    => '[% in_element.perl_name %]',
+    in_class       => '[% in_element.module %]',
+    in_attribute   => '[% in_element.perl_name %]',
 [%- END %]
 [%- IF out_element %]
-    out_class       => '[% out_element.module %]',
-    out_attribute   => '[% out_element.perl_name %]',
+    out_class      => '[% out_element.module %]',
+    out_attribute  => '[% out_element.perl_name %]',
 [%- END %]
 );
 [%- IF config.alias && element.name.replace('^\w+:', '') != element.perl_name %]

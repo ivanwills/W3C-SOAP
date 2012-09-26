@@ -57,10 +57,10 @@ has xs_choice_group => (
     isa       => 'PositiveInt',
     predicate => 'has_xs_choice_group',
 );
-has xs_searalize => (
+has xs_serialize => (
     is        => 'rw',
     isa       => 'CodeRef',
-    predicate => 'has_xs_searalize',
+    predicate => 'has_xs_serialize',
 );
 
 1;

@@ -45,7 +45,7 @@ sub dynamic_modules {
     $wsdl->mech($mech);
     can_ok $wsdl, 'first_action';
     my $action = $wsdl->meta->get_method('first_action');
-    is $action->wsdl_opperation, 'firstAction', 'Have an opperation';
+    is $action->wsdl_operation, 'firstAction', 'Have an operation';
     is $action->in_class, 'Dynamic::XSD::urn::eg_schema_org', 'Input class is correct';
 
     $mech->content(<<"XML");
