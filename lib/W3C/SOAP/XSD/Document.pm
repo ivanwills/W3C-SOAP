@@ -326,6 +326,13 @@ sub _element {
 sub _ns_name {
     my ($self) = @_;
     my %rev = reverse %{ $self->ns_map };
+    if ( !$rev{$self->target_namespace} ) {
+        delete $self->ns_map->{''};
+        my $ns = $self->target_namespace;
+        $ns =~ s/:/_/g;
+        $rev{$self->target_namespace} = $ns;
+        $self->ns_map->{$ns} = $self->target_namespace;
+    }
     confess "No ns name\n".Dumper \%rev, $self->target_namespace if !$rev{$self->target_namespace};
     return $rev{$self->target_namespace};
 }
@@ -358,6 +365,12 @@ sub get_ns_uri {
     confess "No namespace passed when trying to map a namespace uri!\n" if !defined $ns_name;
 
     return $self->ns_map->{$ns_name} if $self->ns_map->{$ns_name};
+
+    if ( $ns_name =~ /:/ ) {
+        my $tmp_ns_name = $ns_name;
+        $tmp_ns_name =~ s/:/_/g;
+        return $self->ns_map->{$tmp_ns_name} if $self->ns_map->{$tmp_ns_name};
+    }
 
     while ($node) {
         my $ns = $node->getAttribute("xmlns:$ns_name");
