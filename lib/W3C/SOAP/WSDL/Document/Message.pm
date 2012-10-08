@@ -15,7 +15,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use W3C::SOAP::Utils qw/split_ns/;
+use W3C::SOAP::Utils qw/split_ns xml_error cmp_ns/;
 
 extends 'W3C::SOAP::Document::Node';
 
@@ -49,7 +49,7 @@ sub _element {
         push @schemas, @{ $schema->imports };
         push @schemas, @{ $schema->includes };
 
-        if ( $schema->target_namespace eq $nsuri ) {
+        if ( cmp_ns($schema->target_namespace, $nsuri) ) {
             for my $element (@{ $schema->elements }) {
                 return $element if $element->name eq $el_name;
             }
