@@ -45,6 +45,12 @@ has outputs => (
     builder    => '_outputs',
     lazy_build => 1,
 );
+has faults => (
+    is         => 'rw',
+    isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
+    builder    => '_faults',
+    lazy_build => 1,
+);
 has port_type => (
     is         => 'rw',
     isa        => 'W3C::SOAP::WSDL::Document::Operation',
@@ -70,6 +76,7 @@ sub _action {
 
 sub _inputs  { return $_[0]->_in_out_puts('input');  }
 sub _outputs { return $_[0]->_in_out_puts('output'); }
+sub _faults  { return $_[0]->_in_out_puts('fault');  }
 sub _in_out_puts {
     my ($self, $dir) = @_;
     my @puts;
@@ -77,8 +84,8 @@ sub _in_out_puts {
 
     for my $node (@nodes) {
         push @puts, W3C::SOAP::WSDL::Document::InOutPuts->new(
-            parent_node   => $self,
-            node     => $node,
+            parent_node => $self,
+            node        => $node,
         );
     }
 

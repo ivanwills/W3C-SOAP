@@ -149,7 +149,7 @@ sub show {
                 print "\t\t", $port->binding->name, ' : ', $port->address, "\n";
                 for my $operation (@{ $port->binding->operations }) {
                     print "\t\t\t", $operation->name, "\n";
-                    for my $dir (qw/inputs outputs/) {
+                    for my $dir (qw/inputs outputs faults/) {
                         print "\t\t\t\t$dir: ";
                         if ($operation->port_type->$dir->[0]->message->element) {
                             print $operation->port_type->$dir->[0]->message->element->type_module;

@@ -33,6 +33,7 @@ has '+location' => (
         FOR operation IN port.binding.operations;
             in_element = operation.port_type.inputs.0.message.element;
             out_element = operation.port_type.outputs.0.message.element;
+            fault_element = operation.port_type.faults.0.message.element;
  %]
 operation [% operation.perl_name %] => (
     wsdl_operation => '[% operation.name %]',
@@ -43,6 +44,10 @@ operation [% operation.perl_name %] => (
 [%- IF out_element %]
     out_class      => '[% out_element.module %]',
     out_attribute  => '[% out_element.perl_name %]',
+[%- END %]
+[%- IF fault_element %]
+    fault_class      => '[% fault_element.module %]',
+    fault_attribute  => '[% fault_element.perl_name %]',
 [%- END %]
 );
 [%- IF config.alias && element.name.replace('^\w+:', '') != element.perl_name %]
