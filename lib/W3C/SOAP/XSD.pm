@@ -43,6 +43,7 @@ has xsd_ns_name => (
     my $require = sub {
         my ($module) = @_;
         return if $required{$module}++;
+        return if UNIVERSAL::can($module, 'new');
 
         my $file = "$module.pm";
         $file =~ s{::}{/}g;
