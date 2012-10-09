@@ -76,7 +76,8 @@ sub main {
 
         for my $line ($file->slurp) {
             chomp $line;
-            my ($ns, $mod) = split /,|\t/, $line, 2;
+            next unless ($line);
+            my ($ns, $mod) = split /=|,|\t/, $line, 2;
             $option{ns_module_map}{$ns} ||= $mod
         }
     }
