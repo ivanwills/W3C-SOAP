@@ -329,6 +329,14 @@ sub xsd_subtype {
             via { $_->textContent };
     }
 
+    # Propogate coercion from Any via parent's type coercion.
+    my $this_type = $subtype->parent;
+    if ($this_type->has_parent) {
+        coerce $subtype
+            => from 'Any'
+            => via { $this_type->parent->coerce($_) };
+    }
+
     return $subtype;
 }
 
