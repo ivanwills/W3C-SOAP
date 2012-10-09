@@ -38,21 +38,54 @@ This documentation refers to W3C::SOAP version 0.0.4.
 
 =head1 SYNOPSIS
 
+   # Dynamically created clients
    use W3C::SOAP qw/load_wsdl/;
 
    # load some wsdl file
    my $wsdl = load_wsdl("http://example.com/eg.wsdl");
 
    # call a method exported by the WSDL
-   $wsdl->some_method(...);
+   $wsdl->some_method( HASH | HASH_REF );
+
+   # A real world example
+   my $wsdl = load_wsdl('http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl');
+   my $res = $wsdl->resolve_ip( ip_address => '59.106.161.11', license_key => 0 );
+   printf "lat: %.4f\n", $res->resolve_ipresult->latitude;
 
    # load some xsd file
    my $xsd = load_xsd("http://example.com/eg.xsd");
 
    # create a new object of of the XSD
-   my $obj = $xsd->new( ... );
+   my $obj = $xsd->new( HASH | HASH_REF );
+
+   # Statically created clients
+   # on the command line build Client module (and included XSD modules)
+   # see L<wsdl-parser> or C<wsdl-parser --help> for more details
+   $ wsdl-parser -b ResolveIP ResolveIP 'http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl'
+
+   # back in perl
+
+   # the default directory modules are created into
+   use lib 'lib';
+   # load the ResolveIP client module
+   use ResolveIP;
+   # Create a client object
+   my $client = ResolveIP->new();
+   # call the WS
+   my $res = $client->resolve_ip( ip_address => '59.106.161.11', license_key => 0 );
+   # show the results
+   printf "lat: %.4f\n", $res->resolve_ipresult->latitude;
 
 =head1 DESCRIPTION
+
+A perly SOAP clinet library.
+
+=head2 Gotchas
+
+Java style camael case names are converted to the more legible Perl style underscore
+sepperated names for everything that doesn't end up being a Perl package or Moose
+type. Eg in the Synopsis the operation defined in the IP 2 GEO WSDL is defined as
+ResolveIP this is traslated to the perly name resolve_ip.
 
 =head1 SUBROUTINES/METHODS
 
@@ -85,7 +118,11 @@ See L<W3C::SOAP::XSD::Parser> for more details.
 
 =head1 BUGS AND LIMITATIONS
 
-There are no known bugs in this module.
+There are no known bugs in this module. (Plenty of unknown bugs)
+
+Currently the WSDL handling doesn't deal with more than one input or output
+on an opperation or inputs/outputs that aren't specified by an XMLSchema. A;so
+operation fault objects aren't yet handled.
 
 Please report problems to Ivan Wills (ivan.wills@gmail.com).
 
@@ -93,7 +130,7 @@ Patches are welcome.
 
 =head1 ALSO SEE
 
-L<XML::LibXML>, L<MooseX::Types::XMLSchema>
+L<XML::LibXML>, L<Moose>, L<MooseX::Types::XMLSchema>
 
 Inspired by L<SOAP::WSDL> & L<SOAP::Lite>
 
