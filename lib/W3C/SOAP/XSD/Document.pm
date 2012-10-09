@@ -375,6 +375,8 @@ sub get_ns_uri {
     while ($node) {
         my $ns = $node->getAttribute("xmlns:$ns_name");
         return $ns if $ns;
+        $ns = $node->getAttribute("targetNamespace");
+        return $ns if $ns;
         $node = $node->parentNode;
         last if ref $node eq 'XML::LibXML::Document';
     }
