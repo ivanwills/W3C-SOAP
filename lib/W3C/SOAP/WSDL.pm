@@ -34,8 +34,9 @@ sub _request {
             $att => @args == 1 ? $args[0] : {@args},
         );
         my $xsd_ns = $xsd->xsd_ns;
-        $xsd_ns .= '/'
-            unless ($xsd_ns =~ /\/$/);
+        if ( $xsd_ns !~ m{/$} ) {
+            $xsd_ns .= '/';
+        }
         $resp = $self->request( "$xsd_ns$operation" => $xsd );
     }
     else {
