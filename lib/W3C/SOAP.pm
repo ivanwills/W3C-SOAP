@@ -78,14 +78,14 @@ This documentation refers to W3C::SOAP version 0.0.4.
 
 =head1 DESCRIPTION
 
-A perly SOAP clinet library.
+A perly SOAP client library.
 
 =head2 Gotchas
 
-Java style camael case names are converted to the more legible Perl style underscore
-sepperated names for everything that doesn't end up being a Perl package or Moose
+Java style camel case names are converted to the more legible Perl style underscore
+separated names for everything that doesn't end up being a Perl package or Moose
 type. Eg in the Synopsis the operation defined in the IP 2 GEO WSDL is defined as
-ResolveIP this is traslated to the perly name resolve_ip.
+ResolveIP this is translated to the perly name resolve_ip.
 
 =head1 SUBROUTINES/METHODS
 
@@ -121,7 +121,7 @@ See L<W3C::SOAP::XSD::Parser> for more details.
 There are no known bugs in this module. (Plenty of unknown bugs)
 
 Currently the WSDL handling doesn't deal with more than one input or output
-on an opperation or inputs/outputs that aren't specified by an XMLSchema. A;so
+on an operation or inputs/outputs that aren't specified by an XMLSchema. A;so
 operation fault objects aren't yet handled.
 
 Please report problems to Ivan Wills (ivan.wills@gmail.com).

@@ -43,5 +43,7 @@ add_stopwords(qw/
     DateTime
     WSDL
     wsdl
+    ResolveIP
+    perly
 /);
 all_pod_files_spelling_ok();
