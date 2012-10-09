@@ -17,7 +17,7 @@ use English qw/ -no_match_vars /;
 use TryCatch;
 use URI;
 
-our $VERSION     = version->new('0.0.4');
+our $VERSION     = version->new('0.0.5');
 
 has string => (
     is         => 'rw',
@@ -161,7 +161,7 @@ W3C::SOAP::Document - Object to represent an XML Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Document version 0.0.4.
+This documentation refers to W3C::SOAP::Document version 0.0.5.
 
 =head1 SYNOPSIS
 

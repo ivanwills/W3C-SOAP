@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/split_ns/;
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.0.4');
+our $VERSION     = version->new('0.0.5');
 
 has message => (
     is         => 'rw',
@@ -59,7 +59,7 @@ W3C::SOAP::WSDL::Document::InOutPuts - <One-line description of module's purpose
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::InOutPuts version 0.0.4.
+This documentation refers to W3C::SOAP::WSDL::Document::InOutPuts version 0.0.5.
 
 
 =head1 SYNOPSIS
