@@ -144,6 +144,9 @@ sub _imports {
                 module_base   => $self->module_base,
             );
         }
+        else {
+            warn "Found import but no schemaLocation so no schema imported!\n\t" . $import->toString . "\n\t";
+        }
     }
 
     return \@imports;
@@ -167,19 +170,21 @@ sub _includes {
         next if $include->getAttribute('namespace') && $include->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
 
         my $location = $include->getAttribute('schemaLocation')
-            || $include->getAttribute('namespace');
-        confess "No schemaLocation specified for ".$include->toString
-            if !$location;
+        if ($location) {
 
-        if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
-            $location = URI->new_abs($location, $self->location)->as_string;
+            if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
+                $location = URI->new_abs($location, $self->location)->as_string;
+            }
+
+            push @includes, __PACKAGE__->new(
+                location      => $location,
+                ns_module_map => $self->ns_module_map,
+                module_base   => $self->module_base,
+            );
         }
-
-        push @includes, __PACKAGE__->new(
-            location      => $location,
-            ns_module_map => $self->ns_module_map,
-            module_base   => $self->module_base,
-        );
+        else {
+            warn "Found include but no schemaLocation so no schema included!\n\t" . $include->toString . "\n\t";
+        }
     }
 
     return \@includes;
