@@ -169,7 +169,7 @@ sub _includes {
     for my $include (@nodes) {
         next if $include->getAttribute('namespace') && $include->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
 
-        my $location = $include->getAttribute('schemaLocation')
+        my $location = $include->getAttribute('schemaLocation');
         if ($location) {
 
             if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
