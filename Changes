@@ -1,5 +1,40 @@
 Revision history for W3C-SOAP
 
+0.0.5   2012-10-09
+        Fixed spelling
+        Added documentation for cmp_ns function
+        Worked on the quick start documentation
+        Don't try to load dynamically created modules
+        Style cleanup
+        fully qualify operation in SOAPAction header NB some soap servers require the SOAPAction to be fully qualified e.g. http://www.xmlme.com/WSShakespeare.asmx?WSDL REQ: SOAPAction: "GetSpeech" RES: SoapException: Server did not recognize the value of HTTP Header SOAPAction: GetSpeech http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl REQ: SOAPAction: "ResolveIP" RES: <faultstring>Server did not recognize the value of HTTP Header SOAPAction: ResolveIP http://www.ebob42.com/cgi-bin/NumberToWordsInDutch.exe/wsdl/IDutch REQ: SOAPAction: "NumToStr" RES: <faultstring>No interface registered for soap action '"NumToStr"'</faultstring>
+        Style clean up and adding missing semi colon
+        Furthered Danny's to includes and added descriptive warning so any problems can be more easily debugged
+        don't have import fallback to namespace when there's no schemaLocation otherwise on sharepoint 2010, this <s:import namespace="http://microsoft.com/wsdl/types/" /> results in Could not create file parser context for file "http://microsoft.com/wsdl/types/": Resource temporarily unavailable I'm guessing that import is just for the namespace when the contents have been merged in
+        From 28dfcef860ae8fff98e55e74db7edf0ce67b9490 Mon Sep 17 00:00:00 2001 From: Danny Thomas <d.thomas@its.uq.edu.au> Date: Tue, 25 Sep 2012 17:16:34 +1000 Subject: [PATCH] allow '=' in ns map file just like command-line, be tolerant  of empty lines rather than display uninitialized variable   warning
+        From 6c87b9a2666c2b28084492246cf564c87df45b15 Mon Sep 17 00:00:00 2001 From: Danny Thomas <d.thomas@its.uq.edu.au> Date: Tue, 25 Sep 2012 08:57:43 +1000 Subject: [PATCH] some WSDLs were failing to parse No mapping specified for  the namespace http://broadhop.com/unifiedapi/soap/types!  at  /opt/perl/uq.cis.perl-dmt-toys.rhel5-5.14.2-20120731/lib/site_perl/5.14.2/W3C/SOAP/Document.pm  line 149  W3C::SOAP::Document::_module('W3C::SOAP::XSD::Document=HASH(0xf442198)')  called at accessor W3C::SOAP::XSD::Document::module  (defined at  /opt/perl/uq.cis.perl-dmt-toys.rhel5-5.14.2-20120731/lib/site_perl/5.14.2/W3C/SOAP/XSD/Document.pm  line 106) line 10
+        Merge pull request #1 from bacek/master
+        Propograte coercion to parent type for any generated types.
+        Started to add fault handling
+        Fixed trying to compare namespaces with non-normalized domain names
+        Cleaned up ns generation
+        Spelling fixes from Danny
+        Fixed defaults and documentation
+        Added dumping request & response xml - baised on Danny Thomas patch
+        Started to make config externally modifiable
+        More things todo
+        Fixed dieing when no part is found
+        Realised I wasn't handling nillable correctly, need to work out how make it part of type not (Maybe`)
+        Fixed typo, thanks Danny Thomas
+        Fixed missing delegation
+        Started implementing static module name auto generation
+        Moved some common code from XSD & WSDL Documents to the base Document
+        Fixed no execute flag
+        Fixed getting document element
+        Fixed calling to_string instead of as_string
+        Fixed URI warnings for fake URI strings
+        Added version to test lib
+        Changed implicit stringification to explicit
+
 0.0.4   2012-07-31
         Fixed undef warnings
         Moved more WSDLs to end of test data not sure they are valid and/or useful
