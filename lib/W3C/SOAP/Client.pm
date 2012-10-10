@@ -19,6 +19,7 @@ use TryCatch;
 use XML::LibXML;
 use W3C::SOAP::Exception;
 use W3C::SOAP::Header;
+use Moose::Util::TypeConstraints qw/duck_type/;
 
 our $VERSION     = version->new('0.0.5');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
@@ -38,6 +39,11 @@ has mech => (
     is      => 'rw',
     isa     => 'WWW::Mechanize',
     builder => '_mech',
+);
+has log => (
+    is        => 'rw',
+    isa       => duck_type([qw/ debug info warn error fatal /]),
+    predicate => 'has_log',
 );
 
 sub request {
@@ -90,10 +96,12 @@ sub send {
     my ($self, $action, $xml) = @_;
     my $content;
 
+    $self->log->debug("$action REQUEST\n" . $xml->toString) if $self->has_log;
     try {
         $content = $self->_post($action, $xml);
     }
     catch ($e) {
+        $self->log->error("$action RESPONCE \n" . $self->mech->res->content) if $self->has_log;
         my $xml_error = eval { XML::LibXML->load_xml( string => $self->mech->res->content ) };
 
         if ( $xml_error ) {
@@ -117,6 +125,7 @@ sub send {
             );
         }
     };
+    $self->log->debug("$action RESPONCE \n$content") if $self->has_log;
 
     my $xml_response = XML::LibXML->load_xml( string => $content );
     my $ns = $self->_envelope_ns($xml_response);
