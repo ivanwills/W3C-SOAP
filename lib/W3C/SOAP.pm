@@ -87,6 +87,36 @@ separated names for everything that doesn't end up being a Perl package or Moose
 type. Eg in the Synopsis the operation defined in the IP 2 GEO WSDL is defined as
 ResolveIP this is translated to the perly name resolve_ip.
 
+=head2 Debugging
+
+When something goes wrong there are two ways to see what XML is being sent and
+received.
+
+=over 4
+
+=item 1
+
+The C<$W3C_SOAP_DEBUG_CLIENT> environment variable will cause the all request
+and response HTTP bodies to be dumped to STDOUT. The length of the content is
+limitted to 1024 by default but this can be changed with the
+C<$W3C_SOAP_DEBUG_LENGTH> environment variable.
+
+=item 2
+
+Supplying a log object. When a client is instanciated you can supply it a log
+object or after creation supply the C<log> method with a log object, the only
+restriction is that it implements C<debug, info, warn, error and fatal>
+methods. L<Log::Log4perl> and C<Catalyst::Log> are known working examples.
+
+  eg
+    my $client = ResolveIP->new(log => $log);
+  or
+    $client->log($log);
+
+=back
+
+Both methods can be used together.
+
 =head1 SUBROUTINES/METHODS
 
 =over 4
@@ -111,6 +141,20 @@ See L<W3C::SOAP::XSD::Parser> for more details.
 =head1 DIAGNOSTICS
 
 =head1 CONFIGURATION AND ENVIRONMENT
+
+=over 4
+
+=item C<$W3C_SOAP_DEBUG_CLIENT>
+
+If this environment variable is a true value it will turn on printing request
+and response HTTP messages bodies to STDOUT.
+
+=item C<$W3C_SOAP_DEBUG_LENGTH>
+
+Alter the amout of data shown by C<$W3C_SOAP_DEBUG_CLIENT> which defaults to
+1024.
+
+=back
 
 =head1 DEPENDENCIES
 
