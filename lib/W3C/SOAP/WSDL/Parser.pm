@@ -181,6 +181,15 @@ sub dynamic_classes {
                     $out_element ? ( out_class     => $out_element->module    ) : (),
                     $out_element ? ( out_attribute => $out_element->perl_name ) : (),
                 );
+
+                if ( $ENV{W3C_SOAP_NAME_STYLE} eq 'both' && $operation->name ne $operation->perl_name ) {
+                    my $name = $operation->perl_name;
+                    $method{ $operation->name } = Moose::Meta::Method->wrap(
+                        body         => sub { shift->$name(@_) },
+                        package_name => $class_name,
+                        name         => $operation->name,
+                    );
+                }
             }
         }
     }

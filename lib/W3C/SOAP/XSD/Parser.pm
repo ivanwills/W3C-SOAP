@@ -430,6 +430,13 @@ sub element_attributes {
         @extra,
     );
 
+    if ( $ENV{W3C_SOAP_NAME_STYLE} eq 'both' && $element->name ne $element->perl_name ) {
+        my $name = $element->perl_name;
+        $class->add_method(
+            $element->name => sub { shift->$name(@_) }
+        );
+    }
+
     return;
 }
 1;

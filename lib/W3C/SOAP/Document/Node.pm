@@ -15,8 +15,8 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-
-our $VERSION     = version->new('0.0.5');
+our $VERSION    = version->new('0.0.5');
+$ENV{W3C_SOAP_NAME_STYLE} ||= 'perl';
 
 has node => (
     is       => 'rw',
@@ -76,6 +76,9 @@ sub perl_name {
     my ($self) = @_;
     my $name = $self->name;
     return if !$name;
+
+    return $name if $ENV{W3C_SOAP_NAME_STYLE} eq 'original';
+
     $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
     return lc $name;
 }
