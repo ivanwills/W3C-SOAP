@@ -60,7 +60,7 @@ This documentation refers to W3C::SOAP version 0.0.5.
 
    # Statically created clients
    # on the command line build Client module (and included XSD modules)
-   # see L<wsdl-parser> or C<wsdl-parser --help> for more details
+   # see wsdl-parser --help for more details
    $ wsdl-parser -b ResolveIP ResolveIP 'http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl'
 
    # back in perl
@@ -174,7 +174,7 @@ Patches are welcome.
 
 =head1 ALSO SEE
 
-L<XML::LibXML>, L<Moose>, L<MooseX::Types::XMLSchema>
+L<wsdl-parser>, L<W3C::SOAP::Client>, L<XML::LibXML>, L<Moose>, L<MooseX::Types::XMLSchema>
 
 Inspired by L<SOAP::WSDL> & L<SOAP::Lite>
 
