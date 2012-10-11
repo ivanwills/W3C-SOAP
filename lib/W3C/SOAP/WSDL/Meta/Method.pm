@@ -48,6 +48,11 @@ has out_attribute => (
     isa       => 'Str',
     predicate => 'has_out_attribute',
 );
+has faults => (
+    is        => 'rw',
+    isa       => 'ArrayRef[HashRef]',
+    predicate => 'has_faults',
+);
 has security => (
     is        => 'rw',
     isa       => 'Str',

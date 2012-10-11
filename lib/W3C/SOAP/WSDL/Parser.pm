@@ -170,6 +170,13 @@ sub dynamic_classes {
             for my $operation (@{ $port->binding->operations }) {
                 my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
+                my @faults = eval {
+                    map {{
+                        class => $_->message->element->module,
+                        name  => $_->message->element->perl_name,
+                    }}
+                    @{ $operation->port_type->faults }
+                };
 
                 $method{ $operation->perl_name } = W3C::SOAP::WSDL::Meta::Method->wrap(
                     body           => sub { shift->_request($operation->perl_name => @_) },
@@ -180,6 +187,7 @@ sub dynamic_classes {
                     $in_element  ? ( in_attribute  => $in_element->perl_name  ) : (),
                     $out_element ? ( out_class     => $out_element->module    ) : (),
                     $out_element ? ( out_attribute => $out_element->perl_name ) : (),
+                    @faults ? ( faults => \@faults ) : (),
                 );
 
                 if ( $ENV{W3C_SOAP_NAME_STYLE} eq 'both' && $operation->name ne $operation->perl_name ) {
