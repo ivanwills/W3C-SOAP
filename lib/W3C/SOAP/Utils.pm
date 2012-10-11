@@ -17,7 +17,7 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::WSDL::Meta::Method;
 
 Moose::Exporter->setup_import_methods(
-    as_is     => [qw/split_ns xml_error cmp_ns/],
+    as_is     => [qw/split_ns xml_error normalise_ns cmp_ns/],
     with_meta => ['operation'],
 );
 
@@ -30,20 +30,22 @@ sub split_ns {
     return $name ? ($ns, $name) : ('', $ns);
 }
 
+sub normalise_ns {
+    my ($ns) = @_;
+
+    my $uri = URI->new($ns);
+
+    if ( $uri->can('host') ) {
+        $uri->host(lc $uri->host);
+    }
+
+    return "$uri";
+}
+
 sub cmp_ns {
     my ($ns1, $ns2) = @_;
 
-    my $uri1 = URI->new($ns1);
-    my $uri2 = URI->new($ns2);
-
-    if ( $uri1->can('host') ) {
-        $uri1->host(lc $uri1->host);
-    }
-    if ( $uri2->can('host') ) {
-        $uri2->host(lc $uri2->host);
-    }
-
-    return $uri1 eq $uri2;
+    return normalise_ns($ns1) eq normalise_ns($ns2);
 }
 
 sub xml_error {
@@ -115,6 +117,11 @@ Utility Functions
 =item C<split_ns ($name)>
 
 Splits an XML tag's namespace from the tag name
+
+=item C<normalise_ns ($ns)>
+
+Creates a normalised XML name space string (ie lower cases the host part of
+the name space)
 
 =item C<cmp_ns ($ns1, $ns2)>
 

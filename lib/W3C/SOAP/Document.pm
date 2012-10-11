@@ -16,6 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use TryCatch;
 use URI;
+use W3C::SOAP::Utils qw/normalise_ns/;
 
 our $VERSION     = version->new('0.0.5');
 
@@ -118,11 +119,6 @@ sub _target_namespace {
     $xpc->registerNs(ns => $ns) if $ns;
 
     $ns ||= $self->location || 'NsAnon' . $anon++;
-    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
-        $ns = URI->new($ns);
-        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
-        $ns = $ns->as_string;
-    }
 
     return $ns;
 }
@@ -130,25 +126,24 @@ sub _target_namespace {
 sub _module {
     my ($self) = @_;
     my $ns = $self->target_namespace;
-    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
-        $ns = URI->new($ns);
-        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
-        $ns = $ns->as_string;
-    }
 
     if ( $self->has_module_base ) {
         my $ns = $self->target_namespace;
         $ns =~ s{://}{::};
         $ns =~ s{([^:]:)([^:])}{$1:$2}g;
         $ns =~ s{[^\w:]+}{_}g;
-        $self->ns_module_map->{$self->target_namespace}
+        $self->ns_module_map->{normalise_ns($self->target_namespace)}
             = $self->module_base . "::$ns";
     }
 
-    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{$ns};
+    if ( !$self->ns_module_map->{normalise_ns($ns)} && $self->ns_module_map->{$ns} ) {
+        $self->ns_module_map->{normalise_ns($ns)} = $self->ns_module_map->{$ns};
+    }
 
-    return $self->ns_module_map->{$ns};
+    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
+    confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{normalise_ns($ns)};
+
+    return $self->ns_module_map->{normalise_ns($ns)};
 }
 
 1;

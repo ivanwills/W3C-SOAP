@@ -24,6 +24,7 @@ use W3C::SOAP::Exception;
 use W3C::SOAP::XSD::Document::Element;
 use W3C::SOAP::XSD::Document::ComplexType;
 use W3C::SOAP::XSD::Document::SimpleType;
+use W3C::SOAP::Utils qw/normalise_ns/;
 
 extends 'W3C::SOAP::Document';
 
@@ -392,16 +393,11 @@ sub get_ns_uri {
 
 sub get_module_base {
     my ($self, $ns) = @_;
-    if ( $ns && $ns =~ /^(?:https?|ftp):/ ) {
-        $ns = URI->new($ns);
-        $ns->host( lc $ns->host ) if $ns->can('host') && $ns->host;
-        $ns = $ns->as_string;
-    }
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    confess "No mapping specified for the namespace $ns!\n"        if !$self->ns_module_map->{$ns};
+    confess "No mapping specified for the namespace $ns!\n"        if !$self->ns_module_map->{normalise_ns($ns)};
 
-    return $self->ns_module_map->{$ns};
+    return $self->ns_module_map->{normalise_ns($ns)};
 }
 
 1;
