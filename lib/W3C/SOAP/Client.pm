@@ -44,6 +44,7 @@ has log => (
     is        => 'rw',
     isa       => duck_type([qw/ debug info warn error fatal /]),
     predicate => 'has_log',
+    clearer   => 'clear_log',
 );
 
 sub request {
@@ -101,7 +102,7 @@ sub send {
         $content = $self->_post($action, $xml);
     }
     catch ($e) {
-        $self->log->error("$action RESPONCE \n" . $self->mech->res->content) if $self->has_log;
+        $self->log->error("$action RESPONSE \n" . $self->mech->res->content) if $self->has_log;
         my $xml_error = eval { XML::LibXML->load_xml( string => $self->mech->res->content ) };
 
         if ( $xml_error ) {
@@ -125,7 +126,7 @@ sub send {
             );
         }
     };
-    $self->log->debug("$action RESPONCE \n$content") if $self->has_log;
+    $self->log->debug("$action RESPONSE \n$content") if $self->has_log;
 
     my $xml_response = XML::LibXML->load_xml( string => $content );
     my $ns = $self->_envelope_ns($xml_response);
@@ -172,8 +173,8 @@ sub _header {
         $mech = WWW::Mechanize->new;
 
         if ($DEBUG_REQUEST_RESPONSE) {
-            $mech->add_handler("request_send",  sub { shift->dump; return });
-            $mech->add_handler("response_done", sub { shift->dump; return });
+            $mech->add_handler("request_send",  sub { shift->dump( prefix => 'REQUEST  ', maxlength => $ENV{W3C_SOAP_DEBUG_LENGTH} || 1024 ); return });
+            $mech->add_handler("response_done", sub { shift->dump( prefix => 'RESPONSE ', maxlength => $ENV{W3C_SOAP_DEBUG_LENGTH} || 1024 ); return });
         }
 
         return $mech;
