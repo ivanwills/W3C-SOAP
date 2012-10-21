@@ -94,7 +94,16 @@ sub main {
 
     die Dumper \@ARGV if @ARGV % 2;
     my %map = @ARGV;
+
     for my $module (keys %map) {
+
+        # check that %map modules don't overlap with $option{ns_module_map} modules
+        if ($option{ns_module_map}{$module}) {
+            die "The module '$module' is mapped from both the WSDL '$map{$module}'"
+                . " and the XMLSchema '$option{ns_module_map}{$module}' namespaces"
+                . " please use different modules!\n";
+        }
+
         my $wsdl = W3C::SOAP::WSDL::Parser->new(
             location => $map{$module},
             template => $template,

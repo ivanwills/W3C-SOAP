@@ -6,11 +6,6 @@ W3C::SOAP tasks still to be done
 
 =over 4
 
-=item Add checking for namespace collisions
-
-Add checking for namespace collisions between WSDLs and XSDs namespace
-mappings.
-
 =item Improve XML Schema support
 
 Currently I can't pass http://www.w3.org/2001/XMLSchema.xsd due to
