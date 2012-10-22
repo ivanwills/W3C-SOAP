@@ -1,5 +1,5 @@
 [%
-    IF ENV.W3C_SOAP_NAME_STYLE eq 'both';
+    IF ENV.W3C_SOAP_NAME_STYLE == 'both';
         alias = 1;
     ELSE;
         alias = config.alias || 0;
