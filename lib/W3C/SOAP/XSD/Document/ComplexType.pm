@@ -85,13 +85,13 @@ sub _get_sequence_elements {
     my $group = 1;
 
     for my $node (@nodes) {
-        if ( $node->nodeName =~ /:element$/ ) {
+        if ( $node->nodeName =~ /(?:^|:)element$/ ) {
             push @sequence, W3C::SOAP::XSD::Document::Element->new(
                 parent_node => $self,
                 node   => $node,
             );
         }
-        elsif ( $node->nodeName =~ /:choice$/ ) {
+        elsif ( $node->nodeName =~ /(?:^|:)choice$/ ) {
             my @choices = $self->document->xpc->findnodes('xsd:element', $node);
             for my $choice (@choices) {
                 push @sequence, W3C::SOAP::XSD::Document::Element->new(
