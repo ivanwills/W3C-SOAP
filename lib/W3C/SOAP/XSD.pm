@@ -66,7 +66,7 @@ has xsd_ns_name => (
             while ($child) {
                 if ( $child->nodeName !~ /^#/ ) {
                     my ($node_ns, $node) = split_ns($child->nodeName);
-                    confess "Could not get node from (".$child->nodeName." via $node_ns, $node)\n", Dumper $map
+                    confess "Could not get node from (".$child->nodeName." via '$node_ns', '$node')\n"
                         if !$map->{$node};
                     my $attrib = $map->{$node};
                     $node = $attrib->name;
@@ -127,6 +127,15 @@ sub xml2perl_map {
     for my $attr ($class->get_xml_nodes) {
         $map{$attr->xs_name} = $attr;
     }
+
+    # get super class nodes (if any)
+    my $meta = $class->meta;
+
+    for my $super ( $meta->superclasses ) {
+        next if !$super->can('xml2perl_map') && $super ne __PACKAGE__;
+        %map = ( %{ $super->xml2perl_map }, %map );
+    }
+
     return \%map;
 }
 
