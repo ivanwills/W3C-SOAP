@@ -25,7 +25,7 @@ Moose::Exporter->setup_import_methods(
     as_is => ['load_wsdl'],
 );
 
-our $VERSION     = version->new('0.0.5');
+our $VERSION     = version->new('0.0.6');
 
 has document => (
     is       => 'rw',
@@ -227,7 +227,7 @@ W3C::SOAP::WSDL::Parser - Module to create Moose objects from a WSDL
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Parser version 0.0.5.
+This documentation refers to W3C::SOAP::WSDL::Parser version 0.0.6.
 
 =head1 SYNOPSIS
 
