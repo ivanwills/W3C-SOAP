@@ -19,7 +19,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION     = version->new('0.0.5');
+our $VERSION     = version->new('0.0.6');
 
 has sequence => (
     is      => 'rw',
@@ -85,13 +85,13 @@ sub _get_sequence_elements {
     my $group = 1;
 
     for my $node (@nodes) {
-        if ( $node->nodeName =~ /:element$/ ) {
+        if ( $node->nodeName =~ /(?:^|:)element$/ ) {
             push @sequence, W3C::SOAP::XSD::Document::Element->new(
                 parent_node => $self,
                 node   => $node,
             );
         }
-        elsif ( $node->nodeName =~ /:choice$/ ) {
+        elsif ( $node->nodeName =~ /(?:^|:)choice$/ ) {
             my @choices = $self->document->xpc->findnodes('xsd:element', $node);
             for my $choice (@choices) {
                 push @sequence, W3C::SOAP::XSD::Document::Element->new(
@@ -117,7 +117,7 @@ W3C::SOAP::XSD::Document::ComplexType - <One-line description of module's purpos
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::ComplexType version 0.0.5.
+This documentation refers to W3C::SOAP::XSD::Document::ComplexType version 0.0.6.
 
 
 =head1 SYNOPSIS

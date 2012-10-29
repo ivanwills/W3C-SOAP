@@ -32,7 +32,7 @@ use DateTime;
 use DateTime::Format::Strptime qw/strptime/;
 use Math::BigFloat;
 
-our $VERSION     = version->new('0.0.5');
+our $VERSION     = version->new('0.0.6');
 
 my $sig_warn = $SIG{__WARN__};
 $SIG{__WARN__} = sub {};
@@ -49,6 +49,7 @@ coerce 'xsd:boolean',
             : $_ eq 'false' ? undef
             :                 confess "'$_' isn't a xs:boolean!";
         };
+
 subtype 'xsd:double',
     as 'xs:double';
 coerce 'xsd:double',
@@ -56,6 +57,22 @@ coerce 'xsd:double',
 #        => via { Params::Coerce::coerce('xs:double', $_) },
     from 'Str'
         => via { Math::BigFloat->new($_) };
+
+subtype 'xsd:decimal',
+    as 'xs:decimal';
+coerce 'xsd:decimal',
+#    from 'Num'
+#        => via { Params::Coerce::coerce('xs:decimal', $_) },
+    from 'Str'
+        => via { Math::BigFloat->new($_) };
+
+subtype 'xsd:long',
+    as 'xs:long';
+coerce 'xsd:long',
+#    from 'Num'
+#        => via { Params::Coerce::coerce('xs:long', $_) },
+    from 'Str'
+        => via { Math::BigInt->new($_) };
 
 #subtype 'xsd:duration',
 #    as 'DateTime';
@@ -154,7 +171,7 @@ W3C::SOAP::XSD::Types - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Types version 0.0.5.
+This documentation refers to W3C::SOAP::XSD::Types version 0.0.6.
 
 
 =head1 SYNOPSIS

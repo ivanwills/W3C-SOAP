@@ -19,7 +19,7 @@ use W3C::SOAP::Utils qw/split_ns xml_error cmp_ns/;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.0.5');
+our $VERSION     = version->new('0.0.6');
 
 has element => (
     is         => 'rw',
@@ -79,7 +79,7 @@ W3C::SOAP::WSDL::Document::Message - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Message version 0.0.5.
+This documentation refers to W3C::SOAP::WSDL::Document::Message version 0.0.6.
 
 
 =head1 SYNOPSIS

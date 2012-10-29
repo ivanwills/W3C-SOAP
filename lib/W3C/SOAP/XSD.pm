@@ -23,7 +23,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 use TryCatch;
 use DateTime::Format::Strptime qw/strptime/;
 
-our $VERSION     = version->new('0.0.5');
+our $VERSION     = version->new('0.0.6');
 
 has xsd_ns => (
     is  => 'rw',
@@ -66,7 +66,7 @@ has xsd_ns_name => (
             while ($child) {
                 if ( $child->nodeName !~ /^#/ ) {
                     my ($node_ns, $node) = split_ns($child->nodeName);
-                    confess "Could not get node from (".$child->nodeName." via $node_ns, $node)\n", Dumper $map
+                    confess "Could not get node from (".$child->nodeName." via '$node_ns', '$node')\n"
                         if !$map->{$node};
                     my $attrib = $map->{$node};
                     $node = $attrib->name;
@@ -127,6 +127,15 @@ sub xml2perl_map {
     for my $attr ($class->get_xml_nodes) {
         $map{$attr->xs_name} = $attr;
     }
+
+    # get super class nodes (if any)
+    my $meta = $class->meta;
+
+    for my $super ( $meta->superclasses ) {
+        next if !$super->can('xml2perl_map') && $super ne __PACKAGE__;
+        %map = ( %{ $super->xml2perl_map }, %map );
+    }
+
     return \%map;
 }
 
@@ -282,6 +291,8 @@ sub xsd_subtype {
         : $parent_type eq 'xs:dateTime' ? 'xsd:dateTime'
         : $parent_type eq 'xs:boolean'  ? 'xsd:boolean'
         : $parent_type eq 'xs:double'   ? 'xsd:double'
+        : $parent_type eq 'xs:decimal'  ? 'xsd:decimal'
+        : $parent_type eq 'xs:long'     ? 'xsd:long'
         :                                 $parent_type;
 
     my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
@@ -351,7 +362,7 @@ W3C::SOAP::XSD - The parent module to XSD modules
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD version 0.0.5.
+This documentation refers to W3C::SOAP::XSD version 0.0.6.
 
 =head1 SYNOPSIS
 
