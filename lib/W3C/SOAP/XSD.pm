@@ -291,6 +291,8 @@ sub xsd_subtype {
         : $parent_type eq 'xs:dateTime' ? 'xsd:dateTime'
         : $parent_type eq 'xs:boolean'  ? 'xsd:boolean'
         : $parent_type eq 'xs:double'   ? 'xsd:double'
+        : $parent_type eq 'xs:decimal'  ? 'xsd:decimal'
+        : $parent_type eq 'xs:long'     ? 'xsd:long'
         :                                 $parent_type;
 
     my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
