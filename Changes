@@ -1,5 +1,24 @@
 Revision history for W3C-SOAP
 
+0.0.6   2012-10-29
+        Added long and decimal local types (realy need to work out how to get MooseX::Types::XMLSchema coercion working!)
+        Fixed using eq in template
+        Fixed not getting parent attributes when parsing XML
+        Fixed not getting elements with out a namespace prefix
+        Again turned on executable bit
+        Added checking for namespace collissions
+        Merge branch 'master' of github.com:ivanwills/W3C-SOAP
+        Added building static clients with name aliases via env variable, started to change fault_element to faults list
+        Started documenting architecture
+        Added new TODO
+        Continuing with the implementation of fault handling
+        Documentation improvements
+        Added in the ability to control the name style via an environment variable $W3C_SOAP_NAME_STYLE
+        Documented some of the debugging features
+        Fixed spelling, Changed dump to vary dump size put a prefix on request & response dumps
+        Cleaned up namespace normalisations
+        Added the ability to pass in a logging object
+
 0.0.5   2012-10-09
         Fixed spelling
         Added documentation for cmp_ns function
