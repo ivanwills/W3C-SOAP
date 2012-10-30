@@ -98,12 +98,12 @@ received.
 
 The C<$W3C_SOAP_DEBUG_CLIENT> environment variable will cause the all request
 and response HTTP bodies to be dumped to STDOUT. The length of the content is
-limitted to 1024 by default but this can be changed with the
+limited to 1024 by default but this can be changed with the
 C<$W3C_SOAP_DEBUG_LENGTH> environment variable.
 
 =item 2
 
-Supplying a log object. When a client is instanciated you can supply it a log
+Supplying a log object. When a client is instantiated you can supply it a log
 object or after creation supply the C<log> method with a log object, the only
 restriction is that it implements C<debug, info, warn, error and fatal>
 methods. L<Log::Log4perl> and C<Catalyst::Log> are known working examples.
@@ -151,7 +151,7 @@ and response HTTP messages bodies to STDOUT.
 
 =item C<$W3C_SOAP_DEBUG_LENGTH>
 
-Alter the amout of data shown by C<$W3C_SOAP_DEBUG_CLIENT> which defaults to
+Alter the amount of data shown by C<$W3C_SOAP_DEBUG_CLIENT> which defaults to
 1024.
 
 =back
