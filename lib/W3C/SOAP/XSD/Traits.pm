@@ -47,6 +47,18 @@ has xs_name => (
     isa       => 'Str',
     predicate => 'has_xs_name',
 );
+has xs_namespace => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_xs_namespace',
+);
+has xs_namespace_name => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_xs_namespace_name',
+    builder    => '_xs_namespace_name',
+    lazy_build => 1,
+);
 has xs_type => (
     is        => 'rw',
     isa       => 'Str',
@@ -62,6 +74,17 @@ has xs_serialize => (
     isa       => 'CodeRef',
     predicate => 'has_xs_serialize',
 );
+
+my %ns_map;
+my $count = 0;
+sub _xs_namespace_name {
+    my ($self) = @_;
+    my $ns = $self->xs_namespace;
+
+    return $ns_map{$ns} if defined $ns_map{$ns};
+
+    return $ns_map{$ns} = $ns ? 'WSX' . $count++ : '';
+}
 
 1;
 

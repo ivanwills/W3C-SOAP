@@ -10,7 +10,7 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Scalar::Util;
+use Scalar::Util qw/blessed/;
 use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
@@ -27,7 +27,34 @@ sub _request {
     my $operation = $method->wsdl_operation;
     my $resp;
 
-    if ( $method->has_in_class && $method->has_in_attribute ) {
+    if ( $method->has_inputs ) {
+        my $inputs = $method->inputs;
+        my $count  = @$inputs;
+        my $xsd;
+
+        if ( @args == 1 && blessed $args[0] ) {
+            $xsd = $args[0];
+
+            # TODO do checking?
+            #for my $input (@{$method->inputs}) {
+            #}
+        }
+        else {
+            my $class     = $method->inputs->[0]->class;
+            my $attribute = $method->inputs->[0]->attribute;
+
+            $xsd = $class->new({
+                $attribute => @args == 1 ? $args[0] : {@args}
+            });
+        }
+
+        my $namespace = $method->namespace || '';
+        if ( $namespace && $namespace !~ m{/$}xms ) {
+            $namespace .= '/';
+        }
+        $resp = $self->request( "$namespace$operation" => $xsd );
+    }
+    elsif ( $method->has_in_class && $method->has_in_attribute ) {
         my $class = $method->in_class;
         my $att   = $method->in_attribute;
         my $xsd   = $class->new(
@@ -43,7 +70,17 @@ sub _request {
         $resp = $self->request( $operation, @args );
     }
 
-    if ( $method->has_out_class && $method->has_out_attribute ) {
+    if ( $method->has_outputs ) {
+        my $outputs = $method->outputs;
+        my $count  = @$outputs;
+        my $xsd;
+
+        for my $output (@{$method->outputs}) {
+            my $class     = $method->outputs->[0]->class;
+            my $attribute = $method->outputs->[0]->attribute;
+        }
+    }
+    elsif ( $method->has_out_class && $method->has_out_attribute ) {
         my $class = $method->out_class;
         my $att   = $method->out_attribute;
         return $class->new($resp)->$att;

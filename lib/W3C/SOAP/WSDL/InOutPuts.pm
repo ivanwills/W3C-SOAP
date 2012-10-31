@@ -1,4 +1,4 @@
-package W3C::SOAP::WSDL::Meta::Method;
+package W3C::SOAP::WSDL::InOutPuts;
 
 # Created on: 2012-07-15 19:45:13
 # Create by:  Ivan Wills
@@ -16,66 +16,23 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-extends 'Moose::Meta::Method';
-
 our $VERSION     = version->new('0.0.6');
 
-has wsdl_operation => (
+has class => (
     is        => 'rw',
     isa       => 'Str',
-    required  => 1,
-    predicate => 'has_wsdl_operation',
+    predicate => 'has_class',
 );
-# Depricated attributes
-has in_class => (
+has attribute => (
     is        => 'rw',
     isa       => 'Str',
-    predicate => 'has_in_class',
-);
-has in_attribute => (
-    is        => 'rw',
-    isa       => 'Str',
-    default   => 0,
-    predicate => 'has_in_attribute',
-);
-has out_class => (
-    is        => 'rw',
-    isa       => 'Str',
-    default   => 1,
-    predicate => 'has_out_class',
-);
-has out_attribute => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_out_attribute',
-);
-# use the attributes below in future
-has inputs => (
-    is        => 'rw',
-    isa       => 'ArrayRef[W3C::SOAP::WSDL::InOutPuts]',
-    predicate => 'has_inputs',
-);
-has outputs => (
-    is        => 'rw',
-    isa       => 'ArrayRef[W3C::SOAP::WSDL::InOutPuts]',
-    predicate => 'has_outputs',
-);
-has faults => (
-    is        => 'rw',
-    isa       => 'ArrayRef[W3C::SOAP::WSDL::InOutPuts]',
-    predicate => 'has_faults',
+    predicate => 'has_attribute',
 );
 has namespace => (
     is        => 'rw',
     isa       => 'Str',
     predicate => 'has_namespace',
 );
-has security => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_security',
-);
-
 
 1;
 
@@ -83,16 +40,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Meta::Method - <One-line description of module's purpose>
+W3C::SOAP::WSDL::InOutPuts - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Meta::Method version 0.0.6.
+This documentation refers to W3C::SOAP::WSDL::InOutPuts version 0.0.6.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Meta::Method;
+   use W3C::SOAP::WSDL::InOutPuts;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

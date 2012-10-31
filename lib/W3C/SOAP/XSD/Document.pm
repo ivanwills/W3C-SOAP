@@ -123,6 +123,12 @@ has ns_map => (
     builder    => '_ns_map',
     lazy_build => 1,
 );
+has element_from_default => (
+    is         => 'ro',
+    isa        => 'Str',
+    builder    => '_element_from_default',
+    lazy_build => 1,
+);
 
 sub _imports {
     my ($self) = @_;
@@ -363,6 +369,14 @@ sub _ns_map {
     $map{$ns} = $self->target_namespace if !$rev{$self->target_namespace};
 
     return \%map;
+}
+
+sub _element_from_default {
+    my ($self) = @_;
+
+    #$self->xml->documentElement->getAttributeNS('http://www.w3.org/2001/XMLSchema', 'elementFormDefault') // 'unqualified';
+    my ($attrib) = $self->xpc->findnodes('//xsd:schema/@elementFormDefault');
+    return $attrib ? $attrib->value : 'unqualified';
 }
 
 sub get_ns_uri {

@@ -78,9 +78,7 @@ XML
         $soap_body->appendChild( $body );
     }
     elsif ( $body->can('to_xml') ) {
-        for my $node ( $body->to_xml($xml) ) {
-            $soap_body->appendChild( $node );
-        }
+        $soap_body->appendChild( $body->to_xml($xml) );
     }
     else {
         W3C::SOAP::Exception::BadInput->throw(
@@ -116,6 +114,7 @@ sub send {
                 faultstring => $string && $string->textContent,
                 faultactor  => $actor  && $actor->textContent,
                 detail      => $detail && $detail->textContent,
+                xml         => $xml_error->findnodes("//$ns\:Body/"),
             );
         }
         else {

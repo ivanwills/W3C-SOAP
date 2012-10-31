@@ -85,10 +85,18 @@ sub _get_sequence_elements {
     my $group = 1;
 
     for my $node (@nodes) {
+
+        # Calculate targetNamespace for element
+        my $namespace
+            = $self->document->element_from_default  eq 'qualified'
+            ? $self->document->target_namespace
+            : '';
+
         if ( $node->nodeName =~ /(?:^|:)element$/ ) {
             push @sequence, W3C::SOAP::XSD::Document::Element->new(
                 parent_node => $self,
-                node   => $node,
+                node        => $node,
+                namespace   => $namespace,
             );
         }
         elsif ( $node->nodeName =~ /(?:^|:)choice$/ ) {
@@ -98,6 +106,7 @@ sub _get_sequence_elements {
                     parent_node  => $self,
                     node         => $choice,
                     choice_group => $group,
+                    namespace    => $namespace,
                 );
             }
             $group++;

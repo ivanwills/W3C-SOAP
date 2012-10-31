@@ -264,6 +264,15 @@ sub has_anonymous {
     return 'xs:string';
 }
 
+sub namespace {
+    my ($self) = @_;
+    my ($ns, $type) = split_ns($self->type);
+
+    return !$ns || $self->document->element_from_default eq 'unqualified'
+        ? ''
+        : $self->document->target_namespace;
+}
+
 1;
 
 __END__
