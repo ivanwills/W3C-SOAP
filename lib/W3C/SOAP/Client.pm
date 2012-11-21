@@ -100,7 +100,7 @@ sub send {
         $content = $self->_post($action, $xml);
     }
     catch ($e) {
-        $self->log->error("$action RESPONSE \n" . $self->mech->res->content) if $self->has_log;
+        $self->log->error("$action RESPONSE \n" . $self->mech->res->decoded_content) if $self->has_log;
         my $xml_error = eval { XML::LibXML->load_xml( string => $self->mech->res->content ) };
 
         if ( $xml_error ) {
