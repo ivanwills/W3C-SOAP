@@ -11,7 +11,7 @@ use warnings;
 use version;
 use Carp;
 BEGIN {
-    $MooseX::Types::XMLSchema::AUTHORITY = 'cpan:IVANWILLS';
+    $W3C::SOAP::XSD::Types::AUTHORITY = 'cpan:IVANWILLS';
 }
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
