@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'Moose::Meta::Method';
 
-our $VERSION     = version->new('0.0.6');
+our $VERSION     = version->new('0.0.7');
 
 has wsdl_operation => (
     is        => 'rw',
@@ -70,7 +70,7 @@ W3C::SOAP::WSDL::Meta::Method - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Meta::Method version 0.0.6.
+This documentation refers to W3C::SOAP::WSDL::Meta::Method version 0.0.7.
 
 
 =head1 SYNOPSIS
