@@ -66,6 +66,5 @@ templates/xsd_complex_type.pm.tt
 templates/xsd_element.pm.tt
 templates/xsd_element.pod.tt
 tx/wsdls.txt
-tx/wsdls.txt1
 tx/xmethods.pl
 tx/xmethods.t
