@@ -120,7 +120,7 @@ Splits an XML tag's namespace from the tag name
 
 =item C<normalise_ns ($ns)>
 
-Creates a normalised XML name space string (ie lower cases the host part of
+Creates a normalized XML name space string (ie lower cases the host part of
 the name space)
 
 =item C<cmp_ns ($ns1, $ns2)>

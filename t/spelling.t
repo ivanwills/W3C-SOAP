@@ -30,6 +30,8 @@ add_stopwords(qw/
     Hornsby
     Param
     eg
+    Eg
+    ie
     Arg
     isa
     xsd
@@ -45,5 +47,6 @@ add_stopwords(qw/
     wsdl
     ResolveIP
     perly
+    STDOUT
 /);
 all_pod_files_spelling_ok();
