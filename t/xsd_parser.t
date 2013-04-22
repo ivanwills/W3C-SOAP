@@ -40,10 +40,10 @@ exit;
 
 sub parser {
     ok $parser, "Got a parser object";
-    is $parser->documents->[0]->target_namespace, 'urn:eg.schema.org', "Get target namespace";
-    ok scalar( @{ $parser->documents->[0]->elements }      ), "Got some elements";
-    ok scalar( @{ $parser->documents->[0]->simple_types }  ), "Got some simple types";
-    ok scalar( @{ $parser->documents->[0]->complex_types } ), "Got some complex types";
+    is $parser->document->[0]->target_namespace, 'urn:eg.schema.org', "Get target namespace";
+    ok scalar( @{ $parser->document->[0]->elements }      ), "Got some elements";
+    ok scalar( @{ $parser->document->[0]->simple_types }  ), "Got some simple types";
+    ok scalar( @{ $parser->document->[0]->complex_types } ), "Got some complex types";
 }
 
 sub written_modules {

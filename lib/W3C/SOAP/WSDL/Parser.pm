@@ -25,10 +25,11 @@ Moose::Exporter->setup_import_methods(
     as_is => ['load_wsdl'],
 );
 
+extends 'W3C::SOAP::Parser';
+
 our $VERSION     = version->new('0.0.7');
 
-has document => (
-    is       => 'rw',
+has '+document' => (
     isa      => 'W3C::SOAP::WSDL::Document',
     required => 1,
     handles  => {
@@ -39,36 +40,10 @@ has document => (
         has_module_base => 'has_module_base',
     },
 );
-has template => (
-    is        => 'rw',
-    isa       => 'Template',
-    predicate => 'has_template',
-);
 has location => (
     is  => 'rw',
     isa => 'Str',
 );
-has lib => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_lib',
-);
-
-around BUILDARGS => sub {
-    my ($orig, $class, @args) = @_;
-    my $args
-        = !@args     ? {}
-        : @args == 1 ? $args[0]
-        :              {@args};
-
-    for my $arg ( keys %$args ) {
-        if ( $arg eq 'location' || $arg eq 'string' ) {
-            $args->{document} = W3C::SOAP::WSDL::Document->new($args);
-        }
-    }
-
-    return $class->$orig($args);
-};
 
 sub write_modules {
     my ($self) = @_;
@@ -119,7 +94,7 @@ sub get_xsd {
     }
 
     my $parse = W3C::SOAP::XSD::Parser->new(
-        documents     => [],
+        document      => [],
         ns_module_map => $self->ns_module_map,
         @args,
     );
@@ -128,10 +103,10 @@ sub get_xsd {
         $xsd->ns_module_map($self->ns_module_map);
         $xsd->clear_xpc;
 
-        push @{ $parse->documents }, $xsd;
+        push @{ $parse->document }, $xsd;
 
-        $parse->documents->[-1]->target_namespace($self->document->target_namespace)
-            if !$parse->documents->[-1]->has_target_namespace;
+        $parse->document->[-1]->target_namespace($self->document->target_namespace)
+            if !$parse->document->[-1]->has_target_namespace;
     }
 
     return $parse;

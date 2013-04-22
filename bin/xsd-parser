@@ -89,7 +89,7 @@ sub main {
 
 sub show {
     my ($parser) = @_;
-    my @xsd = @{$parser->documents};
+    my @xsd = @{$parser->document};
 
     while ( my $xsd = shift @xsd ) {
         print "Namespace = " . $xsd->target_namespace . "\n";

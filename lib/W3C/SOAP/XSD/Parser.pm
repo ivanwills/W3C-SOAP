@@ -26,6 +26,8 @@ Moose::Exporter->setup_import_methods(
     as_is => ['load_xsd'],
 );
 
+extends 'W3C::SOAP::Parser';
+
 our $VERSION     = version->new('0.0.7');
 
 subtype xsd_documents =>
@@ -33,42 +35,15 @@ subtype xsd_documents =>
 coerce xsd_documents =>
     from 'W3C::SOAP::XSD::Document',
     via {[$_]};
-has documents => (
-    is       => 'rw',
+has '+document' => (
     isa      => 'xsd_documents',
     coerce   => 1,
-);
-has template => (
-    is       => 'rw',
-    isa      => 'Template',
-    predicate => 'has_template',
 );
 has ns_module_map => (
     is       => 'rw',
     isa      => 'HashRef[Str]',
     required => 1,
 );
-has lib => (
-    is       => 'rw',
-    isa      => 'Str',
-    predicate => 'has_lib',
-);
-
-around BUILDARGS => sub {
-    my ($orig, $class, @args) = @_;
-    my $args
-        = !@args     ? {}
-        : @args == 1 ? $args[0]
-        :              {@args};
-
-    for my $arg ( keys %$args ) {
-        if ( $arg eq 'location' || $arg eq 'string' ) {
-            $args->{documents} = W3C::SOAP::XSD::Document->new($args);
-        }
-    }
-
-    return $class->$orig($args);
-};
 
 sub write_modules {
     my ($self) = @_;
@@ -187,7 +162,7 @@ sub write_module {
 
 sub get_schemas {
     my ($self) = @_;
-    my @xsds   = @{ $self->documents };
+    my @xsds   = @{ $self->document };
     my %xsd;
 
     # import all schemas
