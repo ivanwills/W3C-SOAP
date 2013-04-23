@@ -16,6 +16,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Path::Class;
+use W3C::SOAP::Utils qw/ns2module/;
 use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WSDL::Document;
 use W3C::SOAP::WSDL::Meta::Method;
@@ -132,11 +133,7 @@ sub dynamic_classes {
     my ($self) = @_;
     my @classes = $self->get_xsd->dynamic_classes;
 
-    my $ns = $self->document->target_namespace;
-    $ns =~ s{://}{::};
-    $ns =~ s{([^:]:)([^:])}{$1:$2}g;
-    $ns =~ s{[^\w:]+}{_}g;
-    my $class_name = "Dynamic::WSDL::$ns";
+    my $class_name = "Dynamic::WSDL::" . ns2module($self->document->target_namespace);
 
     my $wsdl = $self->document;
     my %method;
