@@ -17,6 +17,8 @@ use English qw/ -no_match_vars /;
 use TryCatch;
 use URI;
 use W3C::SOAP::Utils qw/normalise_ns/;
+use W3C::SOAP::Exception;
+use XML::LibXML;
 
 our $VERSION     = version->new('0.0.7');
 

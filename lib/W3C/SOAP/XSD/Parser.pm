@@ -109,7 +109,7 @@ sub write_modules {
 
             # write the complex type module
             $self->write_module(
-                'xsd_complex_type.pm.tt',
+                'xsd/complex_type.pm.tt',
                 {
                     xsd     => $xsd,
                     module  => $type_module,
@@ -122,7 +122,7 @@ sub write_modules {
 
         # write the simple types library
         $self->write_module(
-            'xsd_base.pm.tt',
+            'xsd/base.pm.tt',
             {
                 xsd => $xsd,
             },
@@ -131,7 +131,7 @@ sub write_modules {
 
         # write the "XSD" elements module
         $self->write_module(
-            'xsd.pm.tt',
+            'xsd/pm.tt',
             {
                 xsd => $xsd,
                 parents => \@parents,

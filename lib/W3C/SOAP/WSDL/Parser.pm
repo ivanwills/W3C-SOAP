@@ -74,7 +74,7 @@ sub write_modules {
         modules  => \@modules,
         location => $self->location,
     };
-    $template->process('wsdl.pm.tt', $data, "$file");
+    $template->process('wsdl/pm.tt', $data, "$file");
     confess "Error in creating $file (xsd.pm): ". $template->error."\n"
         if $template->error;
 
