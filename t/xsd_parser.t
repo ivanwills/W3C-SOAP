@@ -25,9 +25,9 @@ my $parser = W3C::SOAP::XSD::Parser->new(
     template      => $template,
     lib           => $dir->subdir('lib').'',
     ns_module_map => {
-        'urn:eg.schema.org'     => 'MyApp::Eg',
-        'urn:parent.schema.org' => 'MyApp::Parent',
-        'urn:other.schema.org'  => 'MyApp::Other',
+        'http://eg.schema.org/v1'     => 'MyApp::Eg',
+        'http://parent.schema.org/v1' => 'MyApp::Parent',
+        'http://other.schema.org/v1/'  => 'MyApp::Other',
     },
 );
 
@@ -40,7 +40,7 @@ exit;
 
 sub parser {
     ok $parser, "Got a parser object";
-    is $parser->document->[0]->target_namespace, 'urn:eg.schema.org', "Get target namespace";
+    is $parser->document->[0]->target_namespace, 'http://eg.schema.org/v1', "Get target namespace";
     ok scalar( @{ $parser->document->[0]->elements }      ), "Got some elements";
     ok scalar( @{ $parser->document->[0]->simple_types }  ), "Got some simple types";
     ok scalar( @{ $parser->document->[0]->complex_types } ), "Got some complex types";
@@ -125,10 +125,10 @@ XML
     my @str = eval { $eg->to_xml($xml) };
     ok !$@, "Convert to XML ok"
         or diag $@;
-    like $str[-1]->toString, qr/urn:other.schema.org/, 'Contains a sub namespace reference';
+    like $str[-1]->toString, qr{http://other.schema.org/v1/}, 'Contains a sub namespace reference';
     #note join "\n", map {$_->toString} @str;
     is $str[2]->toString,
-        '<WSX0:el2_5 xmlns:WSX0="urn:eg.schema.org">true</WSX0:el2_5>',
+        '<WSX0:el2_5 xmlns:WSX0="http://eg.schema.org/v1">true</WSX0:el2_5>',
         'Boolean value is serialized correctly';
 }
 

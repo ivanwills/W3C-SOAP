@@ -46,12 +46,12 @@ sub dynamic_modules {
     can_ok $wsdl, 'first_action';
     my $action = $wsdl->meta->get_method('first_action');
     is $action->wsdl_operation, 'firstAction', 'Have an operation';
-    is $action->in_class, 'Dynamic::XSD::urn::eg_schema_org', 'Input class is correct';
+    is $action->in_class, 'Dynamic::XSD::Org::Schema::Eg::v1', 'Input class is correct';
 
     $mech->content(<<"XML");
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body xmlns:eg="urn:eg.schema.org">
+    <soapenv:Body xmlns:eg="http://eg.schema.org/v1">
         <eg:el2>2</eg:el2>
     </soapenv:Body>
 </soapenv:Envelope>

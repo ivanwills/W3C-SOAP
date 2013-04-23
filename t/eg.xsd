@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema
-    targetNamespace="urn:eg.schema.org"
+    targetNamespace="http://eg.schema.org/v1"
     elementFormDefault="qualified"
     attributeFormDefault="unqualified"
-    xmlns:tns="urn:eg.schema.org"
+    xmlns:tns="http://eg.schema.org/v1"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:common="urn:parent.schema.org"
-    xmlns:other="urn:other.schema.org"
+    xmlns:common="http://parent.schema.org/v1"
+    xmlns:other="http://other.schema.org/v1/"
     >
 
     <xs:import
-        namespace="urn:parent.schema.org"
+        namespace="http://parent.schema.org/v1"
         schemaLocation="t/parent.xsd"
         />
 
     <xs:include
-        namespace="urn:other.schema.org"
+        namespace="http://other.schema.org/v1/"
         schemaLocation="t/other.xsd"
         />
 
