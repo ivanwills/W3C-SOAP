@@ -26,10 +26,6 @@ has detail => (
     isa  => 'Maybe[Str]',
     traits => [qw{MooseX::Exception::Stringify}],
 );
-has xml => (
-    is   => 'rw',
-    isa  => 'Maybe[XML::LibXML::Node]',
-);
 
 package W3C::SOAP::Exception::HTTP;
 use Moose;

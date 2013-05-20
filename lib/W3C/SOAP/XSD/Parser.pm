@@ -340,6 +340,12 @@ sub complex_type_package {
         superclasses => $super,
     );
 
+    $class->add_attribute(
+        '+xsd_ns',
+        default  => $xsd->target_namespace,
+        required => 1,
+    );
+
     for my $node (@{ $type->sequence }) {
         $self->element_attributes($class, $class_name, $node);
     }
@@ -353,6 +359,12 @@ sub elements_package {
     my $class = Moose::Meta::Class->create(
         $class_name,
         superclasses => [ 'W3C::SOAP::XSD' ],
+    );
+
+    $class->add_attribute(
+        '+xsd_ns',
+        default  => $xsd->target_namespace,
+        required => 1,
     );
 
     for my $node (@{ $xsd->elements }) {
@@ -412,7 +424,6 @@ sub element_attributes {
     #[%- END %]
         traits        => [qw{ W3C::SOAP::XSD }],
         xs_name       => $element->name,
-        xs_namespace  => $element->namespace,
         xs_type       => $element->type,
         xs_min_occurs => $element->min_occurs,
         xs_max_occurs => $element->max_occurs  eq 'unbounded' ? 0 : $element->max_occurs,

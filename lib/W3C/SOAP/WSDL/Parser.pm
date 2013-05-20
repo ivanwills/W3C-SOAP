@@ -19,7 +19,6 @@ use Path::Class;
 use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WSDL::Document;
 use W3C::SOAP::WSDL::Meta::Method;
-use W3C::SOAP::WSDL::InOutPuts;
 use File::ShareDir qw/dist_dir/;
 
 Moose::Exporter->setup_import_methods(
@@ -171,40 +170,24 @@ sub dynamic_classes {
             for my $operation (@{ $port->binding->operations }) {
                 my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
-                my @inputs
-                    = map {
-                        W3C::SOAP::WSDL::InOutPuts->new({
-                            class     => $_->message->element->module,
-                            attribute => $_->message->element->perl_name,
-                        });
-                    }
-                    @{ $operation->port_type->inputs };
-                my @outputs
-                    = map {
-                        W3C::SOAP::WSDL::InOutPuts->new({
-                            class     => $_->message->element->module,
-                            attribute => $_->message->element->perl_name,
-                        });
-                    }
-                    @{ $operation->port_type->outputs };
-                my @faults
-                    = map {
-                        W3C::SOAP::WSDL::InOutPuts->new({
-                            class     => $_->message->element->module,
-                            attribute => $_->message->element->perl_name,
-                        });
-                    }
-                    @{ $operation->port_type->faults };
+                my @faults = eval {
+                    map {{
+                        class => $_->message->element->module,
+                        name  => $_->message->element->perl_name,
+                    }}
+                    @{ $operation->port_type->faults }
+                };
 
                 $method{ $operation->perl_name } = W3C::SOAP::WSDL::Meta::Method->wrap(
                     body           => sub { shift->_request($operation->perl_name => @_) },
                     package_name   => $class_name,
                     name           => $operation->perl_name,
                     wsdl_operation => $operation->name,
-                    namespace      => $ns,
-                    @inputs  ? ( inputs  => \@inputs  ) : (),
-                    @outputs ? ( outputs => \@outputs ) : (),
-                    @faults  ? ( faults  => \@faults  ) : (),
+                    $in_element  ? ( in_class      => $in_element->module     ) : (),
+                    $in_element  ? ( in_attribute  => $in_element->perl_name  ) : (),
+                    $out_element ? ( out_class     => $out_element->module    ) : (),
+                    $out_element ? ( out_attribute => $out_element->perl_name ) : (),
+                    @faults ? ( faults => \@faults ) : (),
                 );
 
                 if ( $ENV{W3C_SOAP_NAME_STYLE} eq 'both' && $operation->name ne $operation->perl_name ) {

@@ -26,7 +26,6 @@ has wsdl_operation => (
     required  => 1,
     predicate => 'has_wsdl_operation',
 );
-# Depricated attributes
 has in_class => (
     is        => 'rw',
     isa       => 'Str',
@@ -49,26 +48,10 @@ has out_attribute => (
     isa       => 'Str',
     predicate => 'has_out_attribute',
 );
-# use the attributes below in future
-has inputs => (
-    is        => 'rw',
-    isa       => 'ArrayRef[W3C::SOAP::WSDL::InOutPuts]',
-    predicate => 'has_inputs',
-);
-has outputs => (
-    is        => 'rw',
-    isa       => 'ArrayRef[W3C::SOAP::WSDL::InOutPuts]',
-    predicate => 'has_outputs',
-);
 has faults => (
     is        => 'rw',
-    isa       => 'ArrayRef[W3C::SOAP::WSDL::InOutPuts]',
+    isa       => 'ArrayRef[HashRef]',
     predicate => 'has_faults',
-);
-has namespace => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_namespace',
 );
 has security => (
     is        => 'rw',

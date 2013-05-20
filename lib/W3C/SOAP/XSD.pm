@@ -25,6 +25,19 @@ use DateTime::Format::Strptime qw/strptime/;
 
 our $VERSION     = version->new('0.0.6');
 
+has xsd_ns => (
+    is  => 'rw',
+    isa => 'Str',
+);
+has xsd_ns_name => (
+    is         => 'rw',
+    isa        => 'Str',
+    predicate  => 'has_xsd_ns_name',
+    clearer    => 'clear_xsd_ns_name',
+    builder    => '_xsd_ns_name',
+    lazy_build => 1,
+);
+
 {
     my %required;
     my $require = sub {
@@ -72,6 +85,17 @@ our $VERSION     = version->new('0.0.6');
 
         return $class->$orig($args);
     };
+}
+
+my %ns_map;
+my $count = 0;
+sub _xsd_ns_name {
+    my ($self) = @_;
+    my $ns = $self->xsd_ns;
+
+    return $ns_map{$ns} if $ns_map{$ns};
+
+    return $ns_map{$ns} = 'WSX' . $count++;
 }
 
 sub _from_xml {
@@ -138,10 +162,11 @@ sub to_xml {
     my @attributes = $self->get_xml_nodes;
 
     my @nodes;
+    $self->clear_xsd_ns_name;
+    my $xsd_ns_name = $self->xsd_ns_name;
 
     for my $att (@attributes) {
         my $name = $att->name;
-        my $xsd_ns = $att->xs_namespace;
 
         # skip attributes that are not XSD attributes
         next if !$att->does('W3C::SOAP::XSD');
@@ -155,13 +180,11 @@ sub to_xml {
         my $value = ref $self->$name eq 'ARRAY' ? $self->$name : [$self->$name];
 
         for my $item (@$value) {
-            my $tag = $xml->createElement($xml_name);
-            if ( ref $item && $item->can('meta') && $item->meta->can('xs_namespace') ) {
-                $tag->setNamespace($item->meta->xs_namespace, $att->xs_namespace_name);
-            }
+            my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
+            $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
 
             if ( blessed($item) && $item->can('to_xml') ) {
-                #$att->xs_namespace_name( $xs_namespace_name ) if !$att->has_xs_namespace_name;
+                $item->xsd_ns_name( $xsd_ns_name ) if !$item->has_xsd_ns_name;
                 my @children = $item->to_xml($xml);
                 $tag->appendChild($_) for @children;
             }

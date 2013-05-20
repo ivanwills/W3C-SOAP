@@ -47,13 +47,6 @@ has name => (
     builder    => '_name',
     lazy_build => 1,
 );
-has namespace => (
-    is         => 'rw',
-    isa        => 'Maybe[Str]',
-    predicate  => 'has_namespace',
-    builder    => '_namespace',
-    lazy_build => 1,
-);
 
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
@@ -77,11 +70,6 @@ sub _document {
 sub _name {
     my ($self) = shift;
     return $self->node->getAttribute('name');
-}
-
-sub _namespace {
-    my ($self) = shift;
-    return $self->node->namespaceURI();
 }
 
 sub perl_name {
