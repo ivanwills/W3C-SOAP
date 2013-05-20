@@ -6,6 +6,18 @@ W3C::SOAP tasks still to be done
 
 =over 4
 
+=item L<Type::Tiny>
+
+L<Type::Tiny> looks like it would give a more consistant and easier to use
+type interface than the current mish-mash of L<Moose> and L<MooseX::Types>
+currently used.
+
+=item L<AnyEvent> support
+
+Need to rearrange the internals so that a request could be done as part of
+an event loop. This needs some thinking of how the client is to be broken up
+and how to determine to use blocking requests and event loop requests.
+
 =item Improve XML Schema support
 
 Currently I can't pass http://www.w3.org/2001/XMLSchema.xsd due to
