@@ -1,5 +1,13 @@
 Revision history for W3C-SOAP
 
+0.0.7   2013-04-11
+        Updated manifests
+        Updated manifests
+        Fixed spelling mistakes
+        Fixed writing a namespace when not supplied one
+        New changes for next release
+        Updated for next version
+
 0.0.6   2012-10-29
         Added long and decimal local types (realy need to work out how to get MooseX::Types::XMLSchema coercion working!)
         Fixed using eq in template

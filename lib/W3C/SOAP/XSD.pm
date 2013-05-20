@@ -23,7 +23,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 use TryCatch;
 use DateTime::Format::Strptime qw/strptime/;
 
-our $VERSION     = version->new('0.0.6');
+our $VERSION     = version->new('0.0.7');
 
 has xsd_ns => (
     is  => 'rw',
@@ -163,7 +163,7 @@ sub to_xml {
 
     my @nodes;
     $self->clear_xsd_ns_name;
-    my $xsd_ns_name = $self->xsd_ns_name;
+    my $xsd_ns_name = $self->xsd_ns ? $self->xsd_ns_name : undef;
 
     for my $att (@attributes) {
         my $name = $att->name;
@@ -180,7 +180,7 @@ sub to_xml {
         my $value = ref $self->$name eq 'ARRAY' ? $self->$name : [$self->$name];
 
         for my $item (@$value) {
-            my $tag = $xml->createElement($xsd_ns_name . ':' . $xml_name);
+            my $tag = $xml->createElement($xsd_ns_name ? $xsd_ns_name . ':' . $xml_name : $xml_name);
             $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
 
             if ( blessed($item) && $item->can('to_xml') ) {
@@ -362,7 +362,7 @@ W3C::SOAP::XSD - The parent module to XSD modules
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD version 0.0.6.
+This documentation refers to W3C::SOAP::XSD version 0.0.7.
 
 =head1 SYNOPSIS
 

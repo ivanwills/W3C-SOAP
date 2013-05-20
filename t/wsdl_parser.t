@@ -29,9 +29,9 @@ my $parser = W3C::SOAP::WSDL::Parser->new(
     template      => $template,
     lib           => $dir->subdir('lib').'',
     ns_module_map => {
-        'urn:eg.schema.org'     => 'MyApp::Eg',
-        'urn:parent.schema.org' => 'MyApp::Parent',
-        'urn:other.schema.org'  => 'MyApp::Other',
+        'http://eg.schema.org/v1'     => 'MyApp::Eg',
+        'http://parent.schema.org/v1' => 'MyApp::Parent',
+        'http://other.schema.org/v1/'  => 'MyApp::Other',
     },
 );
 
@@ -44,7 +44,7 @@ exit;
 
 sub parser {
     ok $parser, "Got a parser object";
-    is $parser->document->target_namespace, 'urn:eg.schema.org', "Get target namespace";
+    is $parser->document->target_namespace, 'http://eg.schema.org/v1', "Get target namespace";
     ok scalar( @{ $parser->document->messages }      ), "Got some messages";
     ok scalar( @{ $parser->document->schemas }  ), "Got some schemas";
     ok scalar( @{ $parser->document->port_types } ), "Got some port types";
@@ -61,7 +61,7 @@ sub written_modules {
     $mech->content(<<"XML");
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body xmlns:eg="urn:eg.schema.org">
+    <soapenv:Body xmlns:eg="http://eg.schema.org/v1">
         <eg:el2>2</eg:el2>
     </soapenv:Body>
 </soapenv:Envelope>

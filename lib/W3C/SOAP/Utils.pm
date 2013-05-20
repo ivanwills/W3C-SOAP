@@ -15,13 +15,14 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::WSDL::Meta::Method;
+use URI;
 
 Moose::Exporter->setup_import_methods(
-    as_is     => [qw/split_ns xml_error normalise_ns cmp_ns/],
+    as_is     => [qw/split_ns xml_error normalise_ns cmp_ns ns2module/],
     with_meta => ['operation'],
 );
 
-our $VERSION     = version->new('0.0.6');
+our $VERSION     = version->new('0.0.7');
 
 sub split_ns {
     my ($tag) = @_;
@@ -40,6 +41,26 @@ sub normalise_ns {
     }
 
     return "$uri";
+}
+
+sub ns2module {
+    my ($ns) = @_;
+
+    my $uri = URI->new($ns);
+
+    # URI's which have a host an a path are converted Java style name spacing
+    if ( $uri->can('host') && $uri->can('path') ) {
+        my $module = join '::', reverse map {ucfirst $_} map {lc $_} map {s/\W/_/g; $_} split /[.]/, $uri->host;
+        $module .= join '::', map {s/\W/_/g; $_} split m{/}, $uri->path;
+        return $module;
+    }
+
+    # other URI's are just made safe as a perl module name.
+    $ns =~ s{://}{::};
+    $ns =~ s{([^:]:)([^:])}{$1:$2}g;
+    $ns =~ s{[^\w:]+}{_}g;
+
+    return $ns;
 }
 
 sub cmp_ns {
@@ -86,7 +107,7 @@ W3C::SOAP::Utils - Utility functions to be used with C<W3C::SOAP> modules
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Utils version 0.0.6.
+This documentation refers to W3C::SOAP::Utils version 0.0.7.
 
 =head1 SYNOPSIS
 

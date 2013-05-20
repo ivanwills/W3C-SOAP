@@ -33,7 +33,7 @@ has '+xsd_ns' => (
 #    default => '[% ns_name %]',
 #);
 [% FOREACH element IN xsd.elements %]
-[% INCLUDE xsd_element.pm.tt %]
+[% INCLUDE xsd/element.pm.tt %]
 [%- END %]
 
 __PACKAGE__->meta->make_immutable;
@@ -64,7 +64,7 @@ This documentation refers to [% module %] version 0.1.
 
 =over 4
 [% FOREACH element IN xsd.elements %]
-[% INCLUDE xsd_element.pod.tt %]
+[% INCLUDE xsd/element.pod.tt %]
 [%- END %]
 =back
 

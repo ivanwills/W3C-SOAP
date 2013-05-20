@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions
     name="EgService"
-    targetNamespace="urn:eg.schema.org"
+    targetNamespace="http://eg.schema.org/v1"
     xmlns:wssec="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:eg="urn:eg.schema.org"
+    xmlns:eg="http://eg.schema.org/v1"
     xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
     xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
     >
@@ -20,7 +20,7 @@
   </wsp:Policy>
   <wsdl:types>
     <xsd:schema
-        targetNamespace="urn:eg.schema.org"
+        targetNamespace="http://eg.schema.org/v1"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         >
       <xsd:include schemaLocation="t/eg.xsd" />

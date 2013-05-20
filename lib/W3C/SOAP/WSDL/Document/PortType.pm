@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.0.6');
+our $VERSION     = version->new('0.0.7');
 
 has operations => (
     is         => 'rw',
@@ -52,7 +52,7 @@ W3C::SOAP::WSDL::Document::PortType - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::PortType version 0.0.6.
+This documentation refers to W3C::SOAP::WSDL::Document::PortType version 0.0.7.
 
 
 =head1 SYNOPSIS

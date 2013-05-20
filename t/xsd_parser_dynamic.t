@@ -37,7 +37,7 @@ exit;
 
 sub dynamic_modules {
     my ($class) = @_;
-    $class = 'Dynamic::XSD::urn::eg_schema_org';
+    $class = 'Dynamic::XSD::Org::Schema::Eg::v1';
 
     my %test_data = (
         el1   => '1234',
@@ -103,7 +103,7 @@ sub dynamic_modules {
         ok 0, 'Got no object';
     }
 
-    is ref $eg->el4->[0], 'Dynamic::XSD::urn::parent_schema_org::complexThing', 'Get a list of objects';
+    is ref $eg->el4->[0], 'Dynamic::XSD::Org::Schema::Parent::v1::complexThing', 'Get a list of objects';
 
     my $xml = XML::LibXML->load_xml(string => <<'XML');
 <?xml version="1.0" encoding="UTF-8"?>
@@ -115,16 +115,16 @@ XML
     my @str = eval { $eg->to_xml($xml) };
     ok !$@, "Convert to XML ok"
         or diag $@;
-    like $str[-1]->toString, qr/urn:other.schema.org/, 'Contains a sub namespace reference';
+    like $str[-1]->toString, qr{http://other.schema.org/v1/}, 'Contains a sub namespace reference';
     #note join "\n", map {$_->toString} @str;
     is $str[2]->toString,
-        '<WSX0:el2_5 xmlns:WSX0="urn:eg.schema.org">true</WSX0:el2_5>',
+        '<WSX0:el2_5 xmlns:WSX0="http://eg.schema.org/v1">true</WSX0:el2_5>',
         'Boolean value is serialized correctly';
 }
 
 sub dynamic_modules_alias {
     my ($class) = @_;
-    $class = 'Dynamic::XSD::urn::eg_schema_org';
+    $class = 'Dynamic::XSD::Org::Schema::Eg::v1';
 
     my %test_data = (
         el1 => '1234',

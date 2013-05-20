@@ -1,6 +1,6 @@
-package W3C::SOAP::WSDL::Document::Policy;
+package W3C::SOAP::WSDL::Document::Node;
 
-# Created on: 2012-07-18 11:11:32
+# Created on: 2012-05-26 19:04:19
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -9,39 +9,15 @@ package W3C::SOAP::WSDL::Document::Policy;
 use Moose;
 use warnings;
 use version;
-use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
-use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Document::Node';
 
 our $VERSION     = version->new('0.0.7');
 
-has sec_id => (
-    is      => 'rw',
-    isa     => 'Str',
-    builder => '_sec_id',
+has '+parent_node' => (
+    isa    => 'Maybe[W3C::SOAP::WSDL::Document::Node]',
 );
-has policy_type => (
-    is      => 'rw',
-    isa     => 'Str',
-    builder => '_policy_type',
-);
-
-sub _sec_id {
-    my ($self) = @_;
-    my @attributes = $self->node->getAttributes();
-
-}
-
-sub _policy_type {
-    my ($self) = @_;
-    my @nodes = $self->document->xpc->findnodes('wsdl:operation', $self->node);
-
-}
 
 1;
 
@@ -49,16 +25,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Document::Policy - Extracted policy information
+W3C::SOAP::WSDL::Document::Node - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Policy version 0.0.7.
+This documentation refers to W3C::SOAP::WSDL::Document::Node version 0.0.7.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Document::Policy;
+   use W3C::SOAP::WSDL::Document::Node;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
@@ -67,7 +43,11 @@ This documentation refers to W3C::SOAP::WSDL::Document::Policy version 0.0.7.
 
 =head1 DESCRIPTION
 
+
 =head1 SUBROUTINES/METHODS
+
+
+
 
 =head1 DIAGNOSTICS
 

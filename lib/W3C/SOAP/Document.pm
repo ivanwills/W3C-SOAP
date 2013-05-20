@@ -16,9 +16,11 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use TryCatch;
 use URI;
-use W3C::SOAP::Utils qw/normalise_ns/;
+use W3C::SOAP::Utils qw/normalise_ns ns2module/;
+use W3C::SOAP::Exception;
+use XML::LibXML;
 
-our $VERSION     = version->new('0.0.6');
+our $VERSION     = version->new('0.0.7');
 
 has string => (
     is         => 'rw',
@@ -128,12 +130,8 @@ sub _module {
     my $ns = $self->target_namespace;
 
     if ( $self->has_module_base ) {
-        my $ns = $self->target_namespace;
-        $ns =~ s{://}{::};
-        $ns =~ s{([^:]:)([^:])}{$1:$2}g;
-        $ns =~ s{[^\w:]+}{_}g;
         $self->ns_module_map->{normalise_ns($self->target_namespace)}
-            = $self->module_base . "::$ns";
+            = $self->module_base . '::' . ns2module($self->target_namespace);
     }
 
     if ( !$self->ns_module_map->{normalise_ns($ns)} && $self->ns_module_map->{$ns} ) {
@@ -156,7 +154,7 @@ W3C::SOAP::Document - Object to represent an XML Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Document version 0.0.6.
+This documentation refers to W3C::SOAP::Document version 0.0.7.
 
 =head1 SYNOPSIS
 

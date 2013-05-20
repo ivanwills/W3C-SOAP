@@ -30,6 +30,7 @@ add_stopwords(qw/
     Hornsby
     Param
     eg
+    Eg
     ie
     Arg
     isa

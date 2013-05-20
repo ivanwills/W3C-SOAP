@@ -16,6 +16,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Path::Class;
+use W3C::SOAP::Utils qw/ns2module/;
 use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WSDL::Document;
 use W3C::SOAP::WSDL::Meta::Method;
@@ -25,10 +26,11 @@ Moose::Exporter->setup_import_methods(
     as_is => ['load_wsdl'],
 );
 
-our $VERSION     = version->new('0.0.6');
+extends 'W3C::SOAP::Parser';
 
-has document => (
-    is       => 'rw',
+our $VERSION     = version->new('0.0.7');
+
+has '+document' => (
     isa      => 'W3C::SOAP::WSDL::Document',
     required => 1,
     handles  => {
@@ -39,36 +41,10 @@ has document => (
         has_module_base => 'has_module_base',
     },
 );
-has template => (
-    is        => 'rw',
-    isa       => 'Template',
-    predicate => 'has_template',
-);
 has location => (
     is  => 'rw',
     isa => 'Str',
 );
-has lib => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_lib',
-);
-
-around BUILDARGS => sub {
-    my ($orig, $class, @args) = @_;
-    my $args
-        = !@args     ? {}
-        : @args == 1 ? $args[0]
-        :              {@args};
-
-    for my $arg ( keys %$args ) {
-        if ( $arg eq 'location' || $arg eq 'string' ) {
-            $args->{document} = W3C::SOAP::WSDL::Document->new($args);
-        }
-    }
-
-    return $class->$orig($args);
-};
 
 sub write_modules {
     my ($self) = @_;
@@ -99,7 +75,7 @@ sub write_modules {
         modules  => \@modules,
         location => $self->location,
     };
-    $template->process('wsdl.pm.tt', $data, "$file");
+    $template->process('wsdl/pm.tt', $data, "$file");
     confess "Error in creating $file (xsd.pm): ". $template->error."\n"
         if $template->error;
 
@@ -119,7 +95,7 @@ sub get_xsd {
     }
 
     my $parse = W3C::SOAP::XSD::Parser->new(
-        documents     => [],
+        document      => [],
         ns_module_map => $self->ns_module_map,
         @args,
     );
@@ -128,10 +104,10 @@ sub get_xsd {
         $xsd->ns_module_map($self->ns_module_map);
         $xsd->clear_xpc;
 
-        push @{ $parse->documents }, $xsd;
+        push @{ $parse->document }, $xsd;
 
-        $parse->documents->[-1]->target_namespace($self->document->target_namespace)
-            if !$parse->documents->[-1]->has_target_namespace;
+        $parse->document->[-1]->target_namespace($self->document->target_namespace)
+            if !$parse->document->[-1]->has_target_namespace;
     }
 
     return $parse;
@@ -157,11 +133,7 @@ sub dynamic_classes {
     my ($self) = @_;
     my @classes = $self->get_xsd->dynamic_classes;
 
-    my $ns = $self->document->target_namespace;
-    $ns =~ s{://}{::};
-    $ns =~ s{([^:]:)([^:])}{$1:$2}g;
-    $ns =~ s{[^\w:]+}{_}g;
-    my $class_name = "Dynamic::WSDL::$ns";
+    my $class_name = "Dynamic::WSDL::" . ns2module($self->document->target_namespace);
 
     my $wsdl = $self->document;
     my %method;
@@ -227,7 +199,7 @@ W3C::SOAP::WSDL::Parser - Module to create Moose objects from a WSDL
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Parser version 0.0.6.
+This documentation refers to W3C::SOAP::WSDL::Parser version 0.0.7.
 
 =head1 SYNOPSIS
 

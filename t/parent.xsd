@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema
-    targetNamespace="urn:parent.schema.org"
+    targetNamespace="http://parent.schema.org/v1"
     elementFormDefault="qualified"
     attributeFormDefault="unqualified"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:tns="urn:parent.schema.org"
+    xmlns:tns="http://parent.schema.org/v1"
     >
 
     <xs:simpleType name="simpleEnum">
