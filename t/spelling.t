@@ -48,5 +48,6 @@ add_stopwords(qw/
     ResolveIP
     perly
     STDOUT
+    URI
 /);
 all_pod_files_spelling_ok();

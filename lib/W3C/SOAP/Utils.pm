@@ -50,8 +50,8 @@ sub ns2module {
 
     # URI's which have a host an a path are converted Java style name spacing
     if ( $uri->can('host') && $uri->can('path') ) {
-        my $module = join '::', reverse map {ucfirst $_} map {lc $_} map {s/\W/_/g; $_} split /[.]/, $uri->host;
-        $module .= join '::', map {s/\W/_/g; $_} split m{/}, $uri->path;
+        my $module = join '::', reverse map {ucfirst $_} map {lc $_} map {s/\W/_/g; $_} split /[.]/, $uri->host; ## no critic
+        $module .= join '::', map {s/\W/_/g; $_} split m{/}, $uri->path; ## no critic
         return $module;
     }
 
@@ -143,6 +143,20 @@ Splits an XML tag's namespace from the tag name
 
 Creates a normalized XML name space string (ie lower cases the host part of
 the name space)
+
+=item C<ns2module ($ns)>
+
+Takes the XML namespace C<$ns> and coverts it to a module name, if it is a
+"normal" URI the module name is got by reversing the order of the domain
+parts and joining that with any directory parts (setting default Perl module
+capitalization along the way)
+
+ eg http://www.example.com/some/path => Com::Example::Www::Some::Path
+
+If the URI doesn't have a host part then URI is split on the non-word
+characters and similarly rejoined
+
+ eg uri:thing.other/unknown => Uri::Thing::Other::Unknown
 
 =item C<cmp_ns ($ns1, $ns2)>
 
