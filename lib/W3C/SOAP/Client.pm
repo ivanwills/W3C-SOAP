@@ -24,17 +24,6 @@ use Moose::Util::TypeConstraints qw/duck_type/;
 our $VERSION     = version->new('0.0.7');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
-has location => (
-    is       => 'rw',
-    isa      => 'Str',
-    required => 1,
-);
-has header => (
-    is        => 'rw',
-    isa       => 'W3C::SOAP::Header',
-    predicate => 'has_header',
-    builder   => '_header',
-);
 has mech => (
     is      => 'rw',
 );
@@ -48,106 +37,12 @@ has response => (
     isa     => 'HTTP::Response',
     clearer => 'clear_response',
 );
-has async => (
-    is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
-);
 has log => (
     is        => 'rw',
     isa       => duck_type([qw/ debug info warn error fatal /]),
     predicate => 'has_log',
     clearer   => 'clear_log',
 );
-
-sub request {
-    my ($self, $action, $body) = @_;
-    my $xml = $self->build_request_xml($action, $body);
-
-    if ( $self->has_header ) {
-        my $node = $self->header->to_xml($xml);
-        $xml->firstChild->insertBefore($node, $xml->getDocumentElement->firstChild);
-    }
-
-    return $self->send($action, $xml);
-}
-
-sub build_request_xml {
-    my ($self, $action, $body) = @_;
-    my $xml = XML::LibXML->load_xml(string => <<'XML');
-<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body/>
-</soapenv:Envelope>
-XML
-
-    my $xc = XML::LibXML::XPathContext->new($xml);
-    $xc->registerNs('soapenv' => 'http://schemas.xmlsoap.org/soap/envelope/' );
-    my ($soap_body) = $xc->findnodes('//soapenv:Body');
-    if ( !blessed $body ) {
-        $soap_body->appendChild( $xml->createTextNode($body) );
-    }
-    elsif ( $body->isa('XML::LibXNL::Node') ) {
-        $soap_body->appendChild( $body );
-    }
-    elsif ( $body->can('to_xml') ) {
-        for my $node ( $body->to_xml($xml) ) {
-            $soap_body->appendChild( $node );
-        }
-    }
-    else {
-        W3C::SOAP::Exception::BadInput->throw(
-            faultcode => 'UNKNOWN SOAP BODY',
-            message   => "Don't know how to process ". (ref $body) ."\n",
-            error     => '',
-        );
-    }
-
-    return $xml;
-}
-
-sub send {
-    my ($self, $action, $xml) = @_;
-    my $content;
-
-    $self->log->debug("$action REQUEST\n" . $xml->toString) if $self->has_log;
-    try {
-        $content = $self->_post($action, $xml);
-    }
-    catch ($e) {
-        $self->log->error("$action RESPONSE \n" . $self->response->content) if $self->has_log;
-        my $xml_error = eval { XML::LibXML->load_xml( string => $self->response->content ) };
-
-        if ( $xml_error ) {
-            my $ns       = $self->_envelope_ns($xml_error);
-            my ($code  ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultcode");
-            my ($string) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultstring");
-            my ($actor ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultactor");
-            my ($detail) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/detail");
-            W3C::SOAP::Exception->throw(
-                faultcode   => $code   && $code->textContent,
-                faultstring => $string && $string->textContent,
-                faultactor  => $actor  && $actor->textContent,
-                detail      => $detail && $detail->textContent,
-            );
-        }
-        else {
-            W3C::SOAP::Exception::HTTP->throw(
-                faultcode => $self->response->code,
-                message   => $self->response->message,
-                error     => $e,
-            );
-        }
-    };
-    $self->log->debug("$action RESPONSE \n$content") if $self->has_log;
-
-    my $xml_response = XML::LibXML->load_xml( string => $content );
-    my $ns = $self->_envelope_ns($xml_response);
-
-    my ($node) = $xml_response->findnodes("//$ns\:Body");
-
-    return $node;
-}
 
 sub _post {
     my ($self, $action, $xml) = @_;
@@ -165,20 +60,6 @@ sub _post {
     $self->response($response);
 
     return $response->content;
-}
-
-sub _envelope_ns {
-    my ($self, $xml) = @_;
-    my %map
-        = map {$_->name =~ /^xmlns:?(.*)$/; ($_->value => $1)}
-        grep { $_->name =~ /^xmlns/ }
-        $xml->firstChild->getAttributes;
-
-    return $map{'http://schemas.xmlsoap.org/soap/envelope/'};
-}
-
-sub _header {
-    W3C::SOAP::Header->new;
 }
 
 {
