@@ -25,11 +25,12 @@ our $VERSION     = version->new('0.0.7');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
 has mech => (
-    is      => 'rw',
+    is        => 'rw',
+    predicate => 'has_mech',
 );
 has ua => (
     is      => 'rw',
-    isa     => 'AnyEvent::HTTP::LWP::UserAgent',
+    isa     => 'LWP::UserAgent',
     builder => '_ua',
 );
 has response => (
@@ -47,6 +48,9 @@ has log => (
 sub _post {
     my ($self, $action, $xml) = @_;
     my $url = $self->location;
+
+    cluck "The mech attribute has been deprecated and is replaced by ua attribute!"
+        if $self->has_mech;
 
     $self->clear_response;
     my $response = $self->ua->post(
