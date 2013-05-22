@@ -21,7 +21,7 @@ my $template = Template->new(
     INTERPOLATE  => 0,
     EVAL_PERL    => 1,
 );
-my $mech = MechMock->new;
+my $ua = MechMock->new;
 # create the parser object
 my $parser = W3C::SOAP::WSDL::Parser->new(
     location      => $dir->file('eg.wsdl').'',
@@ -54,11 +54,11 @@ sub written_modules {
     push @INC, $dir->subdir('lib').'';
     require_ok('MyApp::WsdlEg');
     my $eg = MyApp::WsdlEg->new;
-    $eg->mech($mech);
+    $eg->ua($ua);
 
     isa_ok $eg, 'MyApp::WsdlEg', 'Create the object correctly';
 
-    $mech->content(<<"XML");
+    $ua->content(<<"XML");
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
     <soapenv:Body xmlns:eg="http://eg.schema.org/v1">

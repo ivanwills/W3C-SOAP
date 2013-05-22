@@ -2,13 +2,9 @@ package MechMock;
 
 use strict;
 use warnings;
-use parent qw/WWW::Mechanize/;
+use parent qw/AnyEvent::HTTP::LWP::UserAgent/;
 
 our $VERSION = 0.0001;
-
-sub post {
-    return;
-}
 
 my $content;
 sub content {
@@ -16,5 +12,22 @@ sub content {
     $content = $text if @_ > 1;
     return $content;
 }
+
+sub post {
+    return MechResponse->new($content);
+}
+
+package MechResponse;
+
+use strict;
+use warnings;
+use parent qw/HTTP::Response/;
+
+sub new {
+    my ($class, $content) = @_;
+    return bless { content => $content }, $class;
+}
+
+sub content { shift->{content} };
 
 1;

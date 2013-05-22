@@ -14,7 +14,7 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use WWW::Mechanize;
+use AnyEvent::HTTP::LWP::UserAgent;
 use TryCatch;
 use XML::LibXML;
 use W3C::SOAP::Exception;
@@ -37,8 +37,21 @@ has header => (
 );
 has mech => (
     is      => 'rw',
-    isa     => 'WWW::Mechanize',
-    builder => '_mech',
+);
+has ua => (
+    is      => 'rw',
+    isa     => 'AnyEvent::HTTP::LWP::UserAgent',
+    builder => '_ua',
+);
+has response => (
+    is      => 'rw',
+    isa     => 'HTTP::Response',
+    clearer => 'clear_response',
+);
+has async => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
 );
 has log => (
     is        => 'rw',
@@ -102,8 +115,8 @@ sub send {
         $content = $self->_post($action, $xml);
     }
     catch ($e) {
-        $self->log->error("$action RESPONSE \n" . $self->mech->res->content) if $self->has_log;
-        my $xml_error = eval { XML::LibXML->load_xml( string => $self->mech->res->content ) };
+        $self->log->error("$action RESPONSE \n" . $self->response->content) if $self->has_log;
+        my $xml_error = eval { XML::LibXML->load_xml( string => $self->response->content ) };
 
         if ( $xml_error ) {
             my $ns       = $self->_envelope_ns($xml_error);
@@ -120,8 +133,8 @@ sub send {
         }
         else {
             W3C::SOAP::Exception::HTTP->throw(
-                faultcode => $self->mech->res->code,
-                message   => $self->mech->res->message,
+                faultcode => $self->response->code,
+                message   => $self->response->message,
                 error     => $e,
             );
         }
@@ -140,7 +153,8 @@ sub _post {
     my ($self, $action, $xml) = @_;
     my $url = $self->location;
 
-    $self->mech->post(
+    $self->clear_response;
+    my $response = $self->ua->post(
         $url,
         'Content-Type'     => 'text/xml;charset=UTF-8',
         'SOAPAction'       => qq{"$action"},
@@ -148,8 +162,9 @@ sub _post {
         'Accept-Encoding'  => 'gzip, deflate',
         Content            => $xml->toString,
     );
+    $self->response($response);
 
-    return $self->mech->content;
+    return $response->content;
 }
 
 sub _envelope_ns {
@@ -167,17 +182,17 @@ sub _header {
 }
 
 {
-    my $mech;
-    sub _mech {
-        return $mech if $mech;
-        $mech = WWW::Mechanize->new;
+    my $ua;
+    sub _ua {
+        return $ua if $ua;
+        $ua = AnyEvent::HTTP::LWP::UserAgent->new;
 
         if ($DEBUG_REQUEST_RESPONSE) {
-            $mech->add_handler("request_send",  sub { shift->dump( prefix => 'REQUEST  ', maxlength => $ENV{W3C_SOAP_DEBUG_LENGTH} || 1024 ); return });
-            $mech->add_handler("response_done", sub { shift->dump( prefix => 'RESPONSE ', maxlength => $ENV{W3C_SOAP_DEBUG_LENGTH} || 1024 ); return });
+            $ua->add_handler("request_send",  sub { shift->dump( prefix => 'REQUEST  ', maxlength => $ENV{W3C_SOAP_DEBUG_LENGTH} || 1024 ); return });
+            $ua->add_handler("response_done", sub { shift->dump( prefix => 'RESPONSE ', maxlength => $ENV{W3C_SOAP_DEBUG_LENGTH} || 1024 ); return });
         }
 
-        return $mech;
+        return $ua;
     }
 }
 
