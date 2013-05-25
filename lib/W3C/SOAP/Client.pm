@@ -24,6 +24,11 @@ use Moose::Util::TypeConstraints qw/duck_type/;
 our $VERSION     = version->new('0.0.7');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
+has location => (
+    is       => 'rw',
+    isa      => 'Str',
+    required => 1,
+);
 has mech => (
     is        => 'rw',
     predicate => 'has_mech',

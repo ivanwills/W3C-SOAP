@@ -21,11 +21,6 @@ extends 'W3C::SOAP::Client';
 
 our $VERSION     = version->new('0.0.7');
 
-has location => (
-    is       => 'rw',
-    isa      => 'Str',
-    required => 1,
-);
 has header => (
     is        => 'rw',
     isa       => 'W3C::SOAP::Header',
