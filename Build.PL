@@ -41,7 +41,7 @@ my $builder = Module::Build->new(
         'Test::NoWarnings' => 0,
     },
     recommends => {
-        'MooseX::Aliases' => 0,
+        'MooseX::Aliases'    => 0,
         'Test::Spelling'     => 0,
         'Test::Perl::Critic' => 0,
         'Test::Kwalitee'     => 0,
