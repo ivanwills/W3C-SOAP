@@ -36,6 +36,9 @@ my $builder = Module::Build->new(
         'parent'                         => '0.225',
         'version'                        => '0.88',
     },
+    configure_requires => {
+        'Module::Build' => 0.38,
+    },
     build_requires => {
         'Test::More'       => 0,
         'Test::NoWarnings' => 0,
