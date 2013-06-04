@@ -16,7 +16,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION     = version->new('0.0.7');
+our $VERSION     = version->new('0.1.0');
 
 has document => (
     is       => 'rw',
@@ -62,7 +62,7 @@ W3C::SOAP::Parser - Base module for creating Moose objects from XML documents
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Parser version 0.0.7.
+This documentation refers to W3C::SOAP::Parser version 0.1.0.
 
 =head1 SYNOPSIS
 

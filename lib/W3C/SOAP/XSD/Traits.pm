@@ -15,7 +15,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 
-our $VERSION     = version->new('0.0.7');
+our $VERSION     = version->new('0.1.0');
 
 Moose::Util::meta_attribute_alias('W3C::SOAP::XSD');
 
@@ -73,7 +73,7 @@ W3C::SOAP::XSD::Traits - Specifies the traits of an XSD Moose attribute
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Traits version 0.0.7.
+This documentation refers to W3C::SOAP::XSD::Traits version 0.1.0.
 
 
 =head1 SYNOPSIS
