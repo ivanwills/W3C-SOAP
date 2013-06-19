@@ -9,8 +9,6 @@ my $builder = Module::Build->new(
     dist_version_from => 'lib/W3C/SOAP.pm',
     requires          => {
         'perl'                           => '5.006',
-        'AnyEvent'                       => '7.04',
-        'AnyEvent::HTTP::LWP::UserAgent' => '0.10',
         'DateTime'                       => 0,
         'DateTime::Format::Strptime'     => 0,
         'File::ShareDir'                 => 1.0,
@@ -44,11 +42,13 @@ my $builder = Module::Build->new(
         'Test::NoWarnings' => 0,
     },
     recommends => {
-        'MooseX::Aliases'    => 0,
-        'Test::Spelling'     => 0,
-        'Test::Perl::Critic' => 0,
-        'Test::Kwalitee'     => 0,
-        'Pod::Coverage'      => 0,
+        'MooseX::Aliases'                => 0,
+        'Test::Spelling'                 => 0,
+        'Test::Perl::Critic'             => 0,
+        'Test::Kwalitee'                 => 0,
+        'Pod::Coverage'                  => 0,
+        'AnyEvent'                       => 0,
+        'AnyEvent::HTTP::LWP::UserAgent' => 0,
     },
     share_dir => {
         dist => [
