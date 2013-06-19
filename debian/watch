@@ -1,0 +1,2 @@
+version=3
+http://search.cpan.org/dist/W3C-SOAP/   .*/W3C-SOAP-v?(\d[\d.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)$

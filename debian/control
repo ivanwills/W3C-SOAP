@@ -1,0 +1,52 @@
+Source: libw3c-soap-perl
+Section: perl
+Priority: optional
+Maintainer: Kim Jackson <kimj@kim.jackson.usr.optusnet.com.au>
+Build-Depends: debhelper (>= 8)
+Build-Depends-Indep: libdatetime-format-strptime-perl,
+ libdatetime-perl,
+ libfile-sharedir-perl (>= 1),
+ liblist-moreutils-perl,
+ libmoose-perl (>= 1),
+ libmoosex-exception-base-perl,
+ libmoosex-types-perl,
+ libmoosex-types-xmlschema-perl (>= 0.03),
+ libnamespace-autoclean-perl,
+ libpath-class-perl (>= 0.1),
+ libtemplate-perl (>= 2.2),
+ libtest-nowarnings-perl,
+ libtrycatch-perl (>= 1),
+ liburi-perl,
+ libwww-mechanize-perl (>= 1.6),
+ libxml-libxml-perl (>= 1.7),
+ perl,
+ perl-base,
+ perl-modules (>= 0.225)
+Standards-Version: 3.9.2
+Homepage: http://search.cpan.org/dist/W3C-SOAP/
+
+Package: libw3c-soap-perl
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends},
+ libdatetime-format-strptime-perl,
+ libdatetime-perl,
+ libfile-sharedir-perl (>= 1),
+ liblist-moreutils-perl,
+ libmoose-perl (>= 1),
+ libmoosex-exception-base-perl,
+ libmoosex-types-perl,
+ libmoosex-types-xmlschema-perl (>= 0.03),
+ libnamespace-autoclean-perl,
+ libpath-class-perl (>= 0.1),
+ libtemplate-perl (>= 2.2),
+ libtrycatch-perl (>= 1),
+ liburi-perl,
+ libwww-mechanize-perl (>= 1.6),
+ libxml-libxml-perl (>= 1.7),
+ perl,
+ perl-base,
+ perl-modules (>= 0.225)
+Description: SOAP client generation from WSDL & XSD files
+ A perly SOAP client library.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
