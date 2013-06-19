@@ -2,7 +2,7 @@ package MechMock;
 
 use strict;
 use warnings;
-use parent qw/AnyEvent::HTTP::LWP::UserAgent/;
+use parent qw/LWP::UserAgent/;
 
 our $VERSION = 0.0001;
 

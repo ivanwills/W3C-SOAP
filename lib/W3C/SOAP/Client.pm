@@ -14,7 +14,7 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use AnyEvent::HTTP::LWP::UserAgent;
+use LWP::UserAgent;
 use TryCatch;
 use XML::LibXML;
 use W3C::SOAP::Exception;
@@ -75,7 +75,7 @@ sub _post {
     my $ua;
     sub _ua {
         return $ua if $ua;
-        $ua = AnyEvent::HTTP::LWP::UserAgent->new;
+        $ua = LWP::UserAgent->new;
 
         if ($DEBUG_REQUEST_RESPONSE) {
             $ua->add_handler("request_send",  sub { shift->dump( prefix => 'REQUEST  ', maxlength => $ENV{W3C_SOAP_DEBUG_LENGTH} || 1024 ); return });
