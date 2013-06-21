@@ -1,0 +1,53 @@
+---
+2:
+    - lib/W3C/SOAP.pm
+    - lib/W3C/SOAP/Client.pm
+    - lib/W3C/SOAP/Utils.pm
+    - lib/W3C/SOAP/Exception.pm
+    - lib/W3C/SOAP/Header.pm
+    - lib/W3C/SOAP/Header/*.pm
+    - lib/W3C/SOAP/Header/*/*.pm
+    - lib/W3C/SOAP/Document.pm
+    - lib/W3C/SOAP/Document/*.pm
+3:
+    - bin/xsd-parser
+    - lib/W3C/SOAP/XSD.pm
+    - lib/W3C/SOAP/XSD/*.pm
+    - lib/W3C/SOAP/XSD/Document/*.pm
+4:
+    - bin/wsdl-parser
+    - lib/W3C/SOAP/WSDL.pm
+    - lib/W3C/SOAP/WSDL/*.pm
+    - lib/W3C/SOAP/WSDL/Document/*.pm
+    - lib/W3C/SOAP/WSDL/Meta/*.pm
+5:
+    - plates/*.tt
+6:
+    - t/*.wsdl
+    - t/*.xsd
+7:
+    - t/*_parser*.t
+    - t/lib/MechMock.pm
+8:
+    - t/eg.wsdl
+    - t/eg.xsd
+    - t/parent.xsd
+    - t/other.xsd
+
+alt_2:
+    - lib/W3C/SOAP/Parser.pm
+    - lib/W3C/SOAP/*/Parser.pm
+
+alt_3:
+    - lib/W3C/SOAP/Document.pm
+    - lib/W3C/SOAP/*/Document.pm
+
+alt_4:
+    - lib/W3C/SOAP/Document/Node.pm
+    - lib/W3C/SOAP/WSDL/Document/Node.pm
+    - lib/W3C/SOAP/XSD/Document/Node.pm
+
+alt_5:
+    - lib/W3C/SOAP/WSDL/Document/InOutPuts.pm
+    - lib/W3C/SOAP/XSD/Document/ComplexType.pm
+
