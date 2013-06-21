@@ -211,7 +211,7 @@ Inherits from L<W3C::SOAP::Client>
 
 =item C<request ($action, $body)>
 
-converst the body object to XML and adds any headers, then calls C<send()>
+Converts the body object to XML and adds any headers, then calls C<send()>
 
 =item C<build_request_xml ($action, $body)>
 
