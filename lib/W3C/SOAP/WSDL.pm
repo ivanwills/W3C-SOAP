@@ -209,6 +209,18 @@ Inherits from L<W3C::SOAP::Client>
 
 =over 4
 
+=item C<request ($action, $body)>
+
+converst the body object to XML and adds any headers, then calls C<send()>
+
+=item C<build_request_xml ($action, $body)>
+
+Creates the XML representation of C<$body>
+
+=item C<send ($action, $xml)>
+
+Makes the HTTP request of the soap action and returns the resultant body node
+
 =back
 
 =head1 DIAGNOSTICS
