@@ -1,5 +1,32 @@
 Revision history for W3C-SOAP
 
+0.01    2013-06-22
+        Added skipping vrc.yml when building CPAN dist
+        Documented recently moved methods
+        Added skipping debian files when building CPAN dist - kim
+        Use native source format since we didn't let dh-make-perl create a pristine-tar branch. - kim
+        Removed more generated files. - kim
+        Add missed debian files. - kim
+        Debianise. - kim
+        Changed so that AnyEvent::HTTP isn't required by default - kim
+        Changed version number to old-style decimal: 0.01
+        Moved AnyEvent deps from 'requires' to 'recommends'.
+        Changed load test to explicitly list all modules (for Windows)
+        Upped version number to 0.1.0 for next release
+        Added configure requires section
+        Cleaned up white space
+        Moved location back to client as it is used by multiple client types
+        Relaxed the type for the ua attribute, added deprecation warning
+        Moved WSDL specific code from the Client object to to the WSDL object
+        Started the conversion to be event handlable
+        Added more things to work on
+        Cleaned up the author tests
+        Merged quick fix back to master
+        Reverted commit 48df39a
+        Changed tests to use http URI's so tests are not as messy
+        Changed the way module names are auto generated from name spaces
+        Reorganised templates into sub directories, split out common parser code into separate template and added new WSDL Node object
+
 0.0.7   2013-04-11
         Updated manifests
         Updated manifests
