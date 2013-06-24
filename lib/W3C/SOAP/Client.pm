@@ -34,9 +34,11 @@ has mech => (
     predicate => 'has_mech',
 );
 has ua => (
-    is      => 'rw',
-    isa     => 'LWP::UserAgent',
-    builder => '_ua',
+    is           => 'rw',
+    isa          => 'LWP::UserAgent',
+    builder      => '_ua',
+    required     => 1,
+    lazy_builder => 1,
 );
 has response => (
     is      => 'rw',
