@@ -14,6 +14,7 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::WSDL::Utils;
 use W3C::SOAP::WSDL::Meta::Method;
 use URI;
 
@@ -83,20 +84,6 @@ sub xml_error {
     return $error;
 }
 
-sub operation {
-    my ( $meta, $name, %options ) = @_;
-    $meta->add_method(
-        $name,
-        W3C::SOAP::WSDL::Meta::Method->wrap(
-            body            => sub { shift->_request($name => @_) },
-            package_name    => $meta->name,
-            name            => $name,
-            %options,
-        )
-    );
-    return;
-}
-
 1;
 
 __END__
@@ -117,15 +104,6 @@ This documentation refers to W3C::SOAP::Utils version 0.01.
    my ($namespace, $tag) = split_ns('xs:thing');
    # $namespace = xs
    # $tag = thing
-
-   # In a WSDL package to generate an operation method:
-   operation wsdl_op => (
-       wsdl_operation => 'WsdlOp',
-       in_class       +> 'MyApp::Some::XSD',
-       in_attribute   +> 'wsdl_op_request',
-       out_class      +> 'MyApp::Some::XSD',
-       out_attribute  +> 'wsdl_op_response',
-   );
 
 =head1 DESCRIPTION
 
@@ -174,33 +152,7 @@ Pretty format the C<$xml_node> for an error message
 
 =item C<operation ($name, %optisns)>
 
-Generates a SOAP operation method with the name C<$name>
-
-The options are:
-
-=over 4
-
-=item C<wsdl_operation>
-
-The name of the operation from the WSDL
-
-=item C<in_class>
-
-The name of the XSD generated module that the inputs should be made against
-
-=item C<in_attribute>
-
-The particular element form the C<in_class> XSD
-
-=item C<out_class>
-
-The name of the XSD generated module that the outputs should be passed to
-
-=item C<out_attribute>
-
-The particular element form the C<out_class> XSD that contains the results.
-
-=back
+See L<W3C::SOAP::WSDL::Utils> for details using it from this module is deprecated
 
 =back
 

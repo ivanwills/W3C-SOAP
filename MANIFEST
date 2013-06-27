@@ -28,6 +28,7 @@ lib/W3C/SOAP/WSDL/Document/PortType.pm
 lib/W3C/SOAP/WSDL/Document/Service.pm
 lib/W3C/SOAP/WSDL/Meta/Method.pm
 lib/W3C/SOAP/WSDL/Parser.pm
+lib/W3C/SOAP/WSDL/Utils.pm
 lib/W3C/SOAP/XSD.pm
 lib/W3C/SOAP/XSD/Document.pm
 lib/W3C/SOAP/XSD/Document/ComplexType.pm
