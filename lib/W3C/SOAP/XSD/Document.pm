@@ -139,6 +139,13 @@ sub _imports {
                 $location = URI->new_abs($location, $self->location)->as_string;
             }
 
+            # check if the location is a relative path
+            if ( $location =~ m{^[.]} ) {
+                if ( -f $self->location ) {
+                    $location = file($self->location)->parent->file($location) . '';
+                }
+            }
+
             push @imports, __PACKAGE__->new(
                 location      => $location,
                 ns_module_map => $self->ns_module_map,
