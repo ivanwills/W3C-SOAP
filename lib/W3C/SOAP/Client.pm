@@ -32,13 +32,14 @@ has location => (
 has mech => (
     is        => 'rw',
     predicate => 'has_mech',
+    init_arg  => 0,
 );
 has ua => (
-    is           => 'rw',
-    isa          => 'LWP::UserAgent',
-    builder      => '_ua',
-    required     => 1,
-    lazy_builder => 1,
+    is       => 'rw',
+    isa      => 'LWP::UserAgent',
+    builder  => '_ua',
+    required => 1,
+    lazy     => 1,
 );
 has response => (
     is      => 'rw',
