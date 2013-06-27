@@ -92,7 +92,7 @@ sub show {
     my @xsd = @{$parser->document};
 
     while ( my $xsd = shift @xsd ) {
-        print "Namespace = " . $xsd->target_namespace . "\n";
+        print "\nNamespace = " . $xsd->target_namespace . "\n";
         my $module = $xsd->module;
         my $file   = "$option{lib}/" . $module;
         $file =~ s{::}{/}g;
@@ -104,42 +104,52 @@ sub show {
             $parent = $parent->parent;
         }
         mkdir $_ for reverse @missing;
-
-        print "Imports:\n";
         my @parents;
-        for my $import ( @{ $xsd->imports } ) {
-            print "\t", $import->target_namespace, "\n";
-            push @xsd, $import;
-            push @parents, $import->module;
-        }
-        print "Includes:\n";
-        for my $include ( @{ $xsd->includes } ) {
-            print "\t", $include->target_namespace, "\n";
-            push @xsd, $include;
-            push @parents, $include->module;
-        }
-        print "Simple Types:\n";
-        for my $stype ( @{ $xsd->simple_types } ) {
-            print "\t", $stype->name, ' : ', $stype->type, '(' . @{ $stype->enumeration } . ')', "\n";
-        }
-        print "Complex Types:\n";
-        for my $ctype ( @{ $xsd->complex_types } ) {
-            print "\t", $ctype->name, '(' . @{ $ctype->sequence } . ')', "\n";
-            print "\tElements:\n";
-            for my $seq ( @{ $ctype->sequence } ) {
-                print "\t\t", $seq->name, ' : ', $seq->package, "\n";
-            }
-            my $type_module = $module . '::' . $ctype->name;
-            push @parents, $type_module;
-            my $type_file = "$option{lib}/" . $type_module;
-            $type_file =~ s{::}{/}g;
-            $type_file = file $type_file;
-            mkdir $type_file->parent if !-d $type_file->parent;
 
+        if ( @{ $xsd->imports } ) {
+            print "Imports:\n";
+            for my $import ( @{ $xsd->imports } ) {
+                print "\t", $import->target_namespace, "\n";
+                push @xsd, $import;
+                push @parents, $import->module;
+            }
         }
-        print "Elements:\n";
-        for my $elem ( @{ $xsd->elements } ) {
-            print "\t", $elem->name, ' : ', $elem->package, "\n";
+        if ( @{ $xsd->includes } ) {
+            print "Includes:\n";
+            for my $include ( @{ $xsd->includes } ) {
+                print "\t", $include->target_namespace, "\n";
+                push @xsd, $include;
+                push @parents, $include->module;
+            }
+        }
+        if ( @{ $xsd->simple_types } ) {
+            print "Simple Types:\n";
+            for my $stype ( @{ $xsd->simple_types } ) {
+                print "\t", $stype->name, ' : ', $stype->type, '(' . @{ $stype->enumeration } . ')', "\n";
+            }
+        }
+        if ( @{ $xsd->complex_types } ) {
+            print "Complex Types:\n";
+            for my $ctype ( @{ $xsd->complex_types } ) {
+                print "\t", $ctype->name, '(' . @{ $ctype->sequence } . ')', "\n";
+                print "\tElements:\n";
+                for my $seq ( @{ $ctype->sequence } ) {
+                    print "\t\t", $seq->name, ' : ', $seq->package, "\n";
+                }
+                my $type_module = $module . '::' . $ctype->name;
+                push @parents, $type_module;
+                my $type_file = "$option{lib}/" . $type_module;
+                $type_file =~ s{::}{/}g;
+                $type_file = file $type_file;
+                mkdir $type_file->parent if !-d $type_file->parent;
+
+            }
+        }
+        if ( @{ $xsd->elements } ) {
+            print "Elements:\n";
+            for my $elem ( @{ $xsd->elements } ) {
+                print "\t", $elem->name, ' : ', $elem->package, "\n";
+            }
         }
 
     }
