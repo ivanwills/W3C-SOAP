@@ -135,15 +135,20 @@ sub _imports {
         my $location = $import->getAttribute('schemaLocation');
         if ($location) {
 
-            if ( $self->location && $self->location =~ m{^(?:https?|ftp)://} ) {
-                $location = URI->new_abs($location, $self->location)->as_string;
-            }
+            if ( $self->location && (
+                    $self->location =~ m{^(?:https?|ftp)://}
+                    || (
+                        -f $self->location
+                        && !-f $location
+                    )
+                )
+            ) {
+                my $current_location
+                    = -f $self->location
+                    ? file($self->location)->absolute . ''
+                    : $self->location;
 
-            # check if the location is a relative path
-            if ( $location =~ m{^[.]} ) {
-                if ( -f $self->location ) {
-                    $location = file($self->location)->parent->file($location) . '';
-                }
+                $location = URI->new_abs($location, $current_location)->as_string;
             }
 
             push @imports, __PACKAGE__->new(
