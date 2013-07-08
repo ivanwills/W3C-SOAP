@@ -139,7 +139,7 @@ sub xml2perl_map {
     return \%map;
 }
 
-# recursivly try to find the default value for an attribute
+# recursively try to find the default value for an attribute
 sub _get_attribute_default {
     my ($class, $attribute) = @_;
     my $meta = $class->meta;
