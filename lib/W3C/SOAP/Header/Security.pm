@@ -16,7 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 
-our $VERSION     = version->new('0.01');
+our $VERSION     = version->new('0.02');
 
 sub to_xml {
     my ($self, $xml) = @_;
@@ -42,7 +42,7 @@ W3C::SOAP::Header::Security - Creates a SOAP Header WS-Security object
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Header::Security version 0.01.
+This documentation refers to W3C::SOAP::Header::Security version 0.02.
 
 
 =head1 SYNOPSIS

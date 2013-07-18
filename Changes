@@ -1,5 +1,16 @@
 Revision history for W3C-SOAP
 
+0.02   2013-07-18
+        Added missing load test (Ivan Wills)
+        Fixed spelling mistake (Ivan Wills)
+        Fixed loading local XSD files that are relative to local other files (Ivan Wills)
+        Fixed template list (Ivan Wills)
+        Moved operation helper to lib/W3C/SOAP/WSDL/Utils.pm as it's WSDL specific (Ivan Wills)
+        Changed lazy_builder to lazy to reduce warnings (not sure why nessesary as other modules are not producing warnings) (Ivan Wills)
+        Cleaning up output (Ivan Wills)
+        Trying to cope with relative locations (Ivan Wills)
+        Added that the useragent should be required and that it should be lazy built (Ivan Wills)
+
 0.01    2013-06-22
         Added skipping vrc.yml when building CPAN dist
         Documented recently moved methods

@@ -23,7 +23,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 use TryCatch;
 use DateTime::Format::Strptime qw/strptime/;
 
-our $VERSION     = version->new('0.01');
+our $VERSION     = version->new('0.02');
 
 has xsd_ns => (
     is  => 'rw',
@@ -362,7 +362,7 @@ W3C::SOAP::XSD - The parent module to XSD modules
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD version 0.01.
+This documentation refers to W3C::SOAP::XSD version 0.02.
 
 =head1 SYNOPSIS
 

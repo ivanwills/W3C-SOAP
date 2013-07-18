@@ -21,7 +21,7 @@ use W3C::SOAP::Exception;
 use W3C::SOAP::Header;
 use Moose::Util::TypeConstraints qw/duck_type/;
 
-our $VERSION     = version->new('0.01');
+our $VERSION     = version->new('0.02');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
 has location => (
@@ -99,7 +99,7 @@ W3C::SOAP::Client - Client to talk SOAP to a server.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Client version 0.01.
+This documentation refers to W3C::SOAP::Client version 0.02.
 
 =head1 SYNOPSIS
 
