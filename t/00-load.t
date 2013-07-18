@@ -25,6 +25,7 @@ use_ok('W3C::SOAP::WSDL::Document::Message');
 use_ok('W3C::SOAP::WSDL::Document::InOutPuts');
 use_ok('W3C::SOAP::WSDL::Document::PortType');
 use_ok('W3C::SOAP::WSDL::Meta::Method');
+use_ok('W3C::SOAP::WSDL::Utils');
 use_ok('W3C::SOAP::Parser');
 use_ok('W3C::SOAP::XSD');
 use_ok('W3C::SOAP::XSD::Document::SimpleType');
