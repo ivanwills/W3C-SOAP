@@ -58,6 +58,8 @@ t/perlcriticrc
 t/pod-coverage.t
 t/pod.t
 t/spelling.t
+t/xsd_parser_dynamic.t
+t/xsd_parser.t
 t/wsdl_parser.t
 t/wsdl_parser_dynamic.t
 templates/config.tt
