@@ -43,14 +43,14 @@ has pattern => (
 has maxLength => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
-    builder    => '_minLength',
+    builder    => '_maxLength',
     predicate  => 'has_minLength',
     lazy_build => 1,
 );
 has minLength => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
-    builder    => '_maxLength',
+    builder    => '_minLength',
     predicate  => 'has_maxLength',
     lazy_build => 1,
 );
