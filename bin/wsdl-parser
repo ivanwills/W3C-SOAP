@@ -92,7 +92,11 @@ sub main {
         EVAL_PERL    => 1,
     );
 
-    die Dumper \@ARGV if @ARGV % 2;
+    if ( @ARGV % 2 ) {
+        warn "Called with an odd number of arguments!\n";
+        warn Dumper \@ARGV;
+        pod2usage( -verbose => 1 );
+    }
     my %map = @ARGV;
 
     for my $module (keys %map) {
