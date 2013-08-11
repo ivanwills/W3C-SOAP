@@ -193,7 +193,8 @@ This documentation refers to wsdl-parser version 0.02.
 
 =head1 SYNOPSIS
 
-   wsdl-parser [option] package wsdl_file_or_url
+   wsdl-parser [options] Package::Name file_or_url.wsdl (Package::Name2 file_or_url_2.wsdl ...)
+   wsdl-parser [options] [--show|-s] wsdl_file_or_url
 
  OPTIONS:
   -s --show     Show some info about the passed WSDL file
