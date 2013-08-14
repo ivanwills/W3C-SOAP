@@ -138,8 +138,8 @@ sub get_module_name {
 
         # construct module name if we have a base name
         if ( $self->has_module_base ) {
-            $self->ns_module_map->{normalise_ns($self->target_namespace)}
-                = $self->module_base . '::' . ns2module($self->target_namespace);
+            $self->ns_module_map->{normalise_ns($ns)}
+                = $self->module_base . '::' . ns2module($ns);
         }
 
         # copy the unnormalised module name if we have one
