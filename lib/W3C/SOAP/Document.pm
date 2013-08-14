@@ -194,6 +194,10 @@ the base class for L<W3C::SOAP::XSD::Document> and L<W3C::SOAP::WSDL::Document>.
 
 Creates a new C<W3C::SOAP::Document> object.
 
+=item C<get_module_name ( $namespace )>
+
+Get the Perl module name for a XML namespace.
+
 =back
 
 =head1 DIAGNOSTICS
