@@ -199,7 +199,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Parser - Module to create Moose objects from a WSDL
+W3C::SOAP::WSDL::Parser - Module to create Moose objects from a WSDL file
 
 =head1 VERSION
 
@@ -238,6 +238,32 @@ This documentation refers to W3C::SOAP::WSDL::Parser version 0.02.
 
 This module parses a WSDL file so that it can produce a client to talk to the
 SOAP service.
+
+There are two ways of using this file:
+
+=over 4
+
+=item 1
+
+Dynamic : C<load_wsdl(...)> or C<W3C::SOAP::WSDL->new()->dynamic_classes>
+
+These return an in memory generated WSDL client which you can use to talk
+to the specified web service.
+
+=item 2
+
+Static : C<W3C::SOAP::WSDL->new()->write_modules()>
+
+This writes perl modules to disk so that you can C<use> the modules in your
+later. This has the advantage that you don't have to recompile the WSDL
+every time you run your code but it has the disadvantage that your client
+may be out of date compared to the webservice's WSDL.
+
+=back
+
+Both interfaces are identical once you have the client object. If you want
+to change at a later point the code change should be adding or removing a
+use statement and switching from a C<<Module->new>> to C<load_wsdl()>.
 
 =head1 SUBROUTINES/METHODS
 
