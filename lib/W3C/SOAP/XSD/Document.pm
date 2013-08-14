@@ -24,7 +24,7 @@ use W3C::SOAP::Exception;
 use W3C::SOAP::XSD::Document::Element;
 use W3C::SOAP::XSD::Document::ComplexType;
 use W3C::SOAP::XSD::Document::SimpleType;
-use W3C::SOAP::Utils qw/normalise_ns/;
+use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 
 extends 'W3C::SOAP::Document';
 
@@ -407,7 +407,15 @@ sub get_module_base {
     my ($self, $ns) = @_;
 
     confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    confess "No mapping specified for the namespace $ns!\n"        if !$self->ns_module_map->{normalise_ns($ns)};
+    if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
+        if ( $self->has_module_base ) {
+            $self->ns_module_map->{normalise_ns($self->target_namespace)}
+                = $self->module_base . '::' . ns2module($self->target_namespace);
+        }
+        else {
+            confess "No mapping specified for the namespace $ns!\n";
+        }
+    }
 
     return $self->ns_module_map->{normalise_ns($ns)};
 }
