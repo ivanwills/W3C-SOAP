@@ -257,7 +257,7 @@ Static : C<W3C::SOAP::WSDL->new()->write_modules()>
 This writes perl modules to disk so that you can C<use> the modules in your
 later. This has the advantage that you don't have to recompile the WSDL
 every time you run your code but it has the disadvantage that your client
-may be out of date compared to the webservice's WSDL.
+may be out of date compared to the web service's WSDL.
 
 =back
 
