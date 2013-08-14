@@ -25,14 +25,12 @@ has binding => (
     is         => 'rw',
     isa        => 'W3C::SOAP::WSDL::Document::Binding',
     builder    => '_binding',
-    lazy_build => 1,
     weak_ref   => 1,
 );
 has address => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_address',
-    lazy_build => 1,
 );
 
 sub _binding {
