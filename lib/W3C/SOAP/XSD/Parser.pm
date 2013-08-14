@@ -461,6 +461,10 @@ the XSDs in the documents.
 
 Write the template to disk
 
+=item C<written_modules ()>
+
+Returns a list of all XSD modules written by the parser.
+
 =item C<get_schemas ()>
 
 Gets a list of the schemas imported/included from the base XML Schema(s)
