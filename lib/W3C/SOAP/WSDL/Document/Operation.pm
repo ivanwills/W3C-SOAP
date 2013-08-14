@@ -99,6 +99,8 @@ sub _port_type {
             return $operation if $operation->name eq $self->name;
         }
     }
+
+    return;
 }
 
 1;

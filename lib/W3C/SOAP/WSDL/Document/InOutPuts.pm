@@ -46,6 +46,8 @@ sub _message {
     for my $msg (@{ $self->document->messages }) {
         return $msg if $msg->name eq $message;
     }
+
+    return;
 }
 
 

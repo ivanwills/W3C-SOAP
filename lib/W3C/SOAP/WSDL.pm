@@ -176,7 +176,7 @@ sub _envelope_ns {
 }
 
 sub _header {
-    W3C::SOAP::Header->new;
+    return W3C::SOAP::Header->new;
 }
 
 1;

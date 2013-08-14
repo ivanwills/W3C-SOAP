@@ -158,6 +158,8 @@ sub write_module {
     $template->process($tt, $data, "$file");
     confess "Error in creating $file (via $tt): ". $template->error."\n"
         if $template->error;
+
+    return;
 }
 
 sub written_modules {

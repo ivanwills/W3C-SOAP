@@ -42,6 +42,8 @@ sub _binding {
     for my $binding (@{ $self->document->bindings }) {
         return $binding if $binding->name eq $name;
     }
+
+    return;
 }
 
 sub _address {

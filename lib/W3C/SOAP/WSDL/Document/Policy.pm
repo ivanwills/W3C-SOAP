@@ -35,12 +35,14 @@ sub _sec_id {
     my ($self) = @_;
     my @attributes = $self->node->getAttributes();
 
+    return;
 }
 
 sub _policy_type {
     my ($self) = @_;
     my @nodes = $self->document->xpc->findnodes('wsdl:operation', $self->node);
 
+    return;
 }
 
 1;

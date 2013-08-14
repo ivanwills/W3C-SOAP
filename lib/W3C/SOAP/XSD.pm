@@ -117,6 +117,7 @@ sub _from_xml {
             '*' x 222,
             "\n";
     }
+
     return $xml->textContent;
 }
 

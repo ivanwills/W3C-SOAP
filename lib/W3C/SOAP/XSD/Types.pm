@@ -34,8 +34,7 @@ use Math::BigFloat;
 
 our $VERSION     = version->new('0.03');
 
-my $sig_warn = $SIG{__WARN__};
-$SIG{__WARN__} = sub {};
+local $SIG{__WARN__} = sub {};
 
 class_type 'DateTime';
 class_type 'XML::LibXML::Node';
@@ -158,8 +157,6 @@ coerce 'xsd:date',
 #    via {
 #        DateTime::Format::Striptime("", $_)
 #    };
-
-$SIG{__WARN__} = $sig_warn;
 
 1;
 
