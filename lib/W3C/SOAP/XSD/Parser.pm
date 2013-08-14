@@ -151,13 +151,17 @@ sub write_module {
     my $template = $self->template;
 
      if ($written{$file}++) {
-        warn "Already written $file!\n";
+         #warn "Already written $file!\n";
         return;
     }
 
     $template->process($tt, $data, "$file");
     confess "Error in creating $file (via $tt): ". $template->error."\n"
         if $template->error;
+}
+
+sub written_modules {
+    return keys %written;
 }
 
 sub get_schemas {
