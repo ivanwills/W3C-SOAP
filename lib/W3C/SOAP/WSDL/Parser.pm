@@ -120,8 +120,9 @@ sub load_wsdl {
     return $cache{$location} if $cache{$location};
 
     my $parser = __PACKAGE__->new(
-        location => $location,
+        location      => $location,
         ns_module_map => {},
+        module_base   => 'Dynamic::WSDL',
     );
 
     my $class = $parser->dynamic_classes;
@@ -133,7 +134,7 @@ sub dynamic_classes {
     my ($self) = @_;
     my @classes = $self->get_xsd->dynamic_classes;
 
-    my $class_name = "Dynamic::WSDL::" . ns2module($self->document->target_namespace);
+    my $class_name = $self->base_module . '::' . ns2module($self->document->target_namespace);
 
     my $wsdl = $self->document;
     my %method;
