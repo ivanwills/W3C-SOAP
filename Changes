@@ -1,5 +1,26 @@
 Revision history for W3C-SOAP
 
+0.03   2013-08-14
+        More spelling (Ivan Wills)
+        Fixed spelling (Ivan Wills)
+        Added missing POD documentation for written_modules (Ivan Wills)
+        Added more description on how to use the parser (Ivan Wills)
+        Added check that dynamic xsd type has not already been built (Ivan Wills)
+        Changed WSDL handling to better match the new documentation and added a --test option that allows the testing of all written modules and added --verbose output stating what has been done (Ivan Wills)
+        Fixed using target namespace rather than passed in namespace (Ivan Wills)
+        Changed to return all written modules (Ivan Wills)
+        Added method to return all written modules (Ivan Wills)
+        Lots of extra documentation on how to use wsdl-parser (Ivan Wills)
+        Added documentation for get_module_name (Ivan Wills)
+        Moved the get_module_base to W3C::SOAP::Document and renamed get_module_name so that it's function is clearer (Ivan Wills)
+        Fixed wrong attribute name and not setting it if not already defined (Ivan Wills)
+        Added setting up missing mappings when module_base is set (Ivan Wills)
+        Started using module_base correctly (Ivan Wills)
+        Updated help to make operation clearer (Ivan Wills)
+        Fixed missing warning about why the program is dieing (Ivan Wills)
+        Fixed max and min lengths pointing to wrong constructors (Ivan Wills)
+        Added missing tests to MANIFEST (Ivan Wills)
+
 0.02   2013-07-18
         Added missing load test (Ivan Wills)
         Fixed spelling mistake (Ivan Wills)

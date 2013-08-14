@@ -23,7 +23,7 @@ Moose::Exporter->setup_import_methods(
     with_meta => ['operation'],
 );
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.03');
 
 sub split_ns {
     my ($tag) = @_;
@@ -94,7 +94,7 @@ W3C::SOAP::Utils - Utility functions to be used with C<W3C::SOAP> modules
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Utils version 0.02.
+This documentation refers to W3C::SOAP::Utils version 0.03.
 
 =head1 SYNOPSIS
 

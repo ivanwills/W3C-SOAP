@@ -21,7 +21,7 @@ use Path::Class;
 use XML::LibXML;
 use URI;
 
-our $VERSION = version->new('0.02');
+our $VERSION = version->new('0.03');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (

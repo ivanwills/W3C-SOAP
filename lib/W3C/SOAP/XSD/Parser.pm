@@ -28,7 +28,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.03');
 
 subtype xsd_documents =>
     as 'ArrayRef[W3C::SOAP::XSD::Document]';
@@ -431,7 +431,7 @@ W3C::SOAP::XSD::Parser - Parse an W3C::SOAP::XSD::Document and create perl modul
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Parser version 0.02.
+This documentation refers to W3C::SOAP::XSD::Parser version 0.03.
 
 =head1 SYNOPSIS
 

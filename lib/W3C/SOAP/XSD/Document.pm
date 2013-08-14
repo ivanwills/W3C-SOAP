@@ -28,7 +28,7 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.03');
 
 has imports => (
     is         => 'rw',
@@ -413,7 +413,7 @@ W3C::SOAP::XSD::Document - Represents a XMLSchema Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document version 0.02.
+This documentation refers to W3C::SOAP::XSD::Document version 0.03.
 
 =head1 SYNOPSIS
 

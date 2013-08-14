@@ -32,7 +32,7 @@ use DateTime;
 use DateTime::Format::Strptime qw/strptime/;
 use Math::BigFloat;
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.03');
 
 my $sig_warn = $SIG{__WARN__};
 $SIG{__WARN__} = sub {};
@@ -171,7 +171,7 @@ W3C::SOAP::XSD::Types - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Types version 0.02.
+This documentation refers to W3C::SOAP::XSD::Types version 0.03.
 
 
 =head1 SYNOPSIS
