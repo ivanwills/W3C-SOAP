@@ -55,6 +55,7 @@ has ns_module_map => (
     isa       => 'HashRef[Str]',
     required  => 1,
     predicate => 'has_ns_module_map',
+    default   => sub{{}},
 );
 has module => (
     is        => 'rw',
@@ -127,19 +128,32 @@ sub _target_namespace {
 
 sub _module {
     my ($self) = @_;
-    my $ns = $self->target_namespace;
+    return $self->get_module_name( $self->target_namespace );
+}
 
-    if ( $self->has_module_base ) {
-        $self->ns_module_map->{normalise_ns($self->target_namespace)}
-            = $self->module_base . '::' . ns2module($self->target_namespace);
+sub get_module_name {
+    my ($self, $ns) = @_;
+
+    if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
+
+        # construct module name if we have a base name
+        if ( $self->has_module_base ) {
+            $self->ns_module_map->{normalise_ns($self->target_namespace)}
+                = $self->module_base . '::' . ns2module($self->target_namespace);
+        }
+
+        # copy the unnormalised module name if we have one
+        if ( ! $self->ns_module_map->{normalise_ns($ns)} && $self->ns_module_map->{$ns} ) {
+            $self->ns_module_map->{normalise_ns($ns)} = $self->ns_module_map->{$ns};
+        }
+
+        # all else fails throw an error
+        if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
+            confess "No mapping specified for the namespace $ns!\n"
+                . "Try adding to your command\n"
+                . " -n '$ns=My::NameSpace'\n";
+        }
     }
-
-    if ( !$self->ns_module_map->{normalise_ns($ns)} && $self->ns_module_map->{$ns} ) {
-        $self->ns_module_map->{normalise_ns($ns)} = $self->ns_module_map->{$ns};
-    }
-
-    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    confess "No mapping specified for the namespace ", $ns, "!\n"  if !$self->ns_module_map->{normalise_ns($ns)};
 
     return $self->ns_module_map->{normalise_ns($ns)};
 }

@@ -403,23 +403,6 @@ sub get_ns_uri {
     return $self->ns_map->{$ns_name};
 }
 
-sub get_module_base {
-    my ($self, $ns) = @_;
-
-    confess "Trying to get module mappings when none specified!\n" if !$self->has_ns_module_map;
-    if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
-        if ( $self->has_module_base ) {
-            $self->ns_module_map->{normalise_ns($self->target_namespace)}
-                = $self->module_base . '::' . ns2module($self->target_namespace);
-        }
-        else {
-            confess "No mapping specified for the namespace $ns!\n";
-        }
-    }
-
-    return $self->ns_module_map->{normalise_ns($ns)};
-}
-
 1;
 
 __END__
@@ -453,8 +436,6 @@ interface.
 =over 4
 
 =item C<get_ns_uri ()>
-
-=item C<get_module_base ()>
 
 =back
 

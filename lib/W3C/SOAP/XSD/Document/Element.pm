@@ -114,7 +114,7 @@ sub _package {
         return "xs:$name";
     }
 
-    my $base = $self->document->get_module_base( $ns_uri || $self->document->target_namespace );
+    my $base = $self->document->get_module_name( $ns_uri || $self->document->target_namespace );
 
     return $base . '::' . $name;
 }
@@ -151,7 +151,7 @@ sub type_module {
     $ns ||= $self->document->ns_name;
     my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
 
-    return $self->simple_type || $self->document->get_module_base( $ns_uri ) . '::' . $type;
+    return $self->simple_type || $self->document->get_module_name( $ns_uri ) . '::' . $type;
 }
 
 sub simple_type {

@@ -72,7 +72,7 @@ sub _extension {
         my ($ns, $tag) = split_ns($node->getAttribute('base'));
         my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
 
-        return $self->document->get_module_base( $ns_uri ) . "::$tag";
+        return $self->document->get_module_name( $ns_uri ) . "::$tag";
     }
 
     return;
