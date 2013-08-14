@@ -53,6 +53,7 @@ sub main {
         'show|s',
         'path|p=s',
         'save|S',
+        'test|t!',
         'verbose|v+',
         'man',
         'help',
@@ -92,42 +93,78 @@ sub main {
         EVAL_PERL    => 1,
     );
 
-    if ( @ARGV % 2 ) {
-        warn "Called with an odd number of arguments!\n";
-        warn Dumper \@ARGV;
-        pod2usage( -verbose => 1 );
-    }
-    my %map = @ARGV;
+    my ( $module, $wsdl_file ) = @ARGV;
 
-    for my $module (keys %map) {
-
-        # check that %map modules don't overlap with $option{ns_module_map} modules
-        if ($option{ns_module_map}{$module}) {
-            die "The module '$module' is mapped from both the WSDL '$map{$module}'"
-                . " and the XMLSchema '$option{ns_module_map}{$module}' namespaces"
-                . " please use different modules!\n";
+    if ( !$wsdl_file ) {
+        if ( !$option{module_base} ) {
+            warn "You must specify a package name for your WSDL!\n";
+            pod2usage( -verbose => 1 );
         }
+        $wsdl_file = $module;
+        $module = undef;
+    }
 
-        my $wsdl = W3C::SOAP::WSDL::Parser->new(
-            location => $map{$module},
-            template => $template,
-            module   => $module,
-            %option,
-        );
-        $wsdl->write_modules;
+    # check that %map modules don't overlap with $option{ns_module_map} modules
+    if ( $module && $option{ns_module_map}{$module} ) {
+        die "The module '$module' is mapped from both the WSDL '$wsdl_file'"
+            . " and the XMLSchema '$option{ns_module_map}{$module}' namespaces"
+            . " please use different modules!\n";
+    }
 
-        if ( $option{save} ) {
-            my $file = $map{$module};
+    my $wsdl = W3C::SOAP::WSDL::Parser->new(
+        location => $wsdl_file,
+        template => $template,
+        %option,
+    );
+
+    $wsdl->module( $module ? $module : $wsdl->document->module );
+
+    my @files = $wsdl->write_modules;
+
+    if ( $option{save} ) {
+        my $file = $wsdl_file;
+        $file =~ s{[/:?&]}{_}g;
+        my $fh = file("$file.wsdl")->openw;
+        print {$fh} $wsdl->document->xml->toString();
+
+        for my $schema ($wsdl->get_xsd->get_schemas) {
+            next if ! $schema->location;
+            my $file = $schema->location;
             $file =~ s{[/:?&]}{_}g;
-            my $fh = file("$file.wsdl")->openw;
-            print {$fh} $wsdl->document->xml->toString();
+            my $fh = file("$file.xsd")->openw;
+            print {$fh} $schema->xml->toString();
+        }
+    }
 
-            for my $schema ($wsdl->get_xsd->get_schemas) {
-                next if ! $schema->location;
-                my $file = $schema->location;
-                $file =~ s{[/:?&]}{_}g;
-                my $fh = file("$file.xsd")->openw;
-                print {$fh} $schema->xml->toString();
+    if ( $option{test} ) {
+        for my $file (@files) {
+            my $ok = `perl -I$option{lib} -c $file 2>&1`;
+            if ( $ok =~ / syntax OK/ ) {
+                print "OK     $file\n";
+            }
+            else {
+                warn "Not OK $file\n";
+            }
+        }
+    }
+    if ( $option{verbose} ) {
+        my %written
+            = map {
+                my $module = $_;
+                $module =~ s{$option{lib}/}{};
+                $module =~ s{[.]pm}{};
+                $module =~ s{/}{::}g;
+
+                ( $_ => $module );
+            }
+            @files;
+
+        print "WSDL Module is $written{$files[0]} ($files[0])\n";
+        if ( $option{verbose} > 1 ) {
+            print "XSD Modules:\n";
+            for my $file (sort keys %written) {
+                next if $file eq $files[0];
+                print "  $written{$file} ($file)\n";
             }
         }
     }

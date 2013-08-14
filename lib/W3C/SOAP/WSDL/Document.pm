@@ -252,7 +252,7 @@ sub _schemas {
         if ( $self->has_module_base ) {
             my $base = $self->module_base;
             $base =~ s/WSDL/XSD/;
-            $base .= '::XSD' if ! $base =~ /XSD/;
+            $base .= '::XSD' if $base !~ /XSD/;
             push @args, ( module_base => $base );
         }
 
