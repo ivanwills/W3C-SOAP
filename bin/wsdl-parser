@@ -290,14 +290,14 @@ In the advanced mode all namespaces must be specified either by C<--namespace-ma
 on the command line or by specifying a C<--map-file>. The easiest way to do
 this is to run C<wsdl-parser> and look at the thrown errors (which should
 include the unmapped XSD namespace and append that namespace to the end of
-the command and run again. This may take several itterations to get all of
+the command and run again. This may take several iterations to get all of
 the namespaces specified.
 
 =back
 
 =head2 map-file
 
-The file format is = or tab seperated rows of 2 elements with the first
+The file format is = or tab separated rows of 2 elements with the first
 being the XSD namespace and the second being the perl package namespace.
 Lines with nothing on them are ignored as are lines starting with a hash (#).
 
