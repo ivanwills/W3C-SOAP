@@ -64,7 +64,8 @@ sub write_modules {
         $parent = $parent->parent;
     }
     mkdir $_ for reverse @missing;
-    my @modules = $self->get_xsd->write_modules;
+    my $xsd_parser = $self->get_xsd;
+    my @modules = $xsd_parser->write_modules;
 
     confess "No XSD modules found!\n" unless @modules;
 
@@ -79,6 +80,7 @@ sub write_modules {
     confess "Error in creating $file (xsd.pm): ". $template->error."\n"
         if $template->error;
 
+    return ( $file, $xsd_parser->written_modules );
 }
 
 sub get_xsd {
@@ -90,7 +92,7 @@ sub get_xsd {
     if ( $self->has_module_base ) {
         my $base = $self->module_base;
         $base =~ s/WSDL/XSD/;
-        $base .= '::XSD' if ! $base =~ /XSD/;
+        $base .= '::XSD' if $base !~ /XSD/;
         push @args, ( module_base => $base );
     }
 
