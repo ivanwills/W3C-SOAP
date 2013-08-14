@@ -63,7 +63,7 @@ sub write_modules {
         push @xsd_modules, $module;
         $self_module ||= $module;
         my $file   = $self->lib . '/' . $module;
-        $file =~ s{::}{/}g;
+        $file =~ s{::}{/}gxms;
         $file = file $file;
         my $parent = $file->parent;
         my @missing;
@@ -89,7 +89,7 @@ sub write_modules {
             my $type_module = $module . '::' . $type_name;
             push @parents, $type_module;
             my $type_file = $self->lib . '/' . $type_module;
-            $type_file =~ s{::}{/}g;
+            $type_file =~ s{::}{/}gxms;
             $type_file = file $type_file;
             mkdir $type_file->parent if !-d $type_file->parent;
 
@@ -147,7 +147,7 @@ sub write_modules {
 
 my %written;
 sub write_module {
-    my ($self, $tt, $data, $file) = @_;
+    my ($self, $tt, $template_data, $file) = @_;
     my $template = $self->template;
 
      if ($written{$file}++) {
@@ -155,7 +155,7 @@ sub write_module {
         return;
     }
 
-    $template->process($tt, $data, "$file");
+    $template->process($tt, $template_data, "$file");
     confess "Error in creating $file (via $tt): ". $template->error."\n"
         if $template->error;
 
@@ -377,7 +377,7 @@ sub element_attributes {
             $serialize = sub {
                 return $_->ymd if $_->time_zone->isa('DateTime::TimeZone::Floating');
                 my $d = DateTime::Format::Strptime::strftime('%F%z', $_);
-                $d =~ s/([+-]\d\d)(\d\d)$/$1:$2/;
+                $d =~ s/([+-]\d\d)(\d\d)$/$1:$2/xms;
                 return $d
             };
         }

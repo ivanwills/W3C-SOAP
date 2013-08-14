@@ -113,7 +113,7 @@ coerce 'xsd:date',
         => via {
             return strptime("%F", $_) if /^\d{4}-\d{2}-\d{2}$/xms;
             # DateTime expects timezones as [+-]hhmm XMLSchema expects them as [+-]hh:mm
-            s/([+-]\d{2}):(\d{2})$/$1$2/;
+            s/([+-]\d{2}):(\d{2})$/$1$2/xms;
             # Dates with timezones are meant to track the begging of the day
             return strptime("%TT%F%z", "00:00:00T$_");
         };

@@ -43,10 +43,10 @@ has xsd_ns_name => (
     my $require = sub {
         my ($module) = @_;
         return if $required{$module}++;
-        return if UNIVERSAL::can($module, 'new');
+        return if eval{ $module->can('new') };
 
         my $file = "$module.pm";
-        $file =~ s{::}{/}g;
+        $file =~ s{::}{/}gxms;
         require $file;
     };
     around BUILDARGS => sub {
@@ -60,11 +60,11 @@ has xsd_ns_name => (
             my $xml   = $args;
             my $child = $xml->firstChild;
             my $map   = $class->xml2perl_map;
-            my ($element)  = $class =~ /::([^:]+)$/;
+            my ($element)  = $class =~ /::([^:]+)$/xms;
             $args = {};
 
             while ($child) {
-                if ( $child->nodeName !~ /^#/ ) {
+                if ( $child->nodeName !~ /^[#]/xms ) {
                     my ($node_ns, $node) = split_ns($child->nodeName);
                     confess "Could not get node from (".$child->nodeName." via '$node_ns', '$node')\n"
                         if !$map->{$node};
@@ -108,7 +108,7 @@ sub _from_xml {
         return $type->new($xml);
     }
     catch ($e) {
-        $e =~ s/ at .*//ms;
+        $e =~ s/\s at \s .*//xms;
         warn "$class Failed in building from $type\->new($xml) : $e\n",
             "Will use :\n\t'",
             $xml->toString,
@@ -267,7 +267,7 @@ sub get_xml_nodes {
     my @parent_nodes;
     my @supers = $meta->superclasses;
     for my $super (@supers) {
-        push @parent_nodes, $super->get_xml_nodes if $super ne __PACKAGE__ && UNIVERSAL::can($super, 'get_xml_nodes');
+        push @parent_nodes, $super->get_xml_nodes if $super ne __PACKAGE__ && eval { $super->can('get_xml_nodes') };
     }
 
     return @parent_nodes, map {
@@ -297,7 +297,7 @@ sub xsd_subtype {
         :                                 $parent_type;
 
     my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
-    my $subtype = $parent_type =~ /^xsd:\w/ && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);
+    my $subtype = $parent_type =~ /^xsd:\w/xms && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);
     return $subtype if $subtype;
 
     $subtype = subtype

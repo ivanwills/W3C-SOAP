@@ -28,7 +28,7 @@ our $VERSION     = version->new('0.03');
 sub split_ns {
     my ($tag) = @_;
     confess "No XML tag passed to split!\n" unless defined $tag;
-    my ($ns, $name) = split /:/, $tag, 2;
+    my ($ns, $name) = split /:/xms, $tag, 2;
     return $name ? ($ns, $name) : ('', $ns);
 }
 
@@ -51,15 +51,22 @@ sub ns2module {
 
     # URI's which have a host an a path are converted Java style name spacing
     if ( $uri->can('host') && $uri->can('path') ) {
-        my $module = join '::', reverse map {ucfirst $_} map {lc $_} map {s/\W/_/g; $_} split /[.]/, $uri->host; ## no critic
-        $module .= join '::', map {s/\W/_/g; $_} split m{/}, $uri->path; ## no critic
+        my $module
+            = join '::',
+            reverse map { ucfirst $_}
+            map { lc $_ }
+            map { s/\W/_/gxms; $_ } ## no critic
+            split /[.]/xms, $uri->host;
+        $module .= join '::',
+            map { s/\W/_/gxms; $_ } ## no critic
+            split m{/}xms, $uri->path;
         return $module;
     }
 
     # other URI's are just made safe as a perl module name.
-    $ns =~ s{://}{::};
-    $ns =~ s{([^:]:)([^:])}{$1:$2}g;
-    $ns =~ s{[^\w:]+}{_}g;
+    $ns =~ s{://}{::}xms;
+    $ns =~ s{([^:]:)([^:])}{$1:$2}gxms;
+    $ns =~ s{[^\w:]+}{_}gxms;
 
     return $ns;
 }
@@ -72,9 +79,9 @@ sub cmp_ns {
 
 sub xml_error {
     my ($node) = @_;
-    my @lines  = split /\r?\n/, $node->toString;
+    my @lines  = split /\r?\n/xms, $node->toString;
     my $indent = '';
-    if ( $lines[0] !~ /^\s+/ && $lines[-1] =~ /^(\s+)/ ) {
+    if ( $lines[0] !~ /^\s+/xms && $lines[-1] =~ /^(\s+)/xms ) {
         $indent = $1;
     }
     my $error = $indent . $node->toString."\n at ";

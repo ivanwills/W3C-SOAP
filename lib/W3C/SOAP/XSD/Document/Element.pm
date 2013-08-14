@@ -90,7 +90,7 @@ sub _type {
 
             my $child = $children[0]->firstChild;
             while ($child) {
-                last TYPE if $child->nodeName !~ /^#/;
+                last TYPE if $child->nodeName !~ /^[#]/xms;
                 $child = $child->nextSibling;
             }
 
