@@ -134,7 +134,8 @@ sub dynamic_classes {
     my ($self) = @_;
     my @classes = $self->get_xsd->dynamic_classes;
 
-    my $class_name = $self->base_module . '::' . ns2module($self->document->target_namespace);
+    $self->module_base('Dynamic::WSDL') if !$self->has_module_base;
+    my $class_name = $self->module_base . '::' . ns2module($self->document->target_namespace);
 
     my $wsdl = $self->document;
     my %method;
