@@ -254,9 +254,11 @@ sub dynamic_classes {
 
         # Complex types
         my @complex_types = @{ $xsd->complex_types };
+        my %types;
         while ( my $type = shift @complex_types ) {
             my $type_name = $type->name || $type->parent_node->name;
             my $type_module = $module . '::' . $type_name;
+            next if $types{$type_module}++;
 
             my %modules = ( 'W3C::SOAP::XSD' => 1 );
             for my $el (@{ $type->sequence }) {
