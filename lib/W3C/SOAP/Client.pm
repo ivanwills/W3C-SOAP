@@ -52,6 +52,11 @@ has log => (
     predicate => 'has_log',
     clearer   => 'clear_log',
 );
+has content_type => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => 'text/xml;charset=UTF-8',
+);
 
 sub _post {
     my ($self, $action, $xml) = @_;
@@ -63,7 +68,7 @@ sub _post {
     $self->clear_response;
     my $response = $self->ua->post(
         $url,
-        'Content-Type'     => 'text/xml;charset=UTF-8',
+        'Content-Type'     => $self->content_type,
         'SOAPAction'       => qq{"$action"},
         'Proxy-Connection' => 'Keep-Alive',
         'Accept-Encoding'  => 'gzip, deflate',
