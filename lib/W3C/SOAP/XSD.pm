@@ -188,7 +188,7 @@ sub to_xml {
 
         for my $item (@$value) {
             my $tag = $xml->createElement($xml_ns_name ? $xml_ns_name . ':' . $xml_name : $xml_name);
-            $tag->setAttribute("xmlns:$xml_ns_name" => $self->xsd_ns) if $self->xsd_ns;
+            $tag->setAttribute("xmlns:$xml_ns_name" => $xml_ns) if $xml_ns;
 
             if ( blessed($item) && $item->can('to_xml') ) {
                 #$item->xsd_ns_name( $xsd_ns_name ) if !$item->has_xsd_ns_name;
