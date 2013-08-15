@@ -78,7 +78,9 @@ This documentation refers to W3C::SOAP version 0.03.
 
 =head1 DESCRIPTION
 
-A perly SOAP client library.
+A perly SOAP client library. To see more details on how to generate a WSDL client
+see L<W3C::SOAP::WSDL::Parser>, and for generating Moose objects from XSD files
+see L<W3C::SOAP::XSD::Parser>.
 
 =head2 Gotchas
 
