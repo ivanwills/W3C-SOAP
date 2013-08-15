@@ -47,6 +47,11 @@ has xs_name => (
     isa       => 'Str',
     predicate => 'has_xs_name',
 );
+has xs_ns => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_xs_ns',
+);
 has xs_type => (
     is        => 'rw',
     isa       => 'Str',

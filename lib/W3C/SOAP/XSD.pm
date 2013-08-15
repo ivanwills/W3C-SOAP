@@ -91,7 +91,11 @@ my %ns_map;
 my $count = 0;
 sub _xsd_ns_name {
     my ($self) = @_;
-    my $ns = $self->xsd_ns;
+    return $self->get_xsd_ns_name($self->xsd_ns);
+}
+
+sub get_xsd_ns_name {
+    my ($self, $ns) = @_;
 
     return $ns_map{$ns} if $ns_map{$ns};
 
@@ -177,15 +181,17 @@ sub to_xml {
         next if !$self->$has;
 
         my $xml_name = $att->has_xs_name ? $att->xs_name : $name;
+        my $xml_ns   = $att->has_xs_ns   ? $att->xs_ns   : $self->xsd_ns;
+        my $xml_ns_name = $xml_ns ? $self->get_xsd_ns_name($xml_ns) : $xsd_ns_name;
 
         my $value = ref $self->$name eq 'ARRAY' ? $self->$name : [$self->$name];
 
         for my $item (@$value) {
-            my $tag = $xml->createElement($xsd_ns_name ? $xsd_ns_name . ':' . $xml_name : $xml_name);
-            $tag->setAttribute("xmlns:$xsd_ns_name" => $self->xsd_ns) if $self->xsd_ns;
+            my $tag = $xml->createElement($xml_ns_name ? $xml_ns_name . ':' . $xml_name : $xml_name);
+            $tag->setAttribute("xmlns:$xml_ns_name" => $self->xsd_ns) if $self->xsd_ns;
 
             if ( blessed($item) && $item->can('to_xml') ) {
-                $item->xsd_ns_name( $xsd_ns_name ) if !$item->has_xsd_ns_name;
+                #$item->xsd_ns_name( $xsd_ns_name ) if !$item->has_xsd_ns_name;
                 my @children = $item->to_xml($xml);
                 $tag->appendChild($_) for @children;
             }
