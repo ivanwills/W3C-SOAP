@@ -139,7 +139,7 @@ sub send {
         W3C::SOAP::Exception->throw(
             faultcode   => $faultcode,
             faultstring => $faultstring,
-            faultfactor => $faultfactor,
+            faultactor  => $faultactor,
             detail      => $detail,
         );
     }
