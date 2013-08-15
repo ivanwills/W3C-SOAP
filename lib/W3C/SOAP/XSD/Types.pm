@@ -91,9 +91,16 @@ coerce 'xsd:dateTime',
             return strptime("%FT%T", $_) if /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/xms;
             # DateTime expects timezones as [+-]hhmm XMLSchema expects them as [+-]hh:mm
             # also remove any milli seconds
+            my $subseconds = /[.](\d+)/;
             s/(?:[.]\d+)? (?: ([+-]\d{2}) : (\d{2}) ) $/$1$2/xms;
             # Dates with timezones are meant to track the begging of the day
-            return /[+-]\d{4}$/xms ? strptime("%FT%T%z", $_) : strptime("%FT%T", $_);
+            my $dt = /[+-]\d{4}$/xms ? strptime("%FT%T%z", $_) : strptime("%FT%T", $_);
+            $dt->set_nanoseconds(
+                  length $subseconds <= 3 ? $subseconds * 1_000_000
+                : length $subseconds <= 6 ? $subseconds * 1_000
+                :                           $subseconds
+            ) if $subseconds;
+            return $dt;
         };
 
 #subtype 'xsd:time',
