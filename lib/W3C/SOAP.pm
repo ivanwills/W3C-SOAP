@@ -30,7 +30,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP - SOAP client generation from WSDL & XSD files
+W3C::SOAP - Static and dynamic SOAP client generator from WSDL & XSD files
 
 =head1 VERSION
 

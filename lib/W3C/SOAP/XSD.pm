@@ -365,7 +365,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD - The parent module to XSD modules
+W3C::SOAP::XSD - The parent module for generated XSD modules.
 
 =head1 VERSION
 
