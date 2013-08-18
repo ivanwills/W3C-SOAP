@@ -113,7 +113,7 @@ sub send {
 
     $self->log->debug("$action REQUEST\n" . $xml->toString) if $self->has_log;
     try {
-        $content = $self->_post($action, $xml);
+        $content = $self->post($action, $xml);
     }
     catch ($e) {
         $self->log->error("$action RESPONSE \n" . $self->response->content) if $self->has_log;
