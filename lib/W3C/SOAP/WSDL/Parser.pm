@@ -199,7 +199,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Parser - Parses WSDL focuments to generate Perl client
+W3C::SOAP::WSDL::Parser - Parses WSDL documents to generate Perl client
 libraries to access the Web Service defined.
 
 =head1 VERSION

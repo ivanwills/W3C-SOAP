@@ -49,5 +49,7 @@ add_stopwords(qw/
     perly
     STDOUT
     URI
+    mech
+    ua
 /);
 all_pod_files_spelling_ok();

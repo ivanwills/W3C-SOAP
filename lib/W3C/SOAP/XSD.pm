@@ -387,6 +387,10 @@ This documentation refers to W3C::SOAP::XSD version 0.03.
 
 =over 4
 
+=item C<get_xsd_ns_name ($ns)>
+
+Returns the namespace name for a particular namespace.
+
 =item C<xml2perl_map ()>
 
 Returns a mapping of XML tag elements to perl attributes

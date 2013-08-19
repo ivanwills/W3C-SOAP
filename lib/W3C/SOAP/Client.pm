@@ -136,7 +136,7 @@ No longer used
 
 =item ua
 
-A L<LWP::UserAgent> compatible object which if not supplied will be lazely
+A L<LWP::UserAgent> compatible object which if not supplied will be lazily
 created.
 
 =item response
@@ -145,7 +145,7 @@ The L<HTTP::Response> object of the last returned response
 
 =item log
 
-An logging object that provies the following methods:
+An logging object that proves the following methods:
 
  debug, info, warn, error and fatal
 
