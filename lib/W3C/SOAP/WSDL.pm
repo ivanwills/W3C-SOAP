@@ -131,10 +131,10 @@ sub send {
 
     my ($fault) = $xml_response->findnodes("//$ns\:Body/$ns:Fault");
     if ($fault) {
-        my $faultcode   = join ' ', map {$_->toString} $fault->findnodes("faultcode")  ->map( sub {$_->childNodes} );
-        my $faultstring = join ' ', map {$_->toString} $fault->findnodes("faultstring")->map( sub {$_->childNodes} );
-        my $faultactor  = join ' ', map {$_->toString} $fault->findnodes("faultactor") ->map( sub {$_->childNodes} );
-        my $detail      = join ' ', map {$_->toString} $fault->findnodes("detail")     ->map( sub {$_->childNodes} );
+        my $faultcode   = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("faultcode");
+        my $faultstring = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("faultstring");
+        my $faultactor  = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("faultactor");
+        my $detail      = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("detail");
 
         W3C::SOAP::Exception->throw(
             faultcode   => $faultcode,
