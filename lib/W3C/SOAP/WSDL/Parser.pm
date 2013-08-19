@@ -28,7 +28,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION     = version->new('0.03');
+our $VERSION     = version->new('0.04');
 
 has '+document' => (
     isa      => 'W3C::SOAP::WSDL::Document',
@@ -204,7 +204,7 @@ libraries to access the Web Service defined.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Parser version 0.03.
+This documentation refers to W3C::SOAP::WSDL::Parser version 0.04.
 
 =head1 SYNOPSIS
 

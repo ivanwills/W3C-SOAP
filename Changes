@@ -1,5 +1,25 @@
 Revision history for W3C-SOAP
 
+0.04   2013-08-19
+        Cleaned up author tests (Ivan Wills)
+        Fixed issue when fault does not have one parameter - Kim (Ivan Wills)
+        Fixed nanoseconds -> nanosecond (Ivan Wills)
+        Changed _post to post as it's the only provided method so it probably shouldn't be considered private, also documented the attributes (Ivan Wills)
+        Removed documentation of methods that moved to W3C::SOAP::WSDL (Ivan Wills)
+        Updated module descriptions (Ivan Wills)
+        Fixed sub-second handling - From Kim (Ivan Wills)
+        Working on documentation on WSDLs (Ivan Wills)
+        Working on documentation (Ivan Wills)
+        Added preserving milli-seconds in DateTimes (Ivan Wills)
+        Fixed typo (Ivan Wills)
+        Fixed handling of dateTime values with milliseconds but without timezones (Ivan Wills)
+        Fixed SOAP Fault handling (Ivan Wills)
+        Made content_type an attribute rather than being hard coded (Ivan Wills)
+        Fixed writing attributes namespace (Ivan Wills)
+        Attempting to fix issue with extended complex types not setting the correct namespace on parent elements (Ivan Wills)
+        Perlcritic Level 3 fixes (Ivan Wills)
+        Changes to make perlcritic level 4 happier (Ivan Wills)
+
 0.03   2013-08-14
         More spelling (Ivan Wills)
         Fixed spelling (Ivan Wills)
