@@ -476,7 +476,7 @@ Gets a list of the schemas imported/included from the base XML Schema(s)
 
 Creates the complex types
 
-=item C<$wsdl->dynamic_classes ()>
+=item C<<$wsdl->dynamic_classes ()>>
 
 Creates a dynamic XSD objects that represent the XML Schema files imported.
 

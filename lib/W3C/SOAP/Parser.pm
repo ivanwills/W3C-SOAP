@@ -128,17 +128,17 @@ The mapping of XSD namespaces to perl Modules.
 
 =over 4
 
-=item C<$wsdl->write_modules ()>
+=item C<<$wsdl->write_modules ()>>
 
 Writes out a module that is a SOAP Client to interface with the contained
 WSDL document, also writes any referenced XSDs.
 
-=item C<$wsdl->dynamic_classes ()>
+=item C<<$wsdl->dynamic_classes ()>>
 
 Creates a dynamic SOAP client object to talk to the WSDL this object was
 created for
 
-=item C<$wsdl->get_xsd ()>
+=item C<<$wsdl->get_xsd ()>>
 
 Creates the L<W3C::SOAP::XSD::Parser> object that represents the XSDs that
 are used by the specified WSDL file.
