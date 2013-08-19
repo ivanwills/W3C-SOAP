@@ -95,7 +95,7 @@ coerce 'xsd:dateTime',
             s/(?:[.]\d+)? (?: ([+-]\d{2}) : (\d{2}) ) $/$1$2/xms;
             # Dates with timezones are meant to track the begging of the day
             my $dt = /[+-]\d{4}$/xms ? strptime("%FT%T%z", $_) : strptime("%FT%T", $_);
-            $dt->set_nanoseconds( $subseconds * 1_000_000_000 ) if $subseconds;
+            $dt->set_nanosecond( $subseconds * 1_000_000_000 ) if $subseconds;
             return $dt;
         };
 
