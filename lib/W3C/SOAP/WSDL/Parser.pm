@@ -208,7 +208,7 @@ This documentation refers to W3C::SOAP::WSDL::Parser version 0.04.
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Parser qw/load_wsdl?;
+   use W3C::SOAP::WSDL::Parser qw/load_wsdl/;
 
    # quick/simple usage
    # create a SOAP client
@@ -230,7 +230,7 @@ This documentation refers to W3C::SOAP::WSDL::Parser version 0.04.
 
    # Write the generated WSDL module to disk
    $wsdl->write_modules();
-   # would generate files
+   # may generate the files
    #   lib/MyApp/WSDL.pm
    #   lib/MyApp/XSD/Example.pm
    #   lib/MyApp/XSD/SomeOther.pm
@@ -246,7 +246,7 @@ There are two ways of using this file:
 
 =item 1
 
-Dynamic : C<<load_wsdl(...)> or C<W3C::SOAP::WSDL->new()->dynamic_classes>>
+Dynamic : C<load_wsdl(...)> or C<<W3C::SOAP::WSDL->new()->dynamic_classes>>
 
 These return an in memory generated WSDL client which you can use to talk
 to the specified web service.
@@ -292,7 +292,12 @@ Create the new object C<new> accepts the following arguments:
 
 =item location
 
-This is the location of the WSDL file, it may be a local file or a URL
+This is the location of the WSDL file, it may be a local file or a URL, it
+is used to create the C<document> attribute if not supplied.
+
+=item document
+
+A L<W3C::SOAP::Document> object representing the WSDL file.
 
 =item module
 
@@ -307,7 +312,8 @@ calling C<write_modules>
 
 =item template
 
-The Template Toolkit object used for the generation of on disk modules
+The Template Toolkit object used for the generation of on static modules
+when using the L</write_modules> method.
 
 =item ns_module_map
 
