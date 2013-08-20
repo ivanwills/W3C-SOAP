@@ -1,3 +1,9 @@
+libw3c-soap-perl (0.05) UNRELEASED; urgency=low
+
+  * UNRELEASED
+
+ -- Ivan Wills <dev@ivan.wills.usr.optusnet.com.au>  Tue, 20 Aug 2013 14:47:24 +1000
+
 libw3c-soap-perl (0.04) precise; urgency=low
 
   [ Kim Jackson ]
