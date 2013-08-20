@@ -1,3 +1,74 @@
+libw3c-soap-perl (0.04) precise; urgency=low
+
+  [ Kim Jackson ]
+  * Add missed debian files.
+  * Removed more generated files.
+  * Use native source format since we didn't let dh-make-perl create a pristine-tar branch.
+
+  [ Ivan Wills ]
+  * Added skipping debian files when building CPAN dist
+  * Documented recently moved methods
+  * Fixed typo
+  * Personal helper
+  * Added skipping vrc.yml when building CPAN dist
+  * Added changes to changelog
+  * Added missing dependancy
+  * Added that the useragent should be required and that it should be lazy built
+  * Trying to cope with relative locations
+  * Cleaning up output
+  * Changed lazy_builder to lazy to reduce warnings (not sure why nessesary as other modules are not producing warnings)
+  * Moved operation helper to lib/W3C/SOAP/WSDL/Utils.pm as it's WSDL specific
+  * Fixed template list
+  * Fixed loading local XSD files that are relative to local other files
+  * Fixed spelling mistake
+  * Added missing load test
+  * Updating for release of version 0.02
+  * Added missing tests to MANIFEST
+  * Fixed max and min lengths pointing to wrong constructors
+  * Fixed missing warning about why the program is dieing
+  * Updated help to make operation clearer
+  * Started using module_base correctly
+  * Added setting up missing mappings when module_base is set
+  * Fixed wrong attribute name and not setting it if not already defined
+  * Moved the get_module_base to W3C::SOAP::Document and renamed get_module_name so that it's function is clearer
+  * Added documentation for get_module_name
+  * Lots of extra documentation on how to use wsdl-parser
+  * Added method to return all written modules
+  * Changed to return all written modules
+  * Fixed using target namespace rather than passed in namespace
+  * Changed WSDL handling to better match the new documentation and added a --test option that allows the testing of all written modules and added --verbose output stating what has been done
+  * Added check that dynamic xsd type has not already been built
+  * Added more description on how to use the parser
+  * Added missing POD documentation for written_modules
+  * Fixed spelling
+  * More spelling
+  * Updating for release of version 0.03
+  * Changes to make perlcritic level 4 happier
+  * Perlcritic Level 3 fixes
+  * Attempting to fix issue with extended complex types not setting the correct namespace on parent elements
+  * Fixed writing attributes namespace
+  * Made content_type an attribute rather than being hard coded
+  * Fixed SOAP Fault handling
+  * Fixed handling of dateTime values with milliseconds but without timezones
+  * Fixed typo
+  * Added preserving milli-seconds in DateTimes
+  * Working on documentation
+  * Working on documentation on WSDLs
+  * Fixed sub-second handling - From Kim
+  * Updated module descriptions
+  * Removed documentation of methods that moved to W3C::SOAP::WSDL
+  * Changed _post to post as it's the only provided method so it probably shouldn't be considered private, also documented the attributes
+  * Fixed nanoseconds -> nanosecond
+  * Fixed issue when fault does not have one parameter - Kim
+  * Cleaned up author tests
+  * Updating for release of version 0.04
+  * Fixed module version
+  * Fixed some POD quoting issues
+  * 78875 - Fixed issues mentioned in bug
+  * Added lib/W3C/SOAP/Parser.pm
+
+ -- Ivan Wills <dev@ivan.wills.usr.optusnet.com.au>  Tue, 20 Aug 2013 14:45:39 +1000
+
 libw3c-soap-perl (0.01) unstable; urgency=low
 
   * Initial Release.
