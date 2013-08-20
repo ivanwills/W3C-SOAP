@@ -306,7 +306,7 @@ sub xsd_subtype {
 
     my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
     my $subtype = $parent_type =~ /^xsd:\w/xms && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);
-    return $subtype if $subtype;
+    return $subtype if $subtype && !$args{list};
 
     $subtype = subtype
         as $parent_type_name,
