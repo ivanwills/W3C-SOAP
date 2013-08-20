@@ -133,8 +133,9 @@ sub write_modules {
         $self->write_module(
             'xsd/pm.tt',
             {
-                xsd => $xsd,
-                parents => \@parents,
+                xsd         => $xsd,
+                parents     => \@parents,
+                w3c_version => $VERSION,
             },
             "$file.pm"
         );

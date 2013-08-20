@@ -21,10 +21,13 @@ use W3C::SOAP::XSD::Traits;
 [%- FOREACH type IN xsd.complex_types %]
 use [% type.module %];
 [%- END %]
-extends 'W3C::SOAP::XSD';
+extends '[% config.xsd.parent_module || 'W3C::SOAP::XSD' %]';
 
 our $VERSION     = version->new('0.0.1');
 
+has '+w3c_built_with_version' => (
+    default => sub {version->new('[% w3c_version %]')},
+);
 has '+xsd_ns' => (
     default => '[% xsd.target_namespace %]',
     required => 1,

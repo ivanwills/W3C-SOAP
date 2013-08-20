@@ -21,6 +21,8 @@ use W3C::SOAP::Exception;
 use W3C::SOAP::Header;
 use Moose::Util::TypeConstraints qw/duck_type/;
 
+extends 'W3C::SOAP::Base';
+
 our $VERSION     = version->new('0.04');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 

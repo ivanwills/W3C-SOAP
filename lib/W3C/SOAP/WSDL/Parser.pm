@@ -70,11 +70,12 @@ sub write_modules {
     confess "No XSD modules found!\n" unless @modules;
 
     my $data = {
-        wsdl     => $wsdl,
-        module   => $self->module,
-        xsd      => shift @modules,
-        modules  => \@modules,
-        location => $self->location,
+        wsdl        => $wsdl,
+        module      => $self->module,
+        xsd         => shift @modules,
+        modules     => \@modules,
+        location    => $self->location,
+        w3c_version => $VERSION,
     };
     $template->process('wsdl/pm.tt', $data, "$file");
     confess "Error in creating $file (xsd.pm): ". $template->error."\n"

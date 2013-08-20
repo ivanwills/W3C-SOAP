@@ -23,6 +23,8 @@ use W3C::SOAP::Utils qw/split_ns/;
 use TryCatch;
 use DateTime::Format::Strptime qw/strptime/;
 
+extends 'W3C::SOAP::Base';
+
 our $VERSION     = version->new('0.04');
 
 has xsd_ns => (

@@ -21,10 +21,13 @@ use [% xsd %];
 use [% schema %];
 [%- END %]
 
-extends '[% config.wsdl.parent_module %]';
+extends '[% config.wsdl.parent_module  || 'W3C::SOAP::WSDL' %]';
 
 our $VERSION     = version->new('0.0.1');
 
+has '+w3c_built_with_version' => (
+    default => sub {version->new('[% w3c_version %]')},
+);
 has '+location' => (
     default => '[% wsdl.services.0.ports.0.address %]',
 );
