@@ -1,8 +1,10 @@
-libw3c-soap-perl (0.05) UNRELEASED; urgency=low
+libw3c-soap-perl (0.05) quantal; urgency=low
 
-  * UNRELEASED
+  * Added storing the version of the Parser that WSDL and XSD files are created by
+  * Fixed not creating coercions for list sub types of builtin types
+  * Fixed accedentially changed dependency version
 
- -- Ivan Wills <dev@ivan.wills.usr.optusnet.com.au>  Tue, 20 Aug 2013 14:47:24 +1000
+ -- Ivan Wills <dev@ivan.wills.usr.optusnet.com.au>  Wed, 21 Aug 2013 16:07:10 +1000
 
 libw3c-soap-perl (0.04) precise; urgency=low
 

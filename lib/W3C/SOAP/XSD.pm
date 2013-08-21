@@ -25,7 +25,7 @@ use DateTime::Format::Strptime qw/strptime/;
 
 extends 'W3C::SOAP::Base';
 
-our $VERSION     = version->new('0.04');
+our $VERSION     = version->new('0.05');
 
 has xsd_ns => (
     is  => 'rw',
@@ -371,7 +371,7 @@ W3C::SOAP::XSD - The parent module for generated XSD modules.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD version 0.04.
+This documentation refers to W3C::SOAP::XSD version 0.05.
 
 =head1 SYNOPSIS
 

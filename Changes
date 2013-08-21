@@ -1,5 +1,16 @@
 Revision history for W3C-SOAP
 
+0.05   2013-08-21
+        Fixed accedentially changed dependency version (Ivan Wills)
+        Fixed not creating coercions for list sub types of builtin types (Ivan Wills)
+        Added storing the version of the Parser that WSDL and XSD files are created by (Ivan Wills)
+        Updated changed log for next release (Ivan Wills)
+        Updated changelog for 0.04 release (Ivan Wills)
+        Added lib/W3C/SOAP/Parser.pm (Ivan Wills)
+        78875 - Fixed issues mentioned in bug (Ivan Wills)
+        Fixed some POD quoting issues (Ivan Wills)
+        Fixed module version (Ivan Wills)
+
 0.04   2013-08-19
         Cleaned up author tests (Ivan Wills)
         Fixed issue when fault does not have one parameter - Kim (Ivan Wills)

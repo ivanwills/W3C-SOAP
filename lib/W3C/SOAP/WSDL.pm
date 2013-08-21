@@ -19,7 +19,7 @@ use TryCatch;
 
 extends 'W3C::SOAP::Client';
 
-our $VERSION     = version->new('0.04');
+our $VERSION     = version->new('0.05');
 
 has header => (
     is        => 'rw',
@@ -188,7 +188,7 @@ W3C::SOAP::WSDL - A SOAP WSDL Client object
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL version 0.04.
+This documentation refers to W3C::SOAP::WSDL version 0.05.
 
 
 =head1 SYNOPSIS
