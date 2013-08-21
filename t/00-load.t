@@ -5,6 +5,7 @@ use warnings;
 use Test::More;
 
 use_ok('W3C::SOAP');
+use_ok('W3C::SOAP::Base');
 use_ok('W3C::SOAP::Client');
 use_ok('W3C::SOAP::Document');
 use_ok('W3C::SOAP::Document::Node');
