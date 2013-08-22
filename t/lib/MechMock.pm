@@ -29,5 +29,6 @@ sub new {
 }
 
 sub content { shift->{content} };
+sub decoded_content { shift->{content} };
 
 1;
