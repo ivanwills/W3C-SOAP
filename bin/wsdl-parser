@@ -22,7 +22,7 @@ use W3C::SOAP::WSDL::Parser;
 use File::ShareDir qw/dist_dir/;
 use Template;
 
-our $VERSION = version->new('0.02');
+our $VERSION = version->new('0.05');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
@@ -53,6 +53,7 @@ sub main {
         'show|s',
         'path|p=s',
         'save|S',
+        'test|t!',
         'verbose|v+',
         'man',
         'help',
@@ -76,7 +77,7 @@ sub main {
 
         for my $line ($file->slurp) {
             chomp $line;
-            next if !$line;
+            next if !$line || $line =~ /^#/;
             my ($ns, $mod) = split /=|,|\t/, $line, 2;
             $option{ns_module_map}{$ns} ||= $mod
         }
@@ -92,42 +93,78 @@ sub main {
         EVAL_PERL    => 1,
     );
 
-    if ( @ARGV % 2 ) {
-        warn "Called with an odd number of arguments!\n";
-        warn Dumper \@ARGV;
-        pod2usage( -verbose => 1 );
-    }
-    my %map = @ARGV;
+    my ( $module, $wsdl_file ) = @ARGV;
 
-    for my $module (keys %map) {
-
-        # check that %map modules don't overlap with $option{ns_module_map} modules
-        if ($option{ns_module_map}{$module}) {
-            die "The module '$module' is mapped from both the WSDL '$map{$module}'"
-                . " and the XMLSchema '$option{ns_module_map}{$module}' namespaces"
-                . " please use different modules!\n";
+    if ( !$wsdl_file ) {
+        if ( !$option{module_base} ) {
+            warn "You must specify a package name for your WSDL!\n";
+            pod2usage( -verbose => 1 );
         }
+        $wsdl_file = $module;
+        $module = undef;
+    }
 
-        my $wsdl = W3C::SOAP::WSDL::Parser->new(
-            location => $map{$module},
-            template => $template,
-            module   => $module,
-            %option,
-        );
-        $wsdl->write_modules;
+    # check that %map modules don't overlap with $option{ns_module_map} modules
+    if ( $module && $option{ns_module_map}{$module} ) {
+        die "The module '$module' is mapped from both the WSDL '$wsdl_file'"
+            . " and the XMLSchema '$option{ns_module_map}{$module}' namespaces"
+            . " please use different modules!\n";
+    }
 
-        if ( $option{save} ) {
-            my $file = $map{$module};
+    my $wsdl = W3C::SOAP::WSDL::Parser->new(
+        location => $wsdl_file,
+        template => $template,
+        %option,
+    );
+
+    $wsdl->module( $module ? $module : $wsdl->document->module );
+
+    my @files = $wsdl->write_modules;
+
+    if ( $option{save} ) {
+        my $file = $wsdl_file;
+        $file =~ s{[/:?&]}{_}g;
+        my $fh = file("$file.wsdl")->openw;
+        print {$fh} $wsdl->document->xml->toString();
+
+        for my $schema ($wsdl->get_xsd->get_schemas) {
+            next if ! $schema->location;
+            my $file = $schema->location;
             $file =~ s{[/:?&]}{_}g;
-            my $fh = file("$file.wsdl")->openw;
-            print {$fh} $wsdl->document->xml->toString();
+            my $fh = file("$file.xsd")->openw;
+            print {$fh} $schema->xml->toString();
+        }
+    }
 
-            for my $schema ($wsdl->get_xsd->get_schemas) {
-                next if ! $schema->location;
-                my $file = $schema->location;
-                $file =~ s{[/:?&]}{_}g;
-                my $fh = file("$file.xsd")->openw;
-                print {$fh} $schema->xml->toString();
+    if ( $option{test} ) {
+        for my $file (@files) {
+            my $ok = `perl -I$option{lib} -c $file 2>&1`;
+            if ( $ok =~ / syntax OK/ ) {
+                print "OK     $file\n";
+            }
+            else {
+                warn "Not OK $file\n";
+            }
+        }
+    }
+    if ( $option{verbose} ) {
+        my %written
+            = map {
+                my $module = $_;
+                $module =~ s{$option{lib}/}{};
+                $module =~ s{[.]pm}{};
+                $module =~ s{/}{::}g;
+
+                ( $_ => $module );
+            }
+            @files;
+
+        print "WSDL Module is $written{$files[0]} ($files[0])\n";
+        if ( $option{verbose} > 1 ) {
+            print "XSD Modules:\n";
+            for my $file (sort keys %written) {
+                next if $file eq $files[0];
+                print "  $written{$file} ($file)\n";
             }
         }
     }
@@ -189,24 +226,33 @@ wsdl-parser - Parses a WSDL file to generate a SOAP client
 
 =head1 VERSION
 
-This documentation refers to wsdl-parser version 0.02.
+This documentation refers to wsdl-parser version 0.05.
 
 =head1 SYNOPSIS
 
-   wsdl-parser [options] Package::Name file_or_url.wsdl (Package::Name2 file_or_url_2.wsdl ...)
-   wsdl-parser [options] [--show|-s] wsdl_file_or_url
+   wsdl-parser [options] [--module-base|-b Pkg WSDL
+   wsdl-parser [options] Pkg::Name WSDL [--namespace-map|-n] 'xsd-namespace=perl-namespace' ...
+   wsdl-parser [options] Pkg::Name WSDL [--map-file|-f] file
+   wsdl-parser [options] [--show|-s] WSDL
 
  OPTIONS:
-  -s --show     Show some info about the passed WSDL file
+  WSDL          The WSDL file or URL to get the WSDL from
+  Pkg::Name     The Perl package namespace you want the WSDLs operations accessible from
+
+  -s --show     Show some info about the passed WSDL file eg it's operations
   -b --module-base[=]str
-                    Let the program auto generate package names with this value
-                    as the base of the module name. (Note packages will be valid
-                    but not pretty)
+                Let the W3C::SOAP auto generate package names for any WSDLs or
+                XSDs found while processing. (Note packages will be valid
+                but not pretty)
   -n --namespace-map ns=package
-                A mapping of XSD namespaces (ns) to perl package names, it
-                is required when writing XSD files
+                A mapping of XSD namespaces (ns) to perl package names
+                (package), it is required when writing XSD files if --module-base
+                is not specified. (This results in controlled namespaces but can
+                be a lot of work to setup)
   -f --map-file[=]file
-                File that contains mappings of name
+                File that contains namespace mappings instead of having to
+                write all the mappings on the command line and can be used
+                again for other WSDLs or regenerating the current one.
   -l --lib[=]dir
                 Directory where generated modules should be writted, the
                 default is ./lib
@@ -222,7 +268,45 @@ This documentation refers to wsdl-parser version 0.02.
 
 =head1 DESCRIPTION
 
+There are three basic modes of operation of C<wsdl-parser>:
 
+=over 4
+
+=item show
+
+When using the C<--show> option C<wsdl-parser> dumps a human readable version
+of what the WSDL can do.
+
+=item basic
+
+In basic mode occurs when using the C<--module-base> option L<W3C::SOAP> will
+generate all of the module names for the WSDL and XSDs processed. The names
+are based on the target namespaces of each WSDL or XSD so they might end up
+being rather long and unwieldy.
+
+=item advanced
+
+In the advanced mode all namespaces must be specified either by C<--namespace-map>
+on the command line or by specifying a C<--map-file>. The easiest way to do
+this is to run C<wsdl-parser> and look at the thrown errors (which should
+include the unmapped XSD namespace and append that namespace to the end of
+the command and run again. This may take several iterations to get all of
+the namespaces specified.
+
+=back
+
+=head2 map-file
+
+The file format is = or tab separated rows of 2 elements with the first
+being the XSD namespace and the second being the perl package namespace.
+Lines with nothing on them are ignored as are lines starting with a hash (#).
+
+An example map file:
+
+ # this is ignored
+ http://example.com/=XSD::Example
+
+ http://example.com/data=XSD::Example::Data
 
 =head1 SUBROUTINES/METHODS
 

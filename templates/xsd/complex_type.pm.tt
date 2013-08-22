@@ -1,5 +1,5 @@
 [% PROCESS config.tt -%]
-[%- base = xsd.get_module_base(xsd.target_namespace) -%]
+[%- base = xsd.get_module_name(xsd.target_namespace) -%]
 package [% module %];
 
 # Created on: [% date %] [% time %]

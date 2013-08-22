@@ -5,6 +5,7 @@ Build.PL
 Changes
 docs/Modules.dia
 lib/W3C/SOAP.pm
+lib/W3C/SOAP/Base.pm
 lib/W3C/SOAP/Client.pm
 lib/W3C/SOAP/Document.pm
 lib/W3C/SOAP/Document/Node.pm

@@ -28,7 +28,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.05');
 
 subtype xsd_documents =>
     as 'ArrayRef[W3C::SOAP::XSD::Document]';
@@ -63,7 +63,7 @@ sub write_modules {
         push @xsd_modules, $module;
         $self_module ||= $module;
         my $file   = $self->lib . '/' . $module;
-        $file =~ s{::}{/}g;
+        $file =~ s{::}{/}gxms;
         $file = file $file;
         my $parent = $file->parent;
         my @missing;
@@ -89,7 +89,7 @@ sub write_modules {
             my $type_module = $module . '::' . $type_name;
             push @parents, $type_module;
             my $type_file = $self->lib . '/' . $type_module;
-            $type_file =~ s{::}{/}g;
+            $type_file =~ s{::}{/}gxms;
             $type_file = file $type_file;
             mkdir $type_file->parent if !-d $type_file->parent;
 
@@ -103,7 +103,7 @@ sub write_modules {
                 my ($ns) = split_ns($element->type);
                 $ns ||= $element->document->target_namespace;
                 my $ns_uri = $element->document->get_ns_uri($ns, $element->node);
-                $modules{ $type->document->get_module_base($ns_uri) }++
+                $modules{ $type->document->get_module_name($ns_uri) }++
                     if $ns_uri && $ns_uri ne $type->document->target_namespace;
             }
 
@@ -133,8 +133,9 @@ sub write_modules {
         $self->write_module(
             'xsd/pm.tt',
             {
-                xsd => $xsd,
-                parents => \@parents,
+                xsd         => $xsd,
+                parents     => \@parents,
+                w3c_version => $VERSION,
             },
             "$file.pm"
         );
@@ -147,17 +148,23 @@ sub write_modules {
 
 my %written;
 sub write_module {
-    my ($self, $tt, $data, $file) = @_;
+    my ($self, $tt, $template_data, $file) = @_;
     my $template = $self->template;
 
      if ($written{$file}++) {
-        warn "Already written $file!\n";
+         #warn "Already written $file!\n";
         return;
     }
 
-    $template->process($tt, $data, "$file");
+    $template->process($tt, $template_data, "$file");
     confess "Error in creating $file (via $tt): ". $template->error."\n"
         if $template->error;
+
+    return;
+}
+
+sub written_modules {
+    return keys %written;
 }
 
 sub get_schemas {
@@ -250,9 +257,11 @@ sub dynamic_classes {
 
         # Complex types
         my @complex_types = @{ $xsd->complex_types };
+        my %types;
         while ( my $type = shift @complex_types ) {
             my $type_name = $type->name || $type->parent_node->name;
             my $type_module = $module . '::' . $type_name;
+            next if $types{$type_module}++;
 
             my %modules = ( 'W3C::SOAP::XSD' => 1 );
             for my $el (@{ $type->sequence }) {
@@ -369,7 +378,7 @@ sub element_attributes {
             $serialize = sub {
                 return $_->ymd if $_->time_zone->isa('DateTime::TimeZone::Floating');
                 my $d = DateTime::Format::Strptime::strftime('%F%z', $_);
-                $d =~ s/([+-]\d\d)(\d\d)$/$1:$2/;
+                $d =~ s/([+-]\d\d)(\d\d)$/$1:$2/xms;
                 return $d
             };
         }
@@ -421,11 +430,12 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Parser - Parse an W3C::SOAP::XSD::Document and create perl modules
+W3C::SOAP::XSD::Parser - Parser for XSD documents that generates Perl modules
+implementing the object defined.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Parser version 0.02.
+This documentation refers to W3C::SOAP::XSD::Parser version 0.05.
 
 =head1 SYNOPSIS
 
@@ -455,6 +465,10 @@ the XSDs in the documents.
 
 Write the template to disk
 
+=item C<written_modules ()>
+
+Returns a list of all XSD modules written by the parser.
+
 =item C<get_schemas ()>
 
 Gets a list of the schemas imported/included from the base XML Schema(s)
@@ -463,7 +477,7 @@ Gets a list of the schemas imported/included from the base XML Schema(s)
 
 Creates the complex types
 
-=item C<$wsdl->dynamic_classes ()>
+=item C<<$wsdl->dynamic_classes ()>>
 
 Creates a dynamic XSD objects that represent the XML Schema files imported.
 

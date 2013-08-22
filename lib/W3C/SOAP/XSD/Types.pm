@@ -32,10 +32,9 @@ use DateTime;
 use DateTime::Format::Strptime qw/strptime/;
 use Math::BigFloat;
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.05');
 
-my $sig_warn = $SIG{__WARN__};
-$SIG{__WARN__} = sub {};
+local $SIG{__WARN__} = sub {};
 
 class_type 'DateTime';
 class_type 'XML::LibXML::Node';
@@ -92,9 +91,12 @@ coerce 'xsd:dateTime',
             return strptime("%FT%T", $_) if /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/xms;
             # DateTime expects timezones as [+-]hhmm XMLSchema expects them as [+-]hh:mm
             # also remove any milli seconds
-            s/(?:[.]\d+)? ([+-]\d{2}) : (\d{2}) $/$1$2/xms;
+            my $subseconds = /([.]\d+)/;
+            s/(?:[.]\d+)? (?: ([+-]\d{2}) : (\d{2}) ) $/$1$2/xms;
             # Dates with timezones are meant to track the begging of the day
-            return strptime("%FT%T%z", $_);
+            my $dt = /[+-]\d{4}$/xms ? strptime("%FT%T%z", $_) : strptime("%FT%T", $_);
+            $dt->set_nanosecond( $subseconds * 1_000_000_000 ) if $subseconds;
+            return $dt;
         };
 
 #subtype 'xsd:time',
@@ -114,7 +116,7 @@ coerce 'xsd:date',
         => via {
             return strptime("%F", $_) if /^\d{4}-\d{2}-\d{2}$/xms;
             # DateTime expects timezones as [+-]hhmm XMLSchema expects them as [+-]hh:mm
-            s/([+-]\d{2}):(\d{2})$/$1$2/;
+            s/([+-]\d{2}):(\d{2})$/$1$2/xms;
             # Dates with timezones are meant to track the begging of the day
             return strptime("%TT%F%z", "00:00:00T$_");
         };
@@ -159,8 +161,6 @@ coerce 'xsd:date',
 #        DateTime::Format::Striptime("", $_)
 #    };
 
-$SIG{__WARN__} = $sig_warn;
-
 1;
 
 __END__
@@ -171,7 +171,7 @@ W3C::SOAP::XSD::Types - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Types version 0.02.
+This documentation refers to W3C::SOAP::XSD::Types version 0.05.
 
 
 =head1 SYNOPSIS

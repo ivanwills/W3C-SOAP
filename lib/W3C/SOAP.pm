@@ -22,7 +22,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [qw/load_wsdl load_xsd/],
 );
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.05');
 
 1;
 
@@ -30,11 +30,11 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP - SOAP client generation from WSDL & XSD files
+W3C::SOAP - Static and dynamic SOAP client generator from WSDL & XSD files
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP version 0.02.
+This documentation refers to W3C::SOAP version 0.05.
 
 =head1 SYNOPSIS
 
@@ -78,7 +78,9 @@ This documentation refers to W3C::SOAP version 0.02.
 
 =head1 DESCRIPTION
 
-A perly SOAP client library.
+A perly SOAP client library. To see more details on how to generate a WSDL client
+see L<W3C::SOAP::WSDL::Parser>, and for generating Moose objects from XSD files
+see L<W3C::SOAP::XSD::Parser>.
 
 =head2 Gotchas
 

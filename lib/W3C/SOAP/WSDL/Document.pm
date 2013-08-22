@@ -25,7 +25,7 @@ use W3C::SOAP::WSDL::Document::Service;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.05');
 
 has messages => (
     is         => 'rw',
@@ -252,7 +252,7 @@ sub _schemas {
         if ( $self->has_module_base ) {
             my $base = $self->module_base;
             $base =~ s/WSDL/XSD/;
-            $base .= '::XSD' if ! $base =~ /XSD/;
+            $base .= '::XSD' if $base !~ /XSD/;
             push @args, ( module_base => $base );
         }
 
@@ -311,7 +311,7 @@ W3C::SOAP::WSDL::Document - Object to represent a WSDL Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document version 0.02.
+This documentation refers to W3C::SOAP::WSDL::Document version 0.05.
 
 =head1 SYNOPSIS
 

@@ -19,7 +19,7 @@ use TryCatch;
 
 extends 'W3C::SOAP::Client';
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.05');
 
 has header => (
     is        => 'rw',
@@ -113,37 +113,36 @@ sub send {
 
     $self->log->debug("$action REQUEST\n" . $xml->toString) if $self->has_log;
     try {
-        $content = $self->_post($action, $xml);
+        $content = $self->post($action, $xml);
     }
     catch ($e) {
-        $self->log->error("$action RESPONSE \n" . $self->response->content) if $self->has_log;
-        my $xml_error = eval { XML::LibXML->load_xml( string => $self->response->content ) };
+        $self->log->error("$action RESPONSE \n" . $self->response->decoded_content) if $self->has_log;
 
-        if ( $xml_error ) {
-            my $ns       = $self->_envelope_ns($xml_error);
-            my ($code  ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultcode");
-            my ($string) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultstring");
-            my ($actor ) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/faultactor");
-            my ($detail) = $xml_error->findnodes("//$ns\:Body/$ns\:Fault/detail");
-            W3C::SOAP::Exception->throw(
-                faultcode   => $code   && $code->textContent,
-                faultstring => $string && $string->textContent,
-                faultactor  => $actor  && $actor->textContent,
-                detail      => $detail && $detail->textContent,
-            );
-        }
-        else {
-            W3C::SOAP::Exception::HTTP->throw(
-                faultcode => $self->response->code,
-                message   => $self->response->message,
-                error     => $e,
-            );
-        }
+        W3C::SOAP::Exception::HTTP->throw(
+            faultcode => $self->response->code,
+            message   => $self->response->message,
+            error     => $e,
+        );
     };
     $self->log->debug("$action RESPONSE \n$content") if $self->has_log;
 
     my $xml_response = XML::LibXML->load_xml( string => $content );
     my $ns = $self->_envelope_ns($xml_response);
+
+    my ($fault) = $xml_response->findnodes("//$ns\:Body/$ns:Fault");
+    if ($fault) {
+        my $faultcode   = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("faultcode");
+        my $faultstring = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("faultstring");
+        my $faultactor  = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("faultactor");
+        my $detail      = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("detail");
+
+        W3C::SOAP::Exception->throw(
+            faultcode   => $faultcode,
+            faultstring => $faultstring,
+            faultactor  => $faultactor,
+            detail      => $detail,
+        );
+    }
 
     my ($node) = $xml_response->findnodes("//$ns\:Body");
 
@@ -176,7 +175,7 @@ sub _envelope_ns {
 }
 
 sub _header {
-    W3C::SOAP::Header->new;
+    return W3C::SOAP::Header->new;
 }
 
 1;
@@ -189,7 +188,7 @@ W3C::SOAP::WSDL - A SOAP WSDL Client object
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL version 0.02.
+This documentation refers to W3C::SOAP::WSDL version 0.05.
 
 
 =head1 SYNOPSIS

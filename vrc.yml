@@ -3,6 +3,7 @@
     - lib/W3C/SOAP.pm
     - lib/W3C/SOAP/Client.pm
     - lib/W3C/SOAP/Utils.pm
+    - lib/W3C/SOAP/Parser.pm
     - lib/W3C/SOAP/Exception.pm
     - lib/W3C/SOAP/Header.pm
     - lib/W3C/SOAP/Header/*.pm

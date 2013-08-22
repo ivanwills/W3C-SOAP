@@ -28,7 +28,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.05');
 
 has '+document' => (
     isa      => 'W3C::SOAP::WSDL::Document',
@@ -64,21 +64,24 @@ sub write_modules {
         $parent = $parent->parent;
     }
     mkdir $_ for reverse @missing;
-    my @modules = $self->get_xsd->write_modules;
+    my $xsd_parser = $self->get_xsd;
+    my @modules = $xsd_parser->write_modules;
 
     confess "No XSD modules found!\n" unless @modules;
 
     my $data = {
-        wsdl     => $wsdl,
-        module   => $self->module,
-        xsd      => shift @modules,
-        modules  => \@modules,
-        location => $self->location,
+        wsdl        => $wsdl,
+        module      => $self->module,
+        xsd         => shift @modules,
+        modules     => \@modules,
+        location    => $self->location,
+        w3c_version => $VERSION,
     };
     $template->process('wsdl/pm.tt', $data, "$file");
     confess "Error in creating $file (xsd.pm): ". $template->error."\n"
         if $template->error;
 
+    return ( $file, $xsd_parser->written_modules );
 }
 
 sub get_xsd {
@@ -90,7 +93,7 @@ sub get_xsd {
     if ( $self->has_module_base ) {
         my $base = $self->module_base;
         $base =~ s/WSDL/XSD/;
-        $base .= '::XSD' if ! $base =~ /XSD/;
+        $base .= '::XSD' if $base !~ /XSD/;
         push @args, ( module_base => $base );
     }
 
@@ -134,7 +137,8 @@ sub dynamic_classes {
     my ($self) = @_;
     my @classes = $self->get_xsd->dynamic_classes;
 
-    my $class_name = $self->base_module . '::' . ns2module($self->document->target_namespace);
+    $self->module_base('Dynamic::WSDL') if !$self->has_module_base;
+    my $class_name = $self->module_base . '::' . ns2module($self->document->target_namespace);
 
     my $wsdl = $self->document;
     my %method;
@@ -196,15 +200,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Parser - Module to create Moose objects from a WSDL
+W3C::SOAP::WSDL::Parser - Parses WSDL documents to generate Perl client
+libraries to access the Web Service defined.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Parser version 0.02.
+This documentation refers to W3C::SOAP::WSDL::Parser version 0.05.
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WSDL::Parser qw/load_wsdl?;
+   use W3C::SOAP::WSDL::Parser qw/load_wsdl/;
 
    # quick/simple usage
    # create a SOAP client
@@ -226,7 +231,7 @@ This documentation refers to W3C::SOAP::WSDL::Parser version 0.02.
 
    # Write the generated WSDL module to disk
    $wsdl->write_modules();
-   # would generate files
+   # may generate the files
    #   lib/MyApp/WSDL.pm
    #   lib/MyApp/XSD/Example.pm
    #   lib/MyApp/XSD/SomeOther.pm
@@ -235,6 +240,33 @@ This documentation refers to W3C::SOAP::WSDL::Parser version 0.02.
 
 This module parses a WSDL file so that it can produce a client to talk to the
 SOAP service.
+
+There are two ways of using this file:
+
+=over 4
+
+=item 1
+
+Dynamic : C<load_wsdl(...)> or C<<W3C::SOAP::WSDL->new()->dynamic_classes>>
+
+These return an in memory generated WSDL client which you can use to talk
+to the specified web service.
+
+=item 2
+
+Static : C<<W3C::SOAP::WSDL->new()->write_modules()>> or use L<wsdl-parser>
+command line script.
+
+This writes perl modules to disk so that you can C<use> the modules in your
+later. This has the advantage that you don't have to recompile the WSDL
+every time you run your code but it has the disadvantage that your client
+may be out of date compared to the web service's WSDL.
+
+=back
+
+Both interfaces are identical once you have the client object. If you want
+to change at a later point the code change should be adding or removing a
+use statement and switching from a C<<Module->new>> to C<load_wsdl()>.
 
 =head1 SUBROUTINES/METHODS
 
@@ -261,7 +293,12 @@ Create the new object C<new> accepts the following arguments:
 
 =item location
 
-This is the location of the WSDL file, it may be a local file or a URL
+This is the location of the WSDL file, it may be a local file or a URL, it
+is used to create the C<document> attribute if not supplied.
+
+=item document
+
+A L<W3C::SOAP::Document> object representing the WSDL file.
 
 =item module
 
@@ -276,7 +313,8 @@ calling C<write_modules>
 
 =item template
 
-The Template Toolkit object used for the generation of on disk modules
+The Template Toolkit object used for the generation of on static modules
+when using the L</write_modules> method.
 
 =item ns_module_map
 
@@ -290,17 +328,17 @@ The mapping of XSD namespaces to perl Modules.
 
 =over 4
 
-=item C<$wsdl->write_modules ()>
+=item C<<$wsdl->write_modules ()>>
 
 Writes out a module that is a SOAP Client to interface with the contained
 WSDL document, also writes any referenced XSDs.
 
-=item C<$wsdl->dynamic_classes ()>
+=item C<<$wsdl->dynamic_classes ()>>
 
 Creates a dynamic SOAP client object to talk to the WSDL this object was
 created for
 
-=item C<$wsdl->get_xsd ()>
+=item C<<$wsdl->get_xsd ()>>
 
 Creates the L<W3C::SOAP::XSD::Parser> object that represents the XSDs that
 are used by the specified WSDL file.

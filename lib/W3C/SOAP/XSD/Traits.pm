@@ -15,7 +15,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 
-our $VERSION     = version->new('0.02');
+our $VERSION     = version->new('0.05');
 
 Moose::Util::meta_attribute_alias('W3C::SOAP::XSD');
 
@@ -47,6 +47,11 @@ has xs_name => (
     isa       => 'Str',
     predicate => 'has_xs_name',
 );
+has xs_ns => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_xs_ns',
+);
 has xs_type => (
     is        => 'rw',
     isa       => 'Str',
@@ -73,7 +78,7 @@ W3C::SOAP::XSD::Traits - Specifies the traits of an XSD Moose attribute
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Traits version 0.02.
+This documentation refers to W3C::SOAP::XSD::Traits version 0.05.
 
 
 =head1 SYNOPSIS
