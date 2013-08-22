@@ -116,7 +116,7 @@ sub send {
         $content = $self->post($action, $xml);
     }
     catch ($e) {
-        $self->log->error("$action RESPONSE \n" . $self->response->content) if $self->has_log;
+        $self->log->error("$action RESPONSE \n" . $self->response->decoded_content) if $self->has_log;
 
         W3C::SOAP::Exception::HTTP->throw(
             faultcode => $self->response->code,

@@ -78,7 +78,7 @@ sub post {
     );
     $self->response($response);
 
-    return $response->content;
+    return $response->decoded_content;
 }
 
 {
