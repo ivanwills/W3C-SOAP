@@ -150,7 +150,7 @@ sub get_module_name {
         # all else fails throw an error
         if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
             confess "No mapping specified for the namespace $ns!\n"
-                . "Try adding to your command\n"
+                . "If you are using xsd-parser or wsdl-parser try adding to your command\n"
                 . " -n '$ns=My::NameSpace'\n";
         }
     }
