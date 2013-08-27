@@ -30,6 +30,12 @@ extends 'W3C::SOAP::Document';
 
 our $VERSION     = version->new('0.05');
 
+has element_form_default => (
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_element_form_default',
+    lazy_build => 1,
+);
 has imports => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
@@ -123,6 +129,18 @@ has ns_map => (
     builder    => '_ns_map',
     lazy_build => 1,
 );
+
+sub _element_form_default {
+    my ($self) = @_;
+    my @imports;
+    my @nodes = $self->xpc->findnodes('//@elementFormDefault');
+
+    if (@nodes) {
+        return $nodes[0]->value;
+    }
+
+    return 'unqualified';
+}
 
 sub _imports {
     my ($self) = @_;
