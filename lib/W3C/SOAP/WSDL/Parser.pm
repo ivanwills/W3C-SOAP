@@ -45,6 +45,12 @@ has location => (
     is  => 'rw',
     isa => 'Str',
 );
+has xsd_parser => (
+    is      => 'rw',
+    isa     => 'W3C::SOAP::XSD::Parser',
+    builder => '_xsd_parser',
+    lazy    => 1,
+);
 
 sub write_modules {
     my ($self) = @_;
@@ -84,7 +90,7 @@ sub write_modules {
     return ( $file, $xsd_parser->written_modules );
 }
 
-sub get_xsd {
+sub _xsd_parser {
     my ($self) = @_;
 
     my @args;
@@ -102,6 +108,12 @@ sub get_xsd {
         ns_module_map => $self->ns_module_map,
         @args,
     );
+
+    return $parse;
+}
+
+sub get_xsd {
+    my ($self) = @_;
 
     for my $xsd (@{ $self->document->schemas }) {
         $xsd->ns_module_map($self->ns_module_map);
