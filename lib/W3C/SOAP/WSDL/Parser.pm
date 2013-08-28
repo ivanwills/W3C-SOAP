@@ -114,6 +114,7 @@ sub _xsd_parser {
 
 sub get_xsd {
     my ($self) = @_;
+    my $parse = $self->xsd_parser;
 
     for my $xsd (@{ $self->document->schemas }) {
         $xsd->ns_module_map($self->ns_module_map);
