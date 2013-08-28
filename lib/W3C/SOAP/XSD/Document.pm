@@ -268,6 +268,7 @@ sub _complex_types {
     my ($self) = @_;
     my @complex_types;
     my @nodes = $self->xpc->findnodes('/*/xsd:complexType');
+    push @nodes, $self->xpc->findnodes('/*/xsd:complexContent');
 
     for my $node (@nodes) {
         # get all top level complex types
@@ -293,6 +294,9 @@ sub _complex_types {
     while ( my $element = shift @elements ) {
         # Get the elements first sub complex type (if any)
         my ($node) = $self->xpc->findnodes('xsd:complexType', $element->node);
+        if (!$node) {
+            ($node) = $self->xpc->findnodes('xsd:complexContent', $element->node);
+        }
         next unless $node;
 
         try {

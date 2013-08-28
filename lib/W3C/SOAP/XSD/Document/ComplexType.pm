@@ -66,13 +66,13 @@ sub _complex_content {
 
 sub _extension {
     my ($self) = @_;
-    my @nodes = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
+    my @nodes = $self->document->xpc->findnodes('xsd:extension', $self->node);
 
     for my $node (@nodes) {
         my ($ns, $tag) = split_ns($node->getAttribute('base'));
         my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
 
-        return $self->document->get_module_name( $ns_uri ) . "::$tag";
+        return $self->document->get_module_name( $ns_uri ) . "::$tag" . 'Type';
     }
 
     return;
