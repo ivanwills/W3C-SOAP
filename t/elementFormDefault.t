@@ -8,6 +8,7 @@ use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::XSD::Parser;
+use XML::LibXML;
 
 my $dir = file($0)->parent;
 
@@ -42,10 +43,10 @@ sub dynamic_modules {
 
     my $unobject = $unqual->new(
         process_record => {
-            type          => 'TEST',
-            timestamp     => '2013-08-26T00:00:00',
-            correlationId => '1234',
-            billingId     => '4321',
+            type           => 'TEST',
+            timestamp      => '2013-08-26T00:00:00',
+            correlation_id => '1234',
+            billing_id     => '4321',
         }
     );
 
@@ -53,18 +54,34 @@ sub dynamic_modules {
     ok $unobject->process_record, 'Currectly set element';
     is $unobject->process_record->type, 'TEST', 'Currectly set element';
 
-    my $object = $qual->new(
-        re_process_record => {
-            type          => 'TEST',
-            timestamp     => '2013-08-26T00:00:00',
-            correlationId => '1234',
-            billingId     => '4321',
-        }
-    );
+    my $xml = XML::LibXML->load_xml(string => <<'XML');
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body/>
+</soapenv:Envelope>
+XML
 
-    ok $object, 'Get a new object';
-    ok $object->process_record, 'Currectly set element';
-    is $object->process_record->type, 'TEST', 'Currectly set element';
+    my ($xml_str) = $unobject->to_xml($xml);
+    note $xml_str;
+    like $xml_str, qr/<type>/, 'The type attribute has no namespace prefix';
+
+    TODO: {
+        local $TODO = 'Still have to complete writing the complexContent code!';
+        eval {
+            my $object = $qual->new(
+                re_process_record => {
+                    type           => 'TEST',
+                    timestamp      => '2013-08-26T00:00:00',
+                    correlation_id => '1234',
+                    billing_id     => '4321',
+                }
+            );
+
+            ok $object, 'Get a new object';
+            ok $object->process_record, 'Currectly set element';
+            is $object->process_record->type, 'TEST', 'Currectly set element';
+        };
+        ok !$@, 'No errors parsing complex content value';
+    }
 }
-
 

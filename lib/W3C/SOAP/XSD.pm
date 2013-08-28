@@ -185,7 +185,10 @@ sub to_xml {
 
         my $xml_name = $att->has_xs_name ? $att->xs_name : $name;
         my $xml_ns   = $att->has_xs_ns   ? $att->xs_ns   : $self->xsd_ns;
-        my $xml_ns_name = $xml_ns ? $self->get_xsd_ns_name($xml_ns) : $xsd_ns_name;
+        my $xml_ns_name
+            = !defined $xml_ns ? $xsd_ns_name
+            : $xml_ns          ? $self->get_xsd_ns_name($xml_ns)
+            :                    '';
 
         my $value = ref $self->$name eq 'ARRAY' ? $self->$name : [$self->$name];
 
