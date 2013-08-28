@@ -164,6 +164,7 @@ sub _get_attribute_default {
 
 sub to_xml {
     my ($self, $xml) = @_;
+    confess "No XML document passed to attach nodes to!" if !$xml;
     my $child;
     my $meta = $self->meta;
     my @attributes = $self->get_xml_nodes;
