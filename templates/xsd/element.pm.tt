@@ -37,7 +37,7 @@ has [% element.perl_name %] => (
     xs_perl_module  => '[% element.type_module %]',
 [%- END %]
     xs_name         => '[% element.name         %]',
-    xs_ns           => '[% xsd.target_namespace %]',
+    xs_ns           => '[% !complex || xsd.element_form_default == 'qualified' ? xsd.target_namespace : '' %]',
     xs_type         => '[% element.type         %]',
     xs_min_occurs   => '[% element.min_occurs   %]',
     xs_max_occurs   => '[% element.max_occurs  == 'unbounded' ? 0 : element.max_occurs %]',
