@@ -9,6 +9,7 @@ use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::XSD::Parser;
 use XML::LibXML;
+use lib file($0)->parent->subdir('lib').'';
 
 my $dir = file($0)->parent;
 
@@ -28,11 +29,16 @@ my $parser = W3C::SOAP::XSD::Parser->new(
     ns_module_map => {},
     module_base   => 'ElementFormDefault',
 );
-$parser->write_modules;
 
-my (@classes) = eval { $parser->dynamic_classes };
+my (@classes) = sort eval { $parser->write_modules };
 ok !$@, "Create dynamic classes correctly"
     or BAIL_OUT($@);
+
+for my $class (@classes) {
+    my $file = "$class.pm";
+    $file =~ s{::}{/}g;
+    require $file;
+}
 
 dynamic_modules(@classes);
 done_testing();
@@ -62,26 +68,32 @@ sub dynamic_modules {
 XML
 
     my ($xml_str) = $unobject->to_xml($xml);
-    note $xml_str;
+    note "$xml_str\n", Dumper $unobject->to_data;
     like $xml_str, qr/<type>/, 'The type attribute has no namespace prefix';
 
-    TODO: {
-        local $TODO = 'Still have to complete writing the complexContent code!';
-        eval {
-            my $object = $qual->new(
-                re_process_record => {
-                    type           => 'TEST',
-                    timestamp      => '2013-08-26T00:00:00',
-                    correlation_id => '1234',
-                    billing_id     => '4321',
-                }
-            );
+    eval {
+        my $object = $qual->new(
+            re_process_record => {
+                type           => 'TEST',
+                timestamp      => '2013-08-26T00:00:00',
+                correlation_id => '1234',
+                billing_id     => '4321',
+            }
+        );
 
-            ok $object, 'Get a new object';
-            ok $object->process_record, 'Currectly set element';
-            is $object->process_record->type, 'TEST', 'Currectly set element';
-        };
-        ok !$@, 'No errors parsing complex content value';
-    }
+        warn Dumper $object->to_data;
+        ok $object, 'Get a new object';
+        ok $object->re_process_record, 'Currectly set element';
+        is $object->re_process_record->type, 'TEST', 'Currectly set parent type element';
+        is $object->re_process_record->billing_id, '4321', 'Currectly set this type element';
+
+        my ($xml_str) = $unobject->to_xml($xml);
+        note $xml_str;
+        like $xml_str, qr/<type>/, 'The type attribute has no namespace prefix';
+        like $xml_str, qr/<\w+:billingId>/, 'The billingId attribute has a namespace prefix';
+    };
+    my $e = $@;
+    ok !$e, 'No errors parsing complex content value';
+    diag $e;
 }
 

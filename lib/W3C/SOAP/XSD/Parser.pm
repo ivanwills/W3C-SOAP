@@ -143,7 +143,7 @@ sub write_modules {
     }
 
     #warn Dumper \@xsd_modules, $self_module;
-    return $self_module;
+    return wantarray ? @xsd_modules : $self_module;
 }
 
 my %written;

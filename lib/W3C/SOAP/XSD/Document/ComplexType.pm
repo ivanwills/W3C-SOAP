@@ -48,7 +48,7 @@ has extension => (
 
 sub _sequence {
     my ($self) = @_;
-    my ($node) = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
+    my ($node) = $self->document->xpc->findnodes('xsd:extension', $self->node);
     return $self->_get_sequence_elements($node || $self->node);
 }
 
