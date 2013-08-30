@@ -49,7 +49,7 @@ sub dynamic_modules {
 
     my $unobject = $unqual->new(
         process_record => {
-            type           => 'TEST',
+            base           => 'TEST',
             timestamp      => '2013-08-26T00:00:00',
             correlation_id => '1234',
             billing_id     => '4321',
@@ -58,7 +58,7 @@ sub dynamic_modules {
 
     ok $unobject, 'Get a new unobject';
     ok $unobject->process_record, 'Currectly set element';
-    is $unobject->process_record->type, 'TEST', 'Currectly set element';
+    is $unobject->process_record->base, 'TEST', 'Currectly set element';
 
     my $xml = XML::LibXML->load_xml(string => <<'XML');
 <?xml version="1.0" encoding="UTF-8"?>
@@ -69,27 +69,26 @@ XML
 
     my ($xml_str) = $unobject->to_xml($xml);
     note "$xml_str\n", Dumper $unobject->to_data;
-    like $xml_str, qr/<type>/, 'The type attribute has no namespace prefix';
+    like $xml_str, qr/<base>/, 'The base attribute has no namespace prefix';
 
     eval {
         my $object = $qual->new(
             re_process_record => {
-                type           => 'TEST',
+                base           => 'TEST',
                 timestamp      => '2013-08-26T00:00:00',
                 correlation_id => '1234',
                 billing_id     => '4321',
             }
         );
 
-        warn Dumper $object->to_data;
         ok $object, 'Get a new object';
         ok $object->re_process_record, 'Currectly set element';
-        is $object->re_process_record->type, 'TEST', 'Currectly set parent type element';
-        is $object->re_process_record->billing_id, '4321', 'Currectly set this type element';
+        is $object->re_process_record->base, 'TEST', 'Currectly set parent base element';
+        is $object->re_process_record->billing_id, '4321', 'Currectly set this base element';
 
-        my ($xml_str) = $unobject->to_xml($xml);
+        my ($xml_str) = $object->to_xml($xml);
         note $xml_str;
-        like $xml_str, qr/<type>/, 'The type attribute has no namespace prefix';
+        like $xml_str, qr/<base>/, 'The base attribute has no namespace prefix';
         like $xml_str, qr/<\w+:billingId>/, 'The billingId attribute has a namespace prefix';
     };
     my $e = $@;

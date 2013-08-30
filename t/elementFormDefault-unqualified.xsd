@@ -7,7 +7,7 @@
     <xsd:element name="processRecord">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="type"          type="xsd:string" />
+                <xsd:element name="base"          type="xsd:string" />
                 <xsd:element name="timestamp"     type="xsd:string" />
                 <xsd:element name="correlationId" type="xsd:string" />
             </xsd:sequence>
