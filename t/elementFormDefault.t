@@ -41,6 +41,7 @@ for my $class (@classes) {
 }
 
 dynamic_modules(@classes);
+cleanup();
 done_testing();
 exit;
 
@@ -96,3 +97,18 @@ XML
     diag $e;
 }
 
+sub cleanup {
+    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified.pm')                   or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified.pm                  ';
+    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified/Base.pm')              or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified/Base.pm             ';
+    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified/processRecordType.pm') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified/processRecordType.pm';
+    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified.pm')                     or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified.pm                    ';
+    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified/Base.pm')                or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified/Base.pm               ';
+    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified/reProcessRecordType.pm') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified/reProcessRecordType.pm';
+
+    rmdir  $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified';
+    rmdir  $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified')   or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified  ';
+    rmdir  $dir->file('lib/ElementFormDefault/Com/Example/Www')             or note 'Could not remove lib/ElementFormDefault/Com/Example/Www            ';
+    rmdir  $dir->file('lib/ElementFormDefault/Com/Example')                 or note 'Could not remove lib/ElementFormDefault/Com/Example                ';
+    rmdir  $dir->file('lib/ElementFormDefault/Com')                         or note 'Could not remove lib/ElementFormDefault/Com                        ';
+    rmdir  $dir->file('lib/ElementFormDefault')                             or note 'Could not remove lib/ElementFormDefault                            ';
+}
