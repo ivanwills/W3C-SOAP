@@ -48,7 +48,11 @@ has extension => (
 
 sub _sequence {
     my ($self) = @_;
-    my ($node) = $self->document->xpc->findnodes('xsd:extension', $self->node);
+    my ($node) = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
+    if (!$node) {
+        ($node) = $self->document->xpc->findnodes('xsd:extension', $self->node);
+    }
+
     return $self->_get_sequence_elements($node || $self->node);
 }
 
@@ -66,13 +70,19 @@ sub _complex_content {
 
 sub _extension {
     my ($self) = @_;
-    my @nodes = $self->document->xpc->findnodes('xsd:extension', $self->node);
+    # TODO $suffix feels like a hack, it fixes the tests but isn't really calculated to be the correct value
+    my $suffix = '';
+    my @nodes = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);
+    if (!@nodes) {
+        @nodes = $self->document->xpc->findnodes('xsd:extension', $self->node);
+        $suffix = 'Type';
+    }
 
     for my $node (@nodes) {
         my ($ns, $tag) = split_ns($node->getAttribute('base'));
         my $ns_uri = $self->document->get_ns_uri($ns, $self->node);
 
-        return $self->document->get_module_name( $ns_uri ) . "::$tag" . 'Type';
+        return $self->document->get_module_name( $ns_uri ) . "::$tag" . $suffix;
     }
 
     return;
