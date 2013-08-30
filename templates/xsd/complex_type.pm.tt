@@ -36,9 +36,10 @@ use Moose::Util::TypeConstraints;
 [%- END %]
 [%- IF node.extension %]
 use [% base %]::Base;
-extends '[% node.extension %]';
-[%- END %]
+extends '[% base %]::Base', '[% node.extension %]';
+[%- ELSE %]
 extends '[% base %]::Base';
+[%- END %]
 
 our $VERSION     = version->new('0.0.1');
 
