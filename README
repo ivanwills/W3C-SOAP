@@ -1,11 +1,12 @@
 W3C-SOAP
 
 This package is aimed at creating SOAP clients from WSDL files. It does this
-by parsing the WSDL and XSD files to generate Perl Moose objects that can
-be use to call the SOAP web service. The generated Perl objects are made to
-be perly syntax (camel case names are converted to underscore seperated
-attributes/methods where appropriate, if MooseX::Aliases is available and
-configured to be used the raw names will also be available to used.)
+by parsing WSDL and XSD files/URLs to generate Perl Moose objects that can
+be use to talk to the SOAP web service. The generated Perl objects are
+generated to follow Perl best practices syntax (eg camel case names are
+converted to underscore seperated attributes/methods where appropriate. If
+MooseX::Aliases is available and the appropriate configured option passed the
+raw names will also be available to used.)
 
 INSTALLATION
 
