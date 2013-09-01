@@ -1,5 +1,29 @@
 Revision history for W3C-SOAP
 
+0.06   2013-09-01
+        Added correct version number (Ivan Wills)
+        Updated some of the documentation (Ivan Wills)
+        Updated some of the wording (Ivan Wills)
+        Added missing files to manifest (Ivan Wills)
+        Added cleaning up generated modules (Ivan Wills)
+        Fixed generating complex types (Ivan Wills)
+        Got these tests working (Ivan Wills)
+        Fixed calling extends twice, rather than once with multiple arguments (Ivan Wills)
+        Test elementFormDefault with dynamic code (Ivan Wills)
+        Getting closer to working ComplexContent (Ivan Wills)
+        Changed complex_type template to always generate extension to base class even if there is a extension class (Ivan Wills)
+        Trying to get complexContent elements working (Ivan Wills)
+        Got unqualified element parameters to be actually unqualified (Ivan Wills)
+        Fixed missing variable declaration (Ivan Wills)
+        Fixed templates so that attribute namespaces can be set (Ivan Wills)
+        Added error in xml document is not passed in (Ivan Wills)
+        Added element_form_default attribute (Ivan Wills)
+        Exposing the xsd_parser object as attribute (Ivan Wills)
+        Improved error message (Ivan Wills)
+        #2 : Starting to try to get namespace handling under control (Ivan Wills)
+        #3 fixed the tests to work with decoded_content (Ivan Wills)
+        #3 - Fixed using content rather than decoded_content (Ivan Wills)
+
 0.05   2013-08-21
         Fixed accedentially changed dependency version (Ivan Wills)
         Fixed not creating coercions for list sub types of builtin types (Ivan Wills)
