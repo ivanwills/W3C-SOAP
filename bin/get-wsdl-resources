@@ -108,7 +108,7 @@ bin/get-resources - <One-line description of commands purpose>
 
 =head1 VERSION
 
-This documentation refers to bin/get-resources version 0.1.
+This documentation refers to bin/get-resources version 0.05.
 
 =head1 SYNOPSIS
 
