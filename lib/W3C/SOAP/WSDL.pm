@@ -10,16 +10,13 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use TryCatch;
 
 extends 'W3C::SOAP::Client';
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 has header => (
     is        => 'rw',
@@ -63,7 +60,7 @@ sub _request {
 
 sub request {
     my ($self, $action, $body) = @_;
-    my $xml = $self->build_request_xml($action, $body);
+    my $xml = $self->build_request_xml($body);
 
     if ( $self->has_header ) {
         my $node = $self->header->to_xml($xml);
@@ -74,7 +71,7 @@ sub request {
 }
 
 sub build_request_xml {
-    my ($self, $action, $body) = @_;
+    my ($self, $body) = @_;
     my $xml = XML::LibXML->load_xml(string => <<'XML');
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">

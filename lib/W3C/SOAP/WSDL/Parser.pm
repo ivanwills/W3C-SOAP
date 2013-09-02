@@ -10,9 +10,6 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Path::Class;
@@ -28,7 +25,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 has '+document' => (
     isa      => 'W3C::SOAP::WSDL::Document',
