@@ -61,8 +61,16 @@ sub dynamic_modules {
 XML
 
     my ($xml_str) = $unobject->to_xml($xml);
-    note "$xml_str\n", Dumper $unobject->to_data;
+    note $xml_str;
     like $xml_str, qr/<base>/, 'The base attribute has no namespace prefix';
+
+    my ($body) = $xml->findnodes('//soapenv:Body');
+    $body->appendChild($xml_str);
+    my $new_unobject = eval { $unqual->new($body) };
+    my $e = $@;
+    ok !$e, 'No errors in trying to reconstruct object from XML'
+        or diag $e;
+    is_deeply eval { $new_unobject->to_data } || undef, $unobject->to_data, 'New data the same as old data';
 
     eval {
         my $object = $qual->new(
@@ -83,8 +91,18 @@ XML
         note $xml_str;
         like $xml_str, qr/<base>/, 'The base attribute has no namespace prefix';
         like $xml_str, qr/<\w+:billingId>/, 'The billingId attribute has a namespace prefix';
+
+        my ($body) = $xml->findnodes('//soapenv:Body');
+        $body->removeChild($body->firstChild);
+        $body->appendChild($xml_str);
+        my $new_object = eval { $qual->new($body) };
+        my $e = $@;
+        ok !$e, 'No errors in trying to reconstruct object from XML'
+            or diag $e;
+        is_deeply eval { $new_object->to_data } || undef, $object->to_data, 'New data the same as old data';
+
     };
-    my $e = $@;
+    $e = $@;
     ok !$e, 'No errors parsing complex content value';
     diag $e;
 }
