@@ -146,22 +146,6 @@ sub xml2perl_map {
     return \%map;
 }
 
-# recursively try to find the default value for an attribute
-sub _get_attribute_default {
-    my ($class, $attribute) = @_;
-    my $meta = $class->meta;
-    my $attrib = $meta->get_attribute($attribute);
-
-    return $attrib->default if $attrib;
-
-    for my $super ( $meta->superclasses ) {
-        my $default = $super->_get_attribute_default($attribute);
-        return $default if $default;
-    }
-
-    return;
-}
-
 sub to_xml {
     my ($self, $xml) = @_;
     confess "No XML document passed to attach nodes to!" if !$xml;
