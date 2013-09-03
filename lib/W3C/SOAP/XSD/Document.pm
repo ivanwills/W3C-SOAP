@@ -42,22 +42,10 @@ has imports => (
     builder    => '_imports',
     lazy_build => 1,
 );
-has imported => (
-    is         => 'rw',
-    isa        => 'HashRef[W3C::SOAP::XSD::Document]',
-    builder    => '_imported',
-    lazy_build => 1,
-);
 has includes => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_includes',
-    lazy_build => 1,
-);
-has include => (
-    is         => 'rw',
-    isa        => 'HashRef[W3C::SOAP::XSD::Document]',
-    builder    => '_include',
     lazy_build => 1,
 );
 has simple_types => (
@@ -183,15 +171,6 @@ sub _imports {
     return \@imports;
 }
 
-sub _imported {
-    my ($self) = @_;
-    my %import;
-    for my $import (@{ $self->imports }) {
-        $import{$import->name} = $import;
-    }
-    return \%import;
-}
-
 sub _includes {
     my ($self) = @_;
     my @includes;
@@ -219,15 +198,6 @@ sub _includes {
     }
 
     return \@includes;
-}
-
-sub _include {
-    my ($self) = @_;
-    my %include;
-    for my $include (@{ $self->include }) {
-        $include{$include->name} = $include;
-    }
-    return \%include;
 }
 
 sub _simple_types {
@@ -471,11 +441,7 @@ interface.
 
 =item C<imports>
 
-=item C<imported>
-
 =item C<includes>
-
-=item C<include>
 
 =item C<simple_types>
 
