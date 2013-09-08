@@ -36,7 +36,7 @@ use Moose::Util::TypeConstraints;
 [%- END %]
 [%- IF node.extension %]
 use [% base %]::Base;
-extends '[% node.extension %]';
+extends '[% base %]::Base', '[% node.extension %]';
 [%- ELSE %]
 extends '[% base %]::Base';
 [%- END %]
@@ -52,7 +52,7 @@ has '+xsd_ns' => (
 #);
 
 [% FOREACH element IN node.sequence %]
-[% INCLUDE xsd/element.pm.tt %]
+[% INCLUDE xsd/element.pm.tt complex=1 %]
 [%- END %]
 
 __PACKAGE__->meta->make_immutable;

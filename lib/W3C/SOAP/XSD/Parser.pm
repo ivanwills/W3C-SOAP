@@ -28,7 +28,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION     = version->new('0.05');
+our $VERSION     = version->new('0.06');
 
 subtype xsd_documents =>
     as 'ArrayRef[W3C::SOAP::XSD::Document]';
@@ -143,7 +143,7 @@ sub write_modules {
     }
 
     #warn Dumper \@xsd_modules, $self_module;
-    return $self_module;
+    return wantarray ? @xsd_modules : $self_module;
 }
 
 my %written;
@@ -332,7 +332,7 @@ sub complex_type_package {
     );
 
     for my $node (@{ $type->sequence }) {
-        $self->element_attributes($class, $class_name, $node);
+        $self->element_attributes($class, $class_name, $node, $xsd, 1);
     }
 
     return $class;
@@ -353,14 +353,14 @@ sub elements_package {
     );
 
     for my $node (@{ $xsd->elements }) {
-        $self->element_attributes($class, $class_name, $node);
+        $self->element_attributes($class, $class_name, $node, $xsd);
     }
 
     return $class;
 }
 
 sub element_attributes {
-    my ($self, $class, $class_name, $element) = @_;
+    my ($self, $class, $class_name, $element, $xsd, $complex) = @_;
 
     my $simple = $element->simple_type;
     my $very_simple = $element->very_simple_type;
@@ -409,6 +409,7 @@ sub element_attributes {
     #[%- END %]
         traits        => [qw{ W3C::SOAP::XSD }],
         xs_name       => $element->name,
+        xs_ns         => !$complex || $xsd->element_form_default eq 'qualified' ? $xsd->target_namespace : '',
         xs_type       => $element->type,
         xs_min_occurs => $element->min_occurs,
         xs_max_occurs => $element->max_occurs  eq 'unbounded' ? 0 : $element->max_occurs,
@@ -435,7 +436,7 @@ implementing the object defined.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Parser version 0.05.
+This documentation refers to W3C::SOAP::XSD::Parser version 0.06.
 
 =head1 SYNOPSIS
 

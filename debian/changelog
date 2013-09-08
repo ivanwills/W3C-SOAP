@@ -1,3 +1,33 @@
+libw3c-soap-perl (0.06) precise; urgency=low
+
+  [ Ivan Wills ]
+  * Added missing file
+  * #3 - Fixed using content rather than decoded_content
+  * #3 fixed the tests to work with decoded_content
+  * #2 : Starting to try to get namespace handling under control
+  * Improved error message
+  * Exposing the xsd_parser object as attribute
+  * Added element_form_default attribute
+  * Added error in xml document is not passed in
+  * Fixed templates so that attribute namespaces can be set
+  * Fixed missing variable declaration
+  * Got unqualified element parameters to be actually unqualified
+  * Trying to get complexContent elements working
+  * Changed complex_type template to always generate extension to base class even if there is a extension class
+  * Getting closer to working ComplexContent
+  * Test elementFormDefault with dynamic code
+  * Fixed calling extends twice, rather than once with multiple arguments
+  * Got these tests working
+  * Fixed generating complex types
+  * Added cleaning up generated modules
+  * Added missing files to manifest
+  * Updated some of the wording
+  * Updated some of the documentation
+  * Added correct version number
+  * Updating for release of version 0.06
+
+ -- Ivan Wills <Ivan.Wills@optus.com.au>  Sun, 01 Sep 2013 19:28:29 +1000
+
 libw3c-soap-perl (0.05) quantal; urgency=low
 
   * Added storing the version of the Parser that WSDL and XSD files are created by

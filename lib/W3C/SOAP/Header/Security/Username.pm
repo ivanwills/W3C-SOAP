@@ -20,7 +20,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Header::Security';
 
-our $VERSION     = version->new('0.05');
+our $VERSION     = version->new('0.06');
 my $id = 0;
 
 has username => (
@@ -85,7 +85,7 @@ W3C::SOAP::Header::Security::Username - Creates a WS-Security User name object
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Header::Security::Username version 0.05.
+This documentation refers to W3C::SOAP::Header::Security::Username version 0.06.
 
 =head1 SYNOPSIS
 

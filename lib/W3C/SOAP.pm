@@ -10,10 +10,6 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
-use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::XSD::Parser qw/load_xsd/;
 use W3C::SOAP::WSDL::Parser qw/load_wsdl/;
@@ -22,7 +18,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [qw/load_wsdl load_xsd/],
 );
 
-our $VERSION     = version->new('0.05');
+our $VERSION = version->new('0.06');
 
 1;
 
@@ -34,7 +30,7 @@ W3C::SOAP - Static and dynamic SOAP client generator from WSDL & XSD files
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP version 0.05.
+This documentation refers to W3C::SOAP version 0.06.
 
 =head1 SYNOPSIS
 
@@ -162,13 +158,16 @@ Alter the amount of data shown by C<$W3C_SOAP_DEBUG_CLIENT> which defaults to
 
 =head1 INCOMPATIBILITIES
 
-=head1 BUGS AND LIMITATIONS
+Perl 5.18 see below.
 
-There are no known bugs in this module. (Plenty of unknown bugs)
+=head1 BUGS AND LIMITATIONS
 
 Currently the WSDL handling doesn't deal with more than one input or output
 on an operation or inputs/outputs that aren't specified by an XMLSchema. A;so
 operation fault objects aren't yet handled.
+
+Currently there is an issue with Perl 5.18 (probably caused by L<Moose> affecting
+L<XML::LibXML> usage)
 
 Please report problems to Ivan Wills (ivan.wills@gmail.com).
 

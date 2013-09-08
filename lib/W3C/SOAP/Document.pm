@@ -20,7 +20,7 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 use W3C::SOAP::Exception;
 use XML::LibXML;
 
-our $VERSION     = version->new('0.05');
+our $VERSION     = version->new('0.06');
 
 has string => (
     is         => 'rw',
@@ -147,7 +147,7 @@ sub get_module_name {
         # all else fails throw an error
         if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
             confess "No mapping specified for the namespace $ns!\n"
-                . "Try adding to your command\n"
+                . "If you are using xsd-parser or wsdl-parser try adding to your command\n"
                 . " -n '$ns=My::NameSpace'\n";
         }
     }
@@ -165,7 +165,7 @@ W3C::SOAP::Document - Object to represent an XML Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Document version 0.05.
+This documentation refers to W3C::SOAP::Document version 0.06.
 
 =head1 SYNOPSIS
 

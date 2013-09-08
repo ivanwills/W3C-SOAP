@@ -3,7 +3,7 @@ use Moose;
 use warnings;
 extends 'MooseX::Exception::Base';
 
-our $VERSION = version->new('0.05');
+our $VERSION = version->new('0.06');
 
 has '+_verbose' => (
     default => 2,
@@ -32,14 +32,14 @@ use Moose;
 use warnings;
 extends 'W3C::SOAP::Exception';
 
-our $VERSION = version->new('0.05');
+our $VERSION = version->new('0.06');
 
 package W3C::SOAP::Exception::XML;
 use Moose;
 use warnings;
 extends 'W3C::SOAP::Exception';
 
-our $VERSION = version->new('0.05');
+our $VERSION = version->new('0.06');
 
 has '+detail' => ( default => 'XML', stringify_pre => 'Type : ' );
 
@@ -48,14 +48,14 @@ use Moose;
 use warnings;
 extends 'W3C::SOAP::Exception';
 
-our $VERSION = version->new('0.05');
+our $VERSION = version->new('0.06');
 
 package W3C::SOAP::Exception::BadInput;
 use Moose;
 use warnings;
 extends 'MooseX::Exception::Base';
 
-our $VERSION = version->new('0.05');
+our $VERSION = version->new('0.06');
 
 has param => (
     is   => 'rw',

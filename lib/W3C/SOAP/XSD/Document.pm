@@ -28,27 +28,24 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION     = version->new('0.05');
+our $VERSION     = version->new('0.06');
 
+has element_form_default => (
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_element_form_default',
+    lazy_build => 1,
+);
 has imports => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_imports',
-);
-has imported => (
-    is         => 'rw',
-    isa        => 'HashRef[W3C::SOAP::XSD::Document]',
-    builder    => '_imported',
+    lazy_build => 1,
 );
 has includes => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_includes',
-);
-has include => (
-    is         => 'rw',
-    isa        => 'HashRef[W3C::SOAP::XSD::Document]',
-    builder    => '_include',
 );
 has simple_types => (
     is         => 'rw',
@@ -111,6 +108,18 @@ has ns_map => (
     builder    => '_ns_map',
 );
 
+sub _element_form_default {
+    my ($self) = @_;
+    my @imports;
+    my @nodes = $self->xpc->findnodes('//@elementFormDefault');
+
+    if (@nodes) {
+        return $nodes[0]->value;
+    }
+
+    return 'unqualified';
+}
+
 sub _imports {
     my ($self) = @_;
     my @imports;
@@ -152,15 +161,6 @@ sub _imports {
     return \@imports;
 }
 
-sub _imported {
-    my ($self) = @_;
-    my %import;
-    for my $import (@{ $self->imports }) {
-        $import{$import->name} = $import;
-    }
-    return \%import;
-}
-
 sub _includes {
     my ($self) = @_;
     my @includes;
@@ -188,15 +188,6 @@ sub _includes {
     }
 
     return \@includes;
-}
-
-sub _include {
-    my ($self) = @_;
-    my %include;
-    for my $include (@{ $self->include }) {
-        $include{$include->name} = $include;
-    }
-    return \%include;
 }
 
 sub _simple_types {
@@ -237,6 +228,7 @@ sub _complex_types {
     my ($self) = @_;
     my @complex_types;
     my @nodes = $self->xpc->findnodes('/*/xsd:complexType');
+    push @nodes, $self->xpc->findnodes('/*/xsd:complexContent');
 
     for my $node (@nodes) {
         # get all top level complex types
@@ -262,6 +254,9 @@ sub _complex_types {
     while ( my $element = shift @elements ) {
         # Get the elements first sub complex type (if any)
         my ($node) = $self->xpc->findnodes('xsd:complexType', $element->node);
+        if (!$node) {
+            ($node) = $self->xpc->findnodes('xsd:complexContent', $element->node);
+        }
         next unless $node;
 
         try {
@@ -404,7 +399,7 @@ W3C::SOAP::XSD::Document - Represents a XMLSchema Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document version 0.05.
+This documentation refers to W3C::SOAP::XSD::Document version 0.06.
 
 =head1 SYNOPSIS
 
@@ -436,11 +431,7 @@ interface.
 
 =item C<imports>
 
-=item C<imported>
-
 =item C<includes>
-
-=item C<include>
 
 =item C<simple_types>
 
