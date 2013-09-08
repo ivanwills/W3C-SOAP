@@ -19,7 +19,7 @@ use W3C::SOAP::Utils qw/split_ns xml_error cmp_ns/;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 has element => (
     is         => 'rw',

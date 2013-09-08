@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'Moose::Meta::Method';
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 has wsdl_operation => (
     is        => 'rw',

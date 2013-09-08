@@ -20,7 +20,7 @@ Moose::Exporter->setup_import_methods(
     with_meta => ['operation'],
 );
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 sub operation {
     my ( $meta, $name, %options ) = @_;

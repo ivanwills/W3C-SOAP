@@ -28,7 +28,7 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 has element_form_default => (
     is         => 'rw',

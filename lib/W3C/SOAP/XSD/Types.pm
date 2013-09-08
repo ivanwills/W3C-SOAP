@@ -32,7 +32,7 @@ use DateTime;
 use DateTime::Format::Strptime qw/strptime/;
 use Math::BigFloat;
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 local $SIG{__WARN__} = sub {};
 

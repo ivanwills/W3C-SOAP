@@ -15,7 +15,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 
-our $VERSION     = version->new('0.06');
+our $VERSION = version->new('0.06');
 
 Moose::Util::meta_attribute_alias('W3C::SOAP::XSD');
 
