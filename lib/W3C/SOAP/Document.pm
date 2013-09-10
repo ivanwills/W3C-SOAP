@@ -6,8 +6,9 @@ package W3C::SOAP::Document;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use strict;
 use warnings;
+use XML::Rabbit::Root;
 use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
@@ -22,6 +23,15 @@ use XML::LibXML;
 
 our $VERSION = version->new('0.06');
 
+add_xpath_namespace xs   => 'http://www.w3.org/2001/XMLSchema';
+add_xpath_namespace xsd  => 'http://www.w3.org/2001/XMLSchema';
+add_xpath_namespace wsdl => 'http://schemas.xmlsoap.org/wsdl/';
+add_xpath_namespace wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy';
+add_xpath_namespace wssp => 'http://www.bea.com/wls90/security/policy';
+add_xpath_namespace soap => 'http://schemas.xmlsoap.org/wsdl/soap/';
+
+has_xpath_value target_namespace => './@targetNamespace';
+
 has string => (
     is         => 'rw',
     isa        => 'Str',
@@ -34,21 +44,6 @@ has xml => (
     is       => 'ro',
     isa      => 'XML::LibXML::Document',
     required => 1,
-);
-has xpc => (
-    is         => 'ro',
-    isa        => 'XML::LibXML::XPathContext',
-    builder    => '_xpc',
-    clearer    => 'clear_xpc',
-    predicate  => 'has_xpc',
-    lazy_build => 1,
-);
-has target_namespace => (
-    is         => 'rw',
-    isa        => 'Str',
-    builder    => '_target_namespace',
-    predicate  => 'has_target_namespace',
-    lazy_build => 1,
 );
 has ns_module_map => (
     is        => 'rw',
@@ -104,26 +99,8 @@ around BUILDARGS => sub {
 sub _xpc {
     my ($self) = @_;
     my $xpc = XML::LibXML::XPathContext->new($self->xml);
-    $xpc->registerNs(xs   => 'http://www.w3.org/2001/XMLSchema');
-    $xpc->registerNs(xsd  => 'http://www.w3.org/2001/XMLSchema');
-    $xpc->registerNs(wsdl => 'http://schemas.xmlsoap.org/wsdl/');
-    $xpc->registerNs(wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy');
-    $xpc->registerNs(wssp => 'http://www.bea.com/wls90/security/policy');
-    $xpc->registerNs(soap => 'http://schemas.xmlsoap.org/wsdl/soap/');
 
     return $xpc;
-}
-
-my $anon = 0;
-sub _target_namespace {
-    my ($self) = @_;
-    my $ns  = $self->xml->getDocumentElement->getAttribute('targetNamespace');
-    my $xpc = $self->xpc;
-    $xpc->registerNs(ns => $ns) if $ns;
-
-    $ns ||= $self->location || 'NsAnon' . $anon++;
-
-    return $ns;
 }
 
 sub _module {

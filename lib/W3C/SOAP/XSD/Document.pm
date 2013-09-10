@@ -6,8 +6,9 @@ package W3C::SOAP::XSD::Document;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use strict;
 use warnings;
+use XML::Rabbit::Root;
 use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
@@ -30,18 +31,13 @@ extends 'W3C::SOAP::Document';
 
 our $VERSION = version->new('0.06');
 
-has element_form_default => (
-    is         => 'rw',
-    isa        => 'Str',
-    builder    => '_element_form_default',
-    lazy_build => 1,
+has_xpath_value element_form_default => './@elementFormDefault' => (
+    default => 'unqualified',
 );
-has imports => (
-    is         => 'rw',
-    isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
-    builder    => '_imports',
-    lazy_build => 1,
+has_xpath_object imports => (
+    '//xsd:import' => 'W3C::SOAP::XSD::Document',
 );
+
 has includes => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
@@ -117,18 +113,6 @@ has ns_map => (
     builder    => '_ns_map',
     lazy_build => 1,
 );
-
-sub _element_form_default {
-    my ($self) = @_;
-    my @imports;
-    my @nodes = $self->xpc->findnodes('//@elementFormDefault');
-
-    if (@nodes) {
-        return $nodes[0]->value;
-    }
-
-    return 'unqualified';
-}
 
 sub _imports {
     my ($self) = @_;
