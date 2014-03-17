@@ -431,8 +431,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Parser - Parser for XSD documents that generates Perl modules
-implementing the object defined.
+W3C::SOAP::XSD::Parser - Parser for XSD documents that generates Perl modules implementing the object defined.
 
 =head1 VERSION
 
