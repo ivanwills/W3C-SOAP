@@ -34,7 +34,7 @@ has document => (
     isa        => 'W3C::SOAP::Document',
     required   => 1,
     builder    => '_document',
-    lazy_build => 1,
+    lazy => 1,
     weak_ref   => 1,
     handles    => {
         xpc => 'xpc',
@@ -45,7 +45,7 @@ has name => (
     isa        => 'Maybe[Str]',
     predicate  => 'has_name',
     builder    => '_name',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 around BUILDARGS => sub {

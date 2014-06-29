@@ -24,16 +24,19 @@ has message => (
     is         => 'rw',
     isa        => 'Maybe[W3C::SOAP::WSDL::Document::Message]',
     builder    => '_message',
+    lazy       => 1,
 );
 has policy => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_policy',
+    lazy       => 1,
 );
 has body => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_body',
+    lazy       => 1,
 );
 
 sub _message {

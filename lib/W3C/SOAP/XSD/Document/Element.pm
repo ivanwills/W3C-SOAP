@@ -25,13 +25,13 @@ has complex_type => (
     is     => 'rw',
     isa    => 'Str',
     builder => '_complex_type',
-    lazy_build => 1,
+    lazy    => 1,
 );
 has type => (
-    is     => 'rw',
-    isa    => 'Str',
-    builder => '_type',
-    lazy_build => 1,
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_type',
+    lazy       => 1,
     predicate  => 'has_type',
 );
 has package => (

@@ -43,7 +43,7 @@ has extension => (
     is        => 'rw',
     isa       => 'Maybe[Str]',
     builder   => '_extension',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _sequence {
@@ -70,6 +70,7 @@ sub _complex_content {
 
 sub _extension {
     my ($self) = @_;
+
     # TODO $suffix feels like a hack, it fixes the tests but isn't really calculated to be the correct value
     my $suffix = '';
     my @nodes = $self->document->xpc->findnodes('xsd:complexContent/xsd:extension', $self->node);

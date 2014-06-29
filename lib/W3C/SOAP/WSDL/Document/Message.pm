@@ -25,7 +25,7 @@ has element => (
     is         => 'rw',
     isa        => 'Maybe[W3C::SOAP::XSD::Document::Element]',
     builder    => '_element',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has type => (
     is         => 'rw',

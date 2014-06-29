@@ -24,6 +24,7 @@ has documentation => (
     is     => 'rw',
     isa    => 'Str',
     builder => '_documentation',
+    lazy => 1,
 );
 
 sub _documentation {

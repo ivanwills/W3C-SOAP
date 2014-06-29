@@ -34,28 +34,31 @@ has element_form_default => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_element_form_default',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has imports => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_imports',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has includes => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_includes',
+    lazy       => 1,
 );
 has simple_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_types',
+    lazy       => 1,
 );
 has simple_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_type',
+    lazy       => 1,
 );
 has anon_simple_type_count => (
     is      => 'ro',
@@ -68,11 +71,13 @@ has complex_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_types',
+    lazy       => 1,
 );
 has complex_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_type',
+    lazy       => 1,
 );
 has anon_complex_type_count => (
     is      => 'ro',
@@ -80,32 +85,38 @@ has anon_complex_type_count => (
     traits  => [qw/Counter/],
     default => -1,
     handles => { complex_type_count => 'inc' },
+    lazy    => 1,
 );
 has elements => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::Element]',
-    builder   => '_elements',
+    builder    => '_elements',
+    lazy       => 1,
 );
 has element => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::Element]',
-    builder   => '_element',
+    builder    => '_element',
+    lazy       => 1,
 );
 has module => (
-    is        => 'rw',
-    isa       => 'Str',
-    builder   => '_module',
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_module',
+    lazy       => 1,
 );
 has ns_name => (
-    is        => 'rw',
-    isa       => 'Str',
-    builder   => '_ns_name',
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_ns_name',
+    lazy       => 1,
 );
 has ns_map => (
     is         => 'rw',
     isa        => 'HashRef[Str]',
     predicate  => 'has_ns_map',
     builder    => '_ns_map',
+    lazy       => 1,
 );
 
 sub _element_form_default {

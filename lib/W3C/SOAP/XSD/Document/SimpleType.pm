@@ -25,35 +25,41 @@ has type => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_type',
+    lazy       => 1,
 );
 has enumeration => (
     is         => 'rw',
     isa        => 'ArrayRef[Str]',
     builder    => '_enumeration',
+    lazy       => 1,
 );
 has pattern => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_pattern',
     predicate  => 'has_pattern',
+    lazy       => 1,
 );
 has maxLength => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
     builder    => '_maxLength',
     predicate  => 'has_minLength',
+    lazy       => 1,
 );
 has minLength => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
     builder    => '_minLength',
     predicate  => 'has_maxLength',
+    lazy       => 1,
 );
 has length => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
     builder    => '_length',
     predicate  => 'has_length',
+    lazy       => 1,
 );
 
 sub _type {

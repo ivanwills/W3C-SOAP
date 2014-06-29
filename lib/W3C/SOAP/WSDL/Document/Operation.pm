@@ -25,31 +25,37 @@ has style => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_style',
+    lazy       => 1,
 );
 has action => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_action',
+    lazy       => 1,
 );
 has inputs => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
     builder    => '_inputs',
+    lazy       => 1,
 );
 has outputs => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
     builder    => '_outputs',
+    lazy       => 1,
 );
 has faults => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
     builder    => '_faults',
+    lazy       => 1,
 );
 has port_type => (
     is         => 'rw',
     isa        => 'W3C::SOAP::WSDL::Document::Operation',
     builder    => '_port_type',
+    lazy       => 1,
 );
 
 sub _style {

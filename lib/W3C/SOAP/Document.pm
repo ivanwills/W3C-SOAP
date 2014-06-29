@@ -41,12 +41,14 @@ has xpc => (
     builder    => '_xpc',
     clearer    => 'clear_xpc',
     predicate  => 'has_xpc',
+    lazy       => 1,
 );
 has target_namespace => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_target_namespace',
     predicate  => 'has_target_namespace',
+    lazy => 1,
 );
 has ns_module_map => (
     is        => 'rw',
@@ -56,10 +58,11 @@ has ns_module_map => (
     default   => sub{{}},
 );
 has module => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_module',
-    builder   => '_module',
+    is         => 'rw',
+    isa        => 'Str',
+    predicate  => 'has_module',
+    builder    => '_module',
+    lazy       => 1,
 );
 has module_base => (
     is        => 'rw',

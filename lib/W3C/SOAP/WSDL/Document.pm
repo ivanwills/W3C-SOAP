@@ -28,7 +28,7 @@ has messages => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Message]',
     builder    => '_messages',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has message => (
     is         => 'rw',
