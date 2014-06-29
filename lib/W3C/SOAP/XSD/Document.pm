@@ -46,19 +46,16 @@ has includes => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_includes',
-    lazy_build => 1,
 );
 has simple_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_types',
-    lazy_build => 1,
 );
 has simple_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_type',
-    lazy_build => 0,
 );
 has anon_simple_type_count => (
     is      => 'ro',
@@ -71,13 +68,11 @@ has complex_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_types',
-    lazy_build => 1,
 );
 has complex_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_type',
-    lazy_build => 0,
 );
 has anon_complex_type_count => (
     is      => 'ro',
@@ -90,32 +85,27 @@ has elements => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::Element]',
     builder   => '_elements',
-    lazy_build => 1,
 );
 has element => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::Element]',
     builder   => '_element',
-    lazy_build => 1,
 );
 has module => (
     is        => 'rw',
     isa       => 'Str',
     builder   => '_module',
-    lazy_build => 1,
 );
 has ns_name => (
     is        => 'rw',
     isa       => 'Str',
     builder   => '_ns_name',
-    lazy_build => 1,
 );
 has ns_map => (
     is         => 'rw',
     isa        => 'HashRef[Str]',
     predicate  => 'has_ns_map',
     builder    => '_ns_map',
-    lazy_build => 1,
 );
 
 sub _element_form_default {
