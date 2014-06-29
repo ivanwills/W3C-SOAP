@@ -51,5 +51,6 @@ add_stopwords(qw/
     URI
     mech
     ua
+    BaseClass
 /);
 all_pod_files_spelling_ok();
