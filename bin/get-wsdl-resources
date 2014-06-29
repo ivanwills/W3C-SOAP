@@ -21,7 +21,7 @@ use Path::Class;
 use XML::LibXML;
 use URI;
 
-our $VERSION = version->new('0.06');
+our $VERSION = version->new('0.07');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
@@ -108,7 +108,7 @@ bin/get-resources - <One-line description of commands purpose>
 
 =head1 VERSION
 
-This documentation refers to bin/get-resources version 0.06.
+This documentation refers to bin/get-resources version 0.07.
 
 =head1 SYNOPSIS
 
