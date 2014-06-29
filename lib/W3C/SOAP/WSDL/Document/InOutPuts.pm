@@ -18,25 +18,25 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/split_ns/;
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has message => (
     is         => 'rw',
     isa        => 'Maybe[W3C::SOAP::WSDL::Document::Message]',
     builder    => '_message',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has policy => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_policy',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has body => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_body',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _message {

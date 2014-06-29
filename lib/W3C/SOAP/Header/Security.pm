@@ -16,7 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 sub to_xml {
     my ($self, $xml) = @_;

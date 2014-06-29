@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has sec_id => (
     is      => 'rw',

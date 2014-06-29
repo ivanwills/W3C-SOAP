@@ -20,7 +20,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Header::Security';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 my $id = 0;
 
 has username => (

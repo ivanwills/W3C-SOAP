@@ -28,37 +28,37 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has element_form_default => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_element_form_default',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has imports => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_imports',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has includes => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_includes',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has simple_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_types',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has simple_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::SimpleType]',
     builder    => '_simple_type',
-    lazy_build => 0,
+    lazy       => 1,
 );
 has anon_simple_type_count => (
     is      => 'ro',
@@ -71,13 +71,13 @@ has complex_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_types',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has complex_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::ComplexType]',
     builder    => '_complex_type',
-    lazy_build => 0,
+    lazy       => 1,
 );
 has anon_complex_type_count => (
     is      => 'ro',
@@ -85,37 +85,39 @@ has anon_complex_type_count => (
     traits  => [qw/Counter/],
     default => -1,
     handles => { complex_type_count => 'inc' },
+    clearer => 'reset_complex_type_count',
+    lazy    => 1,
 );
 has elements => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document::Element]',
-    builder   => '_elements',
-    lazy_build => 1,
+    builder    => '_elements',
+    lazy       => 1,
 );
 has element => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document::Element]',
-    builder   => '_element',
-    lazy_build => 1,
+    builder    => '_element',
+    lazy       => 1,
 );
 has module => (
-    is        => 'rw',
-    isa       => 'Str',
-    builder   => '_module',
-    lazy_build => 1,
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_module',
+    lazy       => 1,
 );
 has ns_name => (
-    is        => 'rw',
-    isa       => 'Str',
-    builder   => '_ns_name',
-    lazy_build => 1,
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_ns_name',
+    lazy       => 1,
 );
 has ns_map => (
     is         => 'rw',
     isa        => 'HashRef[Str]',
     predicate  => 'has_ns_map',
     builder    => '_ns_map',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _element_form_default {
@@ -287,13 +289,10 @@ sub _complex_types {
         }
     }
 
-    return \@complex_types;
-}
-
-sub _complex_type {
-    my ($self) = @_;
-    my %complex_type;
-    for my $type (@{ $self->complex_types }) {
+    # Moved the typification of the names in here from
+    # the complex_type builder as I can't see why you
+    # wouldn't want the name fixed up front.
+    for my $type (@complex_types) {
         my $name = $type->name;
         if ( !$name ) {
             my $parent = $type->node->parentNode;
@@ -302,6 +301,16 @@ sub _complex_type {
             $type->name($name);
         }
         confess "No name for complex type ".$type->node->parentNode->toString if !$name;
+    }
+
+    return \@complex_types;
+}
+
+sub _complex_type {
+    my ($self) = @_;
+    my %complex_type;
+    for my $type (@{ $self->complex_types }) {
+        my $name = $type->name;
         $complex_type{$name} = $type;
     }
 

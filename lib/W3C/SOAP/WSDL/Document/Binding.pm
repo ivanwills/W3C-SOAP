@@ -19,7 +19,7 @@ use W3C::SOAP::WSDL::Document::Operation;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has style => (
     is         => 'rw',

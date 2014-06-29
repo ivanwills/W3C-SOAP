@@ -18,13 +18,13 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::XSD::Document::Node';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has documentation => (
     is     => 'rw',
     isa    => 'Str',
     builder => '_documentation',
-    lazy_build => 1,
+    lazy => 1,
 );
 
 sub _documentation {
