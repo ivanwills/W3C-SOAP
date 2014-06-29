@@ -23,7 +23,7 @@ use Moose::Util::TypeConstraints qw/duck_type/;
 
 extends 'W3C::SOAP::Base';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
 has location => (

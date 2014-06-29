@@ -19,7 +19,7 @@ use W3C::SOAP::Utils qw/split_ns xml_error/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has complex_type => (
     is     => 'rw',

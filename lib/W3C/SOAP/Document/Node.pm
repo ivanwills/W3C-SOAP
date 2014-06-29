@@ -15,7 +15,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION= version->new('0.06');
+our $VERSION    = version->new('0.06');
 $ENV{W3C_SOAP_NAME_STYLE} ||= 'perl';
 
 has node => (

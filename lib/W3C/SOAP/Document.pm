@@ -20,7 +20,7 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 use W3C::SOAP::Exception;
 use XML::LibXML;
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has string => (
     is         => 'rw',

@@ -25,7 +25,7 @@ use DateTime::Format::Strptime qw/strptime/;
 
 extends 'W3C::SOAP::Base';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.06');
 
 has xsd_ns => (
     is  => 'rw',
