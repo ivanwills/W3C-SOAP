@@ -85,6 +85,7 @@ has anon_complex_type_count => (
     traits  => [qw/Counter/],
     default => -1,
     handles => { complex_type_count => 'inc' },
+    clearer => 'reset_complex_type_count',
     lazy    => 1,
 );
 has elements => (
@@ -288,13 +289,10 @@ sub _complex_types {
         }
     }
 
-    return \@complex_types;
-}
-
-sub _complex_type {
-    my ($self) = @_;
-    my %complex_type;
-    for my $type (@{ $self->complex_types }) {
+    # Moved the typification of the names in here from
+    # the complex_type builder as I can't see why you
+    # wouldn't want the name fixed up front.
+    for my $type (@complex_types) {
         my $name = $type->name;
         if ( !$name ) {
             my $parent = $type->node->parentNode;
@@ -303,6 +301,16 @@ sub _complex_type {
             $type->name($name);
         }
         confess "No name for complex type ".$type->node->parentNode->toString if !$name;
+    }
+
+    return \@complex_types;
+}
+
+sub _complex_type {
+    my ($self) = @_;
+    my %complex_type;
+    for my $type (@{ $self->complex_types }) {
+        my $name = $type->name;
         $complex_type{$name} = $type;
     }
 

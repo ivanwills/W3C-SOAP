@@ -74,7 +74,6 @@ sub write_modules {
         mkdir $_ for reverse @missing;
 
         for my $type ( @{ $xsd->complex_types } ) {
-            $type->document()->complex_type();
             my $type_name = $type->name || $type->parent_node->name;
             warn  "me          = ".(ref $type).
                 "\nnode        = ".($type->node->nodeName).
@@ -235,7 +234,6 @@ sub dynamic_classes {
         my %local_seen;
         TYPE:
         while ( my $type = shift @types ) {
-            $type->document()->complex_type();
             my $type_name = $type->name || $type->parent_node->name;
             my $type_module = $module . '::' . $type_name;
 
