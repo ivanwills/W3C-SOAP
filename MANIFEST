@@ -67,6 +67,8 @@ t/xsd_parser_dynamic.t
 t/xsd_parser.t
 t/wsdl_parser.t
 t/wsdl_parser_dynamic.t
+t/in_header.wsdl
+t/wsdl_header.t
 templates/config.tt
 templates/pod.tt
 templates/wsdl/pm.tt
