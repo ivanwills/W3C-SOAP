@@ -86,6 +86,7 @@ XML
         $soap_body->appendChild( $xml->createTextNode($body) );
     }
     elsif ( $body->isa('XML::LibXNL::Node') ) {
+       warn "got an XML Node";
         $soap_body->appendChild( $body );
     }
     elsif ( $body->can('to_xml') ) {
@@ -133,6 +134,7 @@ sub send {
         my $faultactor  = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("faultactor");
         my $detail      = join ' ', map {$_->toString} map {$_->childNodes} $fault->findnodes("detail");
 
+        warn $xml_response->toString();
         W3C::SOAP::Exception->throw(
             faultcode   => $faultcode,
             faultstring => $faultstring,

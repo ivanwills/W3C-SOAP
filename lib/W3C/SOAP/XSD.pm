@@ -153,12 +153,16 @@ sub to_xml {
     my $meta = $self->meta;
     my @attributes = $self->get_xml_nodes;
 
+
     my @nodes;
     $self->clear_xsd_ns_name;
     my $xsd_ns_name = $self->xsd_ns ? $self->xsd_ns_name : undef;
 
     for my $att (@attributes) {
         my $name = $att->name;
+
+
+        
 
         # skip attributes that are not XSD attributes
         next if !$att->does('W3C::SOAP::XSD');

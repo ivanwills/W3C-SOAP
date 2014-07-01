@@ -58,21 +58,56 @@ has port_type => (
     lazy       => 1,
 );
 
+# If this operation was from the C<port_type> then this would be the
+# one derived from the binding.
+has binding_operation => (
+    is         => 'rw',
+    isa        => 'Maybe[W3C::SOAP::WSDL::Document::Operation]',
+    predicate  => 'has_binding_operation',
+);
+
 sub _style {
     my ($self) = @_;
-    my $style = $self->node->getAttribute('style');
-    return $style if $style;
-    my ($child) = $self->document->xpc->findnode('soap:binding'. $self->node);
-    return $child->getAttribute('style');
+
+    my $style;
+    if (!defined($style = $self->node->getAttribute('style'))) {
+    if ( my ($child) = $self->_soap_binding_node() ) {
+      $style = $child->getAttribute('style');
+    }
+    else {
+      if( my ($child) = $self->_soap_operation_node() ) {
+            $style = $child->getAttribute('style');
+        }
+    }
+   }
+   return $style
 }
 
 sub _action {
     my ($self) = @_;
-    my $action = $self->node->getAttribute('soapAction');
-    return $action if $action;
-    my ($child) = $self->document->xpc->findnode('soap:binding'. $self->node);
-    return $child->getAttribute('soapAction');
+
+    my $action;
+    if(!defined($action = $self->node->getAttribute('soapAction') )) {
+      if( my ($child) = $self->_soap_operation_node() ) {
+            $action = $child->getAttribute('soapAction');
+        }
+    }
+    return $action;
 }
+
+sub _soap_operation_node
+{
+   my ( $self ) = @_;
+
+   return $self->document->xpc->findnodes('soap:operation', $self->node);
+} 
+
+sub _soap_binding_node
+{
+   my ( $self ) = @_;
+
+   return $self->document->xpc->findnodes('../soap:binding', $self->node);
+} 
 
 sub _inputs  { return $_[0]->_in_out_puts('input');  }
 sub _outputs { return $_[0]->_in_out_puts('output'); }
@@ -86,6 +121,7 @@ sub _in_out_puts {
         push @puts, W3C::SOAP::WSDL::Document::InOutPuts->new(
             parent_node => $self,
             node        => $node,
+            dir         => $dir,
         );
     }
 
@@ -94,13 +130,19 @@ sub _in_out_puts {
 
 sub _port_type {
     my ($self) = @_;
+
+    my $ret;
+
+    PORT_TYPE:
     for my $port_type (@{ $self->document->port_types }) {
         for my $operation (@{ $port_type->operations }) {
-            return $operation if $operation->name eq $self->name;
+            if ( $operation->name eq $self->name ) {
+               $ret = $operation;
+               $ret->binding_operation($self);
+            }
         }
     }
-
-    return;
+    return $ret;
 }
 
 1;

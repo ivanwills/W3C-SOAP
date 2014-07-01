@@ -35,7 +35,9 @@ has '+location' => (
     FOR port IN service.ports;
         FOR operation IN port.binding.operations;
             in_element = operation.port_type.inputs.0.message.element;
+            in_header_element =  operation.port_type.inputs.0.header.element
             out_element = operation.port_type.outputs.0.message.element;
+            out_header_element =  operation.port_type.outputs.0.header.element
             faults = operation.port_type.faults;
  %]
 operation [% operation.perl_name %] => (
@@ -44,9 +46,17 @@ operation [% operation.perl_name %] => (
     in_class       => '[% in_element.module %]',
     in_attribute   => '[% in_element.perl_name %]',
 [%- END %]
+[%- IF in_header_element %]
+    in_header_class       => '[% in_header_element.module %]',
+    in_header_attribute   => '[% in_header_element.perl_name %]',
+[%- END %]
 [%- IF out_element %]
     out_class      => '[% out_element.module %]',
     out_attribute  => '[% out_element.perl_name %]',
+[%- END %]
+[%- IF out_header_element %]
+    out_header_class       => '[% out_header_element.module %]',
+    out_header_attribute   => '[% out_header_element.perl_name %]',
 [%- END %]
 [%- IF faults %]
     faults         => [
