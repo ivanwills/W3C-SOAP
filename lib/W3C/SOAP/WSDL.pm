@@ -12,7 +12,7 @@ use version;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use TryCatch;
+use Try::Tiny;
 
 extends 'W3C::SOAP::Client';
 
@@ -124,13 +124,13 @@ sub send {
     try {
         $content = $self->post($action, $xml);
     }
-    catch ($e) {
+    catch  {
         $self->log->error("$action RESPONSE \n" . $self->response->decoded_content) if $self->has_log;
 
         W3C::SOAP::Exception::HTTP->throw(
             faultcode => $self->response->code,
             message   => $self->response->message,
-            error     => $e,
+            error     => $_,
         );
     };
     $self->log->debug("$action RESPONSE \n$content") if $self->has_log;

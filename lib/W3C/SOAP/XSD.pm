@@ -20,7 +20,7 @@ use MooseX::Types::XMLSchema;
 use W3C::SOAP::XSD::Types qw/:all/;
 use W3C::SOAP::XSD::Traits;
 use W3C::SOAP::Utils qw/split_ns/;
-use TryCatch;
+use Try::Tiny;
 use DateTime::Format::Strptime qw/strptime/;
 
 extends 'W3C::SOAP::Base';
@@ -113,16 +113,16 @@ sub _from_xml {
     try {
         return $type->new($xml);
     }
-    catch ($e) {
-        $e =~ s/\s at \s .*//xms;
-        warn "$class Failed in building from $type\->new($xml) : $e\n",
+    catch  {
+        $_ =~ s/\s at \s .*//xms;
+        warn "$class Failed in building from $type\->new($xml) : $_\n",
             "Will use :\n\t'",
             $xml->toString,
             "'\n\tor\n\t'",
             $xml->textContent,"'\n",
             '*' x 222,
             "\n";
-    }
+    };
 
     return $xml->textContent;
 }

@@ -15,7 +15,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use LWP::UserAgent;
-use TryCatch;
+use Try::Tiny;
 use XML::LibXML;
 use W3C::SOAP::Exception;
 use W3C::SOAP::Header;

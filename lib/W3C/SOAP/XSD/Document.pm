@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 use Path::Class;
 use XML::LibXML;
 use WWW::Mechanize;
-use TryCatch;
+use Try::Tiny;
 use URI;
 use W3C::SOAP::Exception;
 use W3C::SOAP::XSD::Document::Element;
@@ -250,13 +250,13 @@ sub _complex_types {
                 node     => $node,
             );
         }
-        catch ($e) {
+        catch {
             warn Dumper {
                 document => $self,
                 node     => $node,
             };
-            die $e;
-        }
+            die $_;
+        };
 
     }
 
@@ -279,14 +279,14 @@ sub _complex_types {
             );
             push @elements, @{ $complex_types[-1]->sequence };
         }
-        catch ($e) {
+        catch  {
             warn Dumper {
                 parent_node => $element->node->toString,
                 document    => $self,
                 node        => $node,
             };
-            die $e;
-        }
+            die $_;
+        };
     }
 
     # Moved the typification of the names in here from
