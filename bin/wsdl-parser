@@ -203,7 +203,7 @@ sub show {
                     for my $dir (qw/inputs outputs faults/) {
                         print "\t\t\t\t$dir: ";
                         if (defined(my $dir_el = $operation->port_type->$dir->[0] )) {
-                        if ($dir_el->message->element) {
+                           if ($dir_el->message->element) {
                                print $dir_el->message->element->type_module;
                            }
                            elsif ($dir_el->message->type) {
