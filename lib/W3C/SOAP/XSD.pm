@@ -110,8 +110,10 @@ sub _from_xml {
     confess "Unknown conversion " . ( (ref $xml) || $xml )
         if !$xml || !blessed $xml || !$xml->isa('XML::LibXML::Node');
 
+    my $ret;
+
     try {
-        return $type->new($xml);
+        $ret = $type->new($xml);
     }
     catch  {
         $_ =~ s/\s at \s .*//xms;
@@ -122,9 +124,10 @@ sub _from_xml {
             $xml->textContent,"'\n",
             '*' x 222,
             "\n";
+        $ret = $xml->textContent;
     };
 
-    return $xml->textContent;
+    return $ret;
 }
 
 sub xml2perl_map {
