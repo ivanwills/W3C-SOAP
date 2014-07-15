@@ -82,6 +82,11 @@ sub perl_name {
     return $name if $ENV{W3C_SOAP_NAME_STYLE} eq 'original';
 
     $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
+
+    # the allowed characters in XML identifiers are not the same
+    # as those in Perl
+    $name =~ s/\W//g;
+
     return lc $name;
 }
 
