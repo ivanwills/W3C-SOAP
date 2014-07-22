@@ -133,7 +133,9 @@ sub _module {
 
 sub get_module_name {
     my ($self, $ns) = @_;
+    confess "No namespace given!" if !defined $ns;
 
+    # namespace may be empty but map must be a module
     if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
 
         # construct module name if we have a base name

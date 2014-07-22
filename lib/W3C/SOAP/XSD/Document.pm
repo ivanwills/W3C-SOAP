@@ -344,14 +344,13 @@ sub _element {
 sub _ns_name {
     my ($self) = @_;
     my %rev = reverse %{ $self->ns_map };
-    if ( !$rev{$self->target_namespace} ) {
+    if ( !defined $rev{$self->target_namespace} ) {
         delete $self->ns_map->{''};
         my $ns = $self->target_namespace;
         $ns =~ s/:/_/gxms;
         $rev{$self->target_namespace} = $ns;
         $self->ns_map->{$ns} = $self->target_namespace;
     }
-    confess "No ns name\n".Dumper \%rev, $self->target_namespace if !$rev{$self->target_namespace};
     return $rev{$self->target_namespace};
 }
 
@@ -369,7 +368,7 @@ sub _ns_map {
 
     my %rev;
     for my $name ( keys %map ) {
-        $rev{$map{$name}} ||= $name;
+        $rev{$map{$name}} //= $name;
     }
     if ( $rev{$self->target_namespace} && $map{''} && $map{''} eq $self->target_namespace ) {
         delete $map{''};
@@ -378,6 +377,7 @@ sub _ns_map {
     my $ns = $self->target_namespace;
     $ns =~ s/:/_/gxms;
     $map{$ns} = $self->target_namespace if !$rev{$self->target_namespace};
+    $map{''} = '';
 
     return \%map;
 }
@@ -403,7 +403,7 @@ sub get_ns_uri {
         last if ref $node eq 'XML::LibXML::Document';
     }
 
-    confess "Couldn't find the namespace '$ns_name' to map\nMap has:\n", Dumper $self->ns_map if !$self->ns_map->{$ns_name};
+    confess "Couldn't find the namespace '$ns_name' to map\nMap has:\n", Dumper $self->ns_map if !defined $self->ns_map->{$ns_name};
 
     return $self->ns_map->{$ns_name};
 }
