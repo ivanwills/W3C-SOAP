@@ -20,7 +20,7 @@
         serialize = "sub { \$_->hms }";
     END;
 %]
-has [% element.perl_name %] => (
+has [% element.perl_name || '' %] => (
     is              => 'rw',
     isa             => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %] ),
     predicate       => 'has_[% element.perl_name %]',
