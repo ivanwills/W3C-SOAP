@@ -26,6 +26,12 @@ has message => (
     builder    => '_message',
     lazy       => 1,
 );
+has header => (
+    is         => 'rw',
+    isa        => 'Maybe[W3C::SOAP::WSDL::Document::Message]',
+    builder    => '_header',
+    lazy       => 1,
+);
 has policy => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
@@ -39,6 +45,12 @@ has body => (
     lazy       => 1,
 );
 
+has dir  => (
+   is       => 'rw',
+   isa      => 'Maybe[Str]',
+   predicate   => 'has_dir',
+);
+
 sub _message {
     my ($self) = @_;
     my ($ns, $message) = split_ns($self->node->getAttribute('message'));
@@ -48,6 +60,31 @@ sub _message {
     }
 
     return;
+}
+
+sub _header {
+    my ($self) = @_;
+
+    my $header;
+    if ( $self->parent_node()->has_binding_operation() ) {
+       my $dir = $self->dir();
+       my $bo_node = $self->parent_node()->binding_operation()->node();
+
+       my ($_node) = $self->document->xpc->findnodes("wsdl:$dir/soap:header", $bo_node);
+
+       if ( defined $_node ) {
+         my ($ns, $message) = split_ns($_node->getAttribute('message'));
+
+         HEADER_MESSAGE:
+         for my $msg (@{ $self->document->messages }) {
+            if ( $msg->name eq $message ) {
+               $header = $msg;
+               last HEADER_MESSAGE;
+            }
+         }
+      }
+    }
+    return $header;
 }
 
 

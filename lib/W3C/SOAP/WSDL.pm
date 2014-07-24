@@ -35,9 +35,21 @@ sub _request {
     if ( $method->has_in_class && $method->has_in_attribute ) {
         my $class = $method->in_class;
         my $att   = $method->in_attribute;
-        my $xsd   = $class->new(
-            $att => @args == 1 ? $args[0] : {@args},
-        );
+
+        my $att_args = @args == 1 ? $args[0] : {@args};
+
+        my $header_args = delete $att_args->{header} || {};
+
+        my $xsd   = $class->new( $att => $att_args);
+
+        if ( $method->has_in_header_class && $method->has_in_header_attribute) {
+           my $header_class   = $method->in_header_class;
+           my $header_att     = $method->in_header_attribute; 
+
+           my $header = $header_class->new($header_att => $header_args);
+
+           $self->header->message($header);
+        }
         my $xsd_ns = $xsd->xsd_ns;
         if ( $xsd_ns !~ m{/$} ) {
             $xsd_ns .= '/';
