@@ -69,7 +69,9 @@ sub _document {
 
 sub _name {
     my ($self) = shift;
-    return $self->node->getAttribute('name');
+    my $name = $self->node->getAttribute('name');
+    $name =~ s/\W/_/gxms if $name;
+    return $name;
 }
 
 sub perl_name {
