@@ -25,3 +25,4 @@ t/lib/MyApp
 t/xsd/
 test/
 t/lib/ElementFormDefault/
+t/lib/XSDs/
