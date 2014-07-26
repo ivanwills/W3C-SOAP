@@ -1,4 +1,4 @@
 <?xml version="1.0" standalone="yes"?>
 <doc xmlns="t/xsds/no_namespace/test.xsd">
-    <agent>yes</agent>
+    <test>answer</test>
 </doc>
