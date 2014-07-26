@@ -72,6 +72,9 @@ sub test_xsd {
         my $from_perl = $module->new($map{$test}{perl});
         my $from_xml  = $module->new( xml => $map{$test}{file} );
         is_deeply $from_perl->to_data, $from_xml->to_data, 'Generated object are the same';
+        my $xml = XML::LibXML->load_xml(string => '<?xml version="1.0"?><doc/>');
+        warn $from_perl->to_xml($xml);
+        warn $xml->toString;
     }
 
     return;

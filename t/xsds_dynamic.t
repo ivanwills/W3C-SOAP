@@ -17,6 +17,7 @@ plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w 
 my @xsds = grep {-d $_} $dir->subdir('xsds')->children;
 
 for my $xsd (@xsds) {
+    next if $xsd =~ /no/;
     test_xsd($xsd);
 }
 
@@ -25,10 +26,8 @@ exit;
 
 sub test_xsd {
     my ($xsd) = @_;
-    my ($name) = $xsd =~ m{/([^/]+)$};
-    $name = join "::", map { ucfirst lc $_ } split /[\W_]+/, $name;
 
-    my $module = load_xsd($xsd);
+    my ($module) = load_xsd("$xsd/test.xsd");
     ok $module, "Get expected module name";
 
     # get all the data tests
@@ -52,9 +51,13 @@ sub test_xsd {
     for my $test (keys %map) {
         my $from_perl = $module->new($map{$test}{perl});
         my $from_xml  = $module->new( xml => $map{$test}{file} );
-        is_deeply $from_perl->to_data, $from_xml->to_data, 'Generated object are the same';
-        my $xml = XML::LibXML->load_xml(string => '<?xml version="1.0"?><doc/>');
-        warn $from_perl->to_xml($xml);
+        is_deeply $from_perl->to_data, $from_xml->to_data, 'Generated object are the same'
+            or note Dumper $from_perl->to_data, $from_xml->to_data;
+        my $xml = XML::LibXML->load_xml(string => '<?xml version="1.0"?><doc><a/></doc>');
+        my @child = $from_perl->to_xml($xml);
+        warn @child;
+        warn Dumper @child;
+        $xml->replaceChild($xml->firstChild, @child);
         warn $xml->toString;
     }
 
