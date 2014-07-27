@@ -1,4 +1,2 @@
 <?xml version="1.0" standalone="yes"?>
-<doc xmlns="http://element.example.com/">
-    <test>answer</test>
-</doc>
+<t:test xmlns:t="http://element.example.com/">answer</t:test>
