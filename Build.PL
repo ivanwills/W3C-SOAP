@@ -41,6 +41,7 @@ my $builder = Module::Build->new(
     build_requires => {
         'Test::More'       => 0,
         'Test::NoWarnings' => 0,
+        'Test::XML'        => 0,
     },
     recommends => {
         'MooseX::Aliases'                => 0,
