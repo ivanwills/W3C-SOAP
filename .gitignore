@@ -26,3 +26,4 @@ t/xsd/
 test/
 t/lib/ElementFormDefault/
 t/lib/XSDs/
+t/lib/XSD/
