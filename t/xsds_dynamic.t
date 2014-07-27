@@ -3,10 +3,12 @@
 use strict;
 use warnings;
 use Test::More;
+use Test::XML;
 use Path::Class;
 use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
+use XML::LibXML;
 use W3C::SOAP::XSD::Parser qw/load_xsd/;
 use lib file($0)->parent->subdir('lib').'';
 
@@ -17,7 +19,6 @@ plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w 
 my @xsds = grep {-d $_} $dir->subdir('xsds')->children;
 
 for my $xsd (@xsds) {
-    next if $xsd =~ /no/;
     test_xsd($xsd);
 }
 
@@ -47,18 +48,16 @@ sub test_xsd {
         $map{$name}{file} = $file;
     }
 
-    warn Dumper \%map;
     for my $test (keys %map) {
+        my $xml = XML::LibXML->load_xml(location => $map{$test}{file});
         my $from_perl = $module->new($map{$test}{perl});
-        my $from_xml  = $module->new( xml => $map{$test}{file} );
+        my $from_xml  = $module->new($xml);
         is_deeply $from_perl->to_data, $from_xml->to_data, 'Generated object are the same'
             or note Dumper $from_perl->to_data, $from_xml->to_data;
-        my $xml = XML::LibXML->load_xml(string => '<?xml version="1.0"?><doc><a/></doc>');
+
         my @child = $from_perl->to_xml($xml);
-        warn @child;
-        warn Dumper @child;
-        $xml->replaceChild($xml->firstChild, @child);
-        warn $xml->toString;
+        is_xml $xml->firstChild->toString, $child[0]->toString, "XML matches"
+            or note "\n", $xml->firstChild->toString, "\n", $child[0]->toString, "\n";
     }
 
     return;
