@@ -20,7 +20,7 @@ use MooseX::Types::XMLSchema;
 use W3C::SOAP::XSD::Types qw/:all/;
 use W3C::SOAP::XSD::Traits;
 use W3C::SOAP::Utils qw/split_ns/;
-use TryCatch;
+use Try::Tiny;
 use DateTime::Format::Strptime qw/strptime/;
 
 extends 'W3C::SOAP::Base';
@@ -110,21 +110,24 @@ sub _from_xml {
     confess "Unknown conversion " . ( (ref $xml) || $xml )
         if !$xml || !blessed $xml || !$xml->isa('XML::LibXML::Node');
 
+    my $ret;
+
     try {
-        return $type->new($xml);
+        $ret = $type->new($xml);
     }
-    catch ($e) {
-        $e =~ s/\s at \s .*//xms;
-        warn "$class Failed in building from $type\->new($xml) : $e\n",
+    catch  {
+        $_ =~ s/\s at \s .*//xms;
+        warn "$class Failed in building from $type\->new($xml) : $_\n",
             "Will use :\n\t'",
             $xml->toString,
             "'\n\tor\n\t'",
             $xml->textContent,"'\n",
             '*' x 222,
             "\n";
-    }
+        $ret = $xml->textContent;
+    };
 
-    return $xml->textContent;
+    return $ret;
 }
 
 sub xml2perl_map {
@@ -153,12 +156,16 @@ sub to_xml {
     my $meta = $self->meta;
     my @attributes = $self->get_xml_nodes;
 
+
     my @nodes;
     $self->clear_xsd_ns_name;
     my $xsd_ns_name = $self->xsd_ns ? $self->xsd_ns_name : undef;
 
     for my $att (@attributes) {
         my $name = $att->name;
+
+
+        
 
         # skip attributes that are not XSD attributes
         next if !$att->does('W3C::SOAP::XSD');

@@ -156,7 +156,9 @@ sub dynamic_classes {
         for my $port (@{ $service->ports }) {
             for my $operation (@{ $port->binding->operations }) {
                 my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
+                my $in_header_element  = eval { $operation->port_type->inputs->[0]->header->element };
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
+                my $out_header_element  = eval { $operation->port_type->outputs->[0]->header->element };
                 my @faults = eval {
                     map {{
                         class => $_->message->element->module,
@@ -172,8 +174,12 @@ sub dynamic_classes {
                     wsdl_operation => $operation->name,
                     $in_element  ? ( in_class      => $in_element->module     ) : (),
                     $in_element  ? ( in_attribute  => $in_element->perl_name  ) : (),
+                    $in_header_element  ? ( in_header_class      => $in_header_element->module     ) : (),
+                    $in_header_element  ? ( in_header_attribute  => $in_header_element->perl_name  ) : (),
                     $out_element ? ( out_class     => $out_element->module    ) : (),
                     $out_element ? ( out_attribute => $out_element->perl_name ) : (),
+                    $out_header_element  ? ( out_header_class      => $out_header_element->module     ) : (),
+                    $out_header_element  ? ( out_header_attribute  => $out_header_element->perl_name  ) : (),
                     @faults ? ( faults => \@faults ) : (),
                 );
 

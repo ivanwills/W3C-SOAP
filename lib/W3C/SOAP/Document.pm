@@ -14,7 +14,7 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use TryCatch;
+use Try::Tiny;
 use URI;
 use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 use W3C::SOAP::Exception;
@@ -83,19 +83,19 @@ around BUILDARGS => sub {
         try {
             $args->{xml} = XML::LibXML->load_xml(string => $args->{string});
         }
-        catch($e) {
-            chomp $e;
-            W3C::SOAP::Exception::XML->throw( error => $e, faultstring => $e );
-        }
+        catch {
+            chomp $_;
+            W3C::SOAP::Exception::XML->throw( error => $_, faultstring => $_ );
+        };
     }
     elsif ( $args->{location} ) {
         try {
             $args->{xml} = XML::LibXML->load_xml(location => $args->{location});
         }
-        catch($e) {
-            chomp $e;
-            W3C::SOAP::Exception::XML->throw( error => $e, faultstring => $args->{location} );
-        }
+        catch {
+            chomp $_;
+            W3C::SOAP::Exception::XML->throw( error => $_, faultstring => $args->{location} );
+        };
     }
 
     return $class->$orig($args);

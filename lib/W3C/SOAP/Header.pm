@@ -25,6 +25,12 @@ has security => (
     predicate => 'has_security',
 );
 
+has message => (
+   is => 'rw',
+   isa   => 'W3C::SOAP::XSD',
+   predicate   => 'has_message',
+);
+
 sub to_xml {
     my ($self, $xml) = @_;
 
@@ -32,6 +38,11 @@ sub to_xml {
 
     if ($self->has_security) {
         $header->appendChild($self->security->to_xml($xml));
+    }
+    if ($self->has_message) {
+       foreach my $node ( $self->message->to_xml($xml) ) {
+        $header->appendChild($node);
+      }
     }
 
     return $header;
