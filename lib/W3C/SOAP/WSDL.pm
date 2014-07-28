@@ -43,12 +43,12 @@ sub _request {
         my $xsd   = $class->new( $att => $att_args);
 
         if ( $method->has_in_header_class && $method->has_in_header_attribute) {
-           my $header_class   = $method->in_header_class;
-           my $header_att     = $method->in_header_attribute; 
+            my $header_class   = $method->in_header_class;
+            my $header_att     = $method->in_header_attribute;
 
-           my $header = $header_class->new($header_att => $header_args);
+            my $header = $header_class->new($header_att => $header_args);
 
-           $self->header->message($header);
+            $self->header->message($header);
         }
         my $xsd_ns = $xsd->xsd_ns;
         if ( $xsd_ns !~ m{/$} ) {

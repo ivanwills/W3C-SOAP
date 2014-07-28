@@ -40,9 +40,9 @@ sub to_xml {
         $header->appendChild($self->security->to_xml($xml));
     }
     if ($self->has_message) {
-       foreach my $node ( $self->message->to_xml($xml) ) {
-        $header->appendChild($node);
-      }
+        for my $node ( $self->message->to_xml($xml) ) {
+            $header->appendChild($node);
+       }
     }
 
     return $header;

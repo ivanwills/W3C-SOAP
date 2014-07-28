@@ -69,45 +69,45 @@ has binding_operation => (
 sub _style {
     my ($self) = @_;
 
-    my $style;
-    if (!defined($style = $self->node->getAttribute('style'))) {
-    if ( my ($child) = $self->_soap_binding_node() ) {
-      $style = $child->getAttribute('style');
-    }
-    else {
-      if( my ($child) = $self->_soap_operation_node() ) {
+    my $style = $self->node->getAttribute('style');
+    if ( !defined $style ) {
+        if ( my ($child) = $self->_soap_binding_node() ) {
             $style = $child->getAttribute('style');
         }
-    }
+        else {
+            if ( my ($child) = $self->_soap_operation_node() ) {
+                  $style = $child->getAttribute('style');
+            }
+       }
    }
+
    return $style
 }
 
 sub _action {
     my ($self) = @_;
 
-    my $action;
-    if(!defined($action = $self->node->getAttribute('soapAction') )) {
-      if( my ($child) = $self->_soap_operation_node() ) {
+    my $action = $self->node->getAttribute('soapAction');
+    if ( !defined $action ) {
+        if ( my ($child) = $self->_soap_operation_node() ) {
             $action = $child->getAttribute('soapAction');
         }
     }
+
     return $action;
 }
 
-sub _soap_operation_node
-{
-   my ( $self ) = @_;
+sub _soap_operation_node {
+   my ($self) = @_;
 
    return $self->document->xpc->findnodes('soap:operation', $self->node);
-} 
+}
 
-sub _soap_binding_node
-{
-   my ( $self ) = @_;
+sub _soap_binding_node {
+   my ($self) = @_;
 
    return $self->document->xpc->findnodes('../soap:binding', $self->node);
-} 
+}
 
 sub _inputs  { return $_[0]->_in_out_puts('input');  }
 sub _outputs { return $_[0]->_in_out_puts('output'); }
