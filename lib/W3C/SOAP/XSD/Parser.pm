@@ -398,7 +398,8 @@ sub element_attributes {
         is            => 'rw',
         isa           => $class_name->xsd_subtype(
             ($simple ? 'parent' : 'module') => $type_name,
-           list => $is_array,
+           list     => $is_array,
+           nillable => $element->nillable,
         ),
         predicate     => 'has_'. $element->perl_name,
         # TODO handle nillable correctly  should be a Maybe type

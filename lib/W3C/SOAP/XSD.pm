@@ -190,6 +190,7 @@ sub to_xml {
             }
             elsif ( ! defined $item && ! $att->has_xs_serialize ) {
                 $tag->setAttribute('nil', 'true');
+                $tag->setAttribute('null', 'true');
             }
             else {
                 local $_ = $item;
@@ -285,7 +286,8 @@ my %types;
 sub xsd_subtype {
     my ($self, %args) = @_;
     my $parent_type = $args{module} || $args{parent};
-    # upgrade dates
+
+    # upgrade types
     $parent_type
         = $parent_type eq 'xs:date'     ? 'xsd:date'
         : $parent_type eq 'xs:dateTime' ? 'xsd:dateTime'
@@ -295,8 +297,12 @@ sub xsd_subtype {
         : $parent_type eq 'xs:long'     ? 'xsd:long'
         :                                 $parent_type;
 
-    my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
-    my $subtype = $parent_type =~ /^xsd:\w/xms && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);
+    my $parent_type_name
+        = $args{list}     ? "ArrayRef[$parent_type]"
+        : $args{nillable} ? "Maybe[$parent_type]"
+        :                   $parent_type;
+
+    my $subtype = $parent_type =~ /^xsd:\w/xms && Moose::Util::TypeConstraints::find_type_constraint($parent_type);
     return $subtype if $subtype && !$args{list};
 
     $subtype = subtype
@@ -346,7 +352,7 @@ sub xsd_subtype {
     if ($this_type->has_parent) {
         coerce $subtype
             => from 'Any'
-            => via { $this_type->parent->coerce($_) };
+            => via { !defined $_ && $args{nillable} ? undef : $this_type->parent->coerce($_) };
     }
 
     return $subtype;
