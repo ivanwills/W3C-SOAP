@@ -1,3 +1,32 @@
+libw3c-soap-perl (0.06ubuntu2) UNRELEASED; urgency=medium
+
+  [ Ivan Wills ]
+  * Ignoring BaseClass
+
+  [ ivan ]
+
+ -- Ivan Wills <Ivan.Wills2@optus.com.au>  Mon, 30 Jun 2014 02:56:38 +0530
+
+libw3c-soap-perl (0.06ubuntu1) trusty; urgency=medium
+
+  [ Ivan Wills ]
+  * Trying to get to work under Perl 5.18 by removing lazy builders
+  * Minor code tidy up
+  * Added test to confirm that unqualified and qualified elements are correctly re-inflated
+  * Removed unused function
+  * Removed to unused attributes
+  * Fixed whitespace
+  * work on Rabbit
+  * Adding tag files
+  * Fixed abstracts to match spec per http://neilb.org/2014/02/19/compliant-abstract.html
+
+  [ Jonathan Stowe ]
+  * Revert "Merge branch 'perl5.18-fix-lazy' of github.com:jonathanstowe/W3C-SOAP into 5.18.1-fix"
+  * Added sufficient laziness for it to work on 5.18.1
+  * Move complex type name fixup into complex_types builder
+
+ -- ivan <ivan@nyssa>  Mon, 30 Jun 2014 02:48:01 +0530
+
 libw3c-soap-perl (0.06) precise; urgency=low
 
   [ Ivan Wills ]

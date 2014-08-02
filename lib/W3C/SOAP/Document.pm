@@ -14,13 +14,13 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use TryCatch;
+use Try::Tiny;
 use URI;
 use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 use W3C::SOAP::Exception;
 use XML::LibXML;
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has string => (
     is         => 'rw',
@@ -41,14 +41,14 @@ has xpc => (
     builder    => '_xpc',
     clearer    => 'clear_xpc',
     predicate  => 'has_xpc',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has target_namespace => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_target_namespace',
     predicate  => 'has_target_namespace',
-    lazy_build => 1,
+    lazy => 1,
 );
 has ns_module_map => (
     is        => 'rw',
@@ -58,11 +58,11 @@ has ns_module_map => (
     default   => sub{{}},
 );
 has module => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_module',
-    builder   => '_module',
-    lazy_build => 1,
+    is         => 'rw',
+    isa        => 'Str',
+    predicate  => 'has_module',
+    builder    => '_module',
+    lazy       => 1,
 );
 has module_base => (
     is        => 'rw',
@@ -83,19 +83,19 @@ around BUILDARGS => sub {
         try {
             $args->{xml} = XML::LibXML->load_xml(string => $args->{string});
         }
-        catch($e) {
-            chomp $e;
-            W3C::SOAP::Exception::XML->throw( error => $e, faultstring => $e );
-        }
+        catch {
+            chomp $_;
+            W3C::SOAP::Exception::XML->throw( error => $_, faultstring => $_ );
+        };
     }
     elsif ( $args->{location} ) {
         try {
             $args->{xml} = XML::LibXML->load_xml(location => $args->{location});
         }
-        catch($e) {
-            chomp $e;
-            W3C::SOAP::Exception::XML->throw( error => $e, faultstring => $args->{location} );
-        }
+        catch {
+            chomp $_;
+            W3C::SOAP::Exception::XML->throw( error => $_, faultstring => $args->{location} );
+        };
     }
 
     return $class->$orig($args);
@@ -133,7 +133,9 @@ sub _module {
 
 sub get_module_name {
     my ($self, $ns) = @_;
+    confess "No namespace given!" if !defined $ns;
 
+    # namespace may be empty but map must be a module
     if ( ! $self->ns_module_map->{normalise_ns($ns)} ) {
 
         # construct module name if we have a base name
@@ -168,7 +170,7 @@ W3C::SOAP::Document - Object to represent an XML Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Document version 0.06.
+This documentation refers to W3C::SOAP::Document version 0.07.
 
 =head1 SYNOPSIS
 

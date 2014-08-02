@@ -87,3 +87,4 @@ t/lib/MyApp
 TODO
 tmp
 vrc.yml
+t/lib/XSDs?/.*

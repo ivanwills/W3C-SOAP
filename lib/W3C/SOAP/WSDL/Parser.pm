@@ -25,7 +25,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION = version->new('0.06');
+our $VERSION = version->new('0.07');
 
 has '+document' => (
     isa      => 'W3C::SOAP::WSDL::Document',
@@ -156,7 +156,9 @@ sub dynamic_classes {
         for my $port (@{ $service->ports }) {
             for my $operation (@{ $port->binding->operations }) {
                 my $in_element  = eval { $operation->port_type->inputs->[0]->message->element };
+                my $in_header_element  = eval { $operation->port_type->inputs->[0]->header->element };
                 my $out_element = eval { $operation->port_type->outputs->[0]->message->element };
+                my $out_header_element  = eval { $operation->port_type->outputs->[0]->header->element };
                 my @faults = eval {
                     map {{
                         class => $_->message->element->module,
@@ -172,8 +174,12 @@ sub dynamic_classes {
                     wsdl_operation => $operation->name,
                     $in_element  ? ( in_class      => $in_element->module     ) : (),
                     $in_element  ? ( in_attribute  => $in_element->perl_name  ) : (),
+                    $in_header_element  ? ( in_header_class      => $in_header_element->module     ) : (),
+                    $in_header_element  ? ( in_header_attribute  => $in_header_element->perl_name  ) : (),
                     $out_element ? ( out_class     => $out_element->module    ) : (),
                     $out_element ? ( out_attribute => $out_element->perl_name ) : (),
+                    $out_header_element  ? ( out_header_class      => $out_header_element->module     ) : (),
+                    $out_header_element  ? ( out_header_attribute  => $out_header_element->perl_name  ) : (),
                     @faults ? ( faults => \@faults ) : (),
                 );
 
@@ -210,11 +216,12 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Parser - Parses WSDL documents to generate Perl client libraries to access the Web Service defined.
+W3C::SOAP::WSDL::Parser - Parses WSDL documents to generate Perl client
+libraries to access the Web Service defined.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Parser version 0.06.
+This documentation refers to W3C::SOAP::WSDL::Parser version 0.07.
 
 =head1 SYNOPSIS
 

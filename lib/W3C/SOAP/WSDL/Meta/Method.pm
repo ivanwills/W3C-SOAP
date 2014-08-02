@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'Moose::Meta::Method';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has wsdl_operation => (
     is        => 'rw',
@@ -37,6 +37,17 @@ has in_attribute => (
     default   => 0,
     predicate => 'has_in_attribute',
 );
+has in_header_class => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_in_header_class',
+);
+has in_header_attribute => (
+    is        => 'rw',
+    isa       => 'Str',
+    default   => 0,
+    predicate => 'has_in_header_attribute',
+);
 has out_class => (
     is        => 'rw',
     isa       => 'Str',
@@ -47,6 +58,17 @@ has out_attribute => (
     is        => 'rw',
     isa       => 'Str',
     predicate => 'has_out_attribute',
+);
+has out_header_class => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_out_header_class',
+);
+has out_header_attribute => (
+    is        => 'rw',
+    isa       => 'Str',
+    default   => 0,
+    predicate => 'has_out_header_attribute',
 );
 has faults => (
     is        => 'rw',
@@ -70,7 +92,7 @@ W3C::SOAP::WSDL::Meta::Method - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Meta::Method version 0.06.
+This documentation refers to W3C::SOAP::WSDL::Meta::Method version 0.07.
 
 
 =head1 SYNOPSIS

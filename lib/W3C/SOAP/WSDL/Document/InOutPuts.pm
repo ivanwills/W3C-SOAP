@@ -18,25 +18,37 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/split_ns/;
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has message => (
     is         => 'rw',
     isa        => 'Maybe[W3C::SOAP::WSDL::Document::Message]',
     builder    => '_message',
-    lazy_build => 1,
+    lazy       => 1,
+);
+has header => (
+    is         => 'rw',
+    isa        => 'Maybe[W3C::SOAP::WSDL::Document::Message]',
+    builder    => '_header',
+    lazy       => 1,
 );
 has policy => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_policy',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has body => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_body',
-    lazy_build => 1,
+    lazy       => 1,
+);
+
+has dir  => (
+   is       => 'rw',
+   isa      => 'Maybe[Str]',
+   predicate   => 'has_dir',
 );
 
 sub _message {
@@ -50,6 +62,31 @@ sub _message {
     return;
 }
 
+sub _header {
+    my ($self) = @_;
+
+    my $header;
+    if ( $self->parent_node()->has_binding_operation() ) {
+       my $dir = $self->dir();
+       my $bo_node = $self->parent_node()->binding_operation()->node();
+
+       my ($_node) = $self->document->xpc->findnodes("wsdl:$dir/soap:header", $bo_node);
+
+       if ( defined $_node ) {
+         my ($ns, $message) = split_ns($_node->getAttribute('message'));
+
+         HEADER_MESSAGE:
+         for my $msg (@{ $self->document->messages }) {
+            if ( $msg->name eq $message ) {
+               $header = $msg;
+               last HEADER_MESSAGE;
+            }
+         }
+      }
+    }
+    return $header;
+}
+
 
 1;
 
@@ -61,7 +98,7 @@ W3C::SOAP::WSDL::Document::InOutPuts - <One-line description of module's purpose
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::InOutPuts version 0.06.
+This documentation refers to W3C::SOAP::WSDL::Document::InOutPuts version 0.07.
 
 
 =head1 SYNOPSIS

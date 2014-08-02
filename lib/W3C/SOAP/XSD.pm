@@ -20,12 +20,12 @@ use MooseX::Types::XMLSchema;
 use W3C::SOAP::XSD::Types qw/:all/;
 use W3C::SOAP::XSD::Traits;
 use W3C::SOAP::Utils qw/split_ns/;
-use TryCatch;
+use Try::Tiny;
 use DateTime::Format::Strptime qw/strptime/;
 
 extends 'W3C::SOAP::Base';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has xsd_ns => (
     is  => 'rw',
@@ -110,21 +110,24 @@ sub _from_xml {
     confess "Unknown conversion " . ( (ref $xml) || $xml )
         if !$xml || !blessed $xml || !$xml->isa('XML::LibXML::Node');
 
+    my $ret;
+
     try {
-        return $type->new($xml);
+        $ret = $type->new($xml);
     }
-    catch ($e) {
-        $e =~ s/\s at \s .*//xms;
-        warn "$class Failed in building from $type\->new($xml) : $e\n",
+    catch  {
+        $_ =~ s/\s at \s .*//xms;
+        warn "$class Failed in building from $type\->new($xml) : $_\n",
             "Will use :\n\t'",
             $xml->toString,
             "'\n\tor\n\t'",
             $xml->textContent,"'\n",
             '*' x 222,
             "\n";
-    }
+        $ret = $xml->textContent;
+    };
 
-    return $xml->textContent;
+    return $ret;
 }
 
 sub xml2perl_map {
@@ -187,6 +190,7 @@ sub to_xml {
             }
             elsif ( ! defined $item && ! $att->has_xs_serialize ) {
                 $tag->setAttribute('nil', 'true');
+                $tag->setAttribute('null', 'true');
             }
             else {
                 local $_ = $item;
@@ -282,7 +286,8 @@ my %types;
 sub xsd_subtype {
     my ($self, %args) = @_;
     my $parent_type = $args{module} || $args{parent};
-    # upgrade dates
+
+    # upgrade types
     $parent_type
         = $parent_type eq 'xs:date'     ? 'xsd:date'
         : $parent_type eq 'xs:dateTime' ? 'xsd:dateTime'
@@ -292,8 +297,12 @@ sub xsd_subtype {
         : $parent_type eq 'xs:long'     ? 'xsd:long'
         :                                 $parent_type;
 
-    my $parent_type_name = $args{list} ? "ArrayRef[$parent_type]" : $parent_type;
-    my $subtype = $parent_type =~ /^xsd:\w/xms && Moose::Util::TypeConstraints::find_type_constraint($parent_type_name);
+    my $parent_type_name
+        = $args{list}     ? "ArrayRef[$parent_type]"
+        : $args{nillable} ? "Maybe[$parent_type]"
+        :                   $parent_type;
+
+    my $subtype = $parent_type =~ /^xsd:\w/xms && Moose::Util::TypeConstraints::find_type_constraint($parent_type);
     return $subtype if $subtype && !$args{list};
 
     $subtype = subtype
@@ -343,7 +352,7 @@ sub xsd_subtype {
     if ($this_type->has_parent) {
         coerce $subtype
             => from 'Any'
-            => via { $this_type->parent->coerce($_) };
+            => via { !defined $_ && $args{nillable} ? undef : $this_type->parent->coerce($_) };
     }
 
     return $subtype;
@@ -359,7 +368,7 @@ W3C::SOAP::XSD - The parent module for generated XSD modules.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD version 0.06.
+This documentation refers to W3C::SOAP::XSD version 0.07.
 
 =head1 SYNOPSIS
 

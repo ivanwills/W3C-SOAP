@@ -19,19 +19,19 @@ use W3C::SOAP::Utils qw/split_ns xml_error/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has complex_type => (
     is     => 'rw',
     isa    => 'Str',
     builder => '_complex_type',
-    lazy_build => 1,
+    lazy    => 1,
 );
 has type => (
-    is     => 'rw',
-    isa    => 'Str',
-    builder => '_type',
-    lazy_build => 1,
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_type',
+    lazy       => 1,
     predicate  => 'has_type',
 );
 has package => (
@@ -274,7 +274,7 @@ W3C::SOAP::XSD::Document::Element - XML Schema Element
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::Element version 0.06.
+This documentation refers to W3C::SOAP::XSD::Document::Element version 0.07.
 
 
 =head1 SYNOPSIS

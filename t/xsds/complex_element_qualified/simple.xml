@@ -1,0 +1,5 @@
+<?xml version="1.0" standalone="yes"?>
+<t:test xmlns:t="http://element.example.com/">
+    <t:id>1</t:id>
+    <t:name>test</t:name>
+</t:test>

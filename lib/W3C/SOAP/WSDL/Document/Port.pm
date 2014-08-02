@@ -19,20 +19,20 @@ use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has binding => (
     is         => 'rw',
     isa        => 'W3C::SOAP::WSDL::Document::Binding',
     builder    => '_binding',
-    lazy_build => 1,
     weak_ref   => 1,
+    lazy       => 1,
 );
 has address => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_address',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _binding {
@@ -62,7 +62,7 @@ W3C::SOAP::WSDL::Document::Port - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Port version 0.06.
+This documentation refers to W3C::SOAP::WSDL::Document::Port version 0.07.
 
 
 =head1 SYNOPSIS

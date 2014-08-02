@@ -19,59 +19,94 @@ use W3C::SOAP::WSDL::Document::InOutPuts;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has style => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_style',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has action => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_action',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has inputs => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
     builder    => '_inputs',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has outputs => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
     builder    => '_outputs',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has faults => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::InOutPuts]',
     builder    => '_faults',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has port_type => (
     is         => 'rw',
     isa        => 'W3C::SOAP::WSDL::Document::Operation',
     builder    => '_port_type',
-    lazy_build => 1,
+    lazy       => 1,
+);
+
+# If this operation was from the C<port_type> then this would be the
+# one derived from the binding.
+has binding_operation => (
+    is         => 'rw',
+    isa        => 'Maybe[W3C::SOAP::WSDL::Document::Operation]',
+    predicate  => 'has_binding_operation',
 );
 
 sub _style {
     my ($self) = @_;
+
     my $style = $self->node->getAttribute('style');
-    return $style if $style;
-    my ($child) = $self->document->xpc->findnode('soap:binding'. $self->node);
-    return $child->getAttribute('style');
+    if ( !defined $style ) {
+        if ( my ($child) = $self->_soap_binding_node() ) {
+            $style = $child->getAttribute('style');
+        }
+        else {
+            if ( my ($child) = $self->_soap_operation_node() ) {
+                  $style = $child->getAttribute('style');
+            }
+       }
+   }
+
+   return $style
 }
 
 sub _action {
     my ($self) = @_;
+
     my $action = $self->node->getAttribute('soapAction');
-    return $action if $action;
-    my ($child) = $self->document->xpc->findnode('soap:binding'. $self->node);
-    return $child->getAttribute('soapAction');
+    if ( !defined $action ) {
+        if ( my ($child) = $self->_soap_operation_node() ) {
+            $action = $child->getAttribute('soapAction');
+        }
+    }
+
+    return $action;
+}
+
+sub _soap_operation_node {
+   my ($self) = @_;
+
+   return $self->document->xpc->findnodes('soap:operation', $self->node);
+}
+
+sub _soap_binding_node {
+   my ($self) = @_;
+
+   return $self->document->xpc->findnodes('../soap:binding', $self->node);
 }
 
 sub _inputs  { return $_[0]->_in_out_puts('input');  }
@@ -86,6 +121,7 @@ sub _in_out_puts {
         push @puts, W3C::SOAP::WSDL::Document::InOutPuts->new(
             parent_node => $self,
             node        => $node,
+            dir         => $dir,
         );
     }
 
@@ -94,13 +130,19 @@ sub _in_out_puts {
 
 sub _port_type {
     my ($self) = @_;
+
+    my $ret;
+
+    PORT_TYPE:
     for my $port_type (@{ $self->document->port_types }) {
         for my $operation (@{ $port_type->operations }) {
-            return $operation if $operation->name eq $self->name;
+            if ( $operation->name eq $self->name ) {
+               $ret = $operation;
+               $ret->binding_operation($self);
+            }
         }
     }
-
-    return;
+    return $ret;
 }
 
 1;
@@ -113,7 +155,7 @@ W3C::SOAP::WSDL::Document::Operation - <One-line description of module's purpose
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Operation version 0.06.
+This documentation refers to W3C::SOAP::WSDL::Document::Operation version 0.07.
 
 
 =head1 SYNOPSIS

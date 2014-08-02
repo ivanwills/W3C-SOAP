@@ -17,12 +17,18 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has security => (
     is        => 'rw',
     isa       => 'W3C::SOAP::Header::Security',
     predicate => 'has_security',
+);
+
+has message => (
+   is => 'rw',
+   isa   => 'W3C::SOAP::XSD',
+   predicate   => 'has_message',
 );
 
 sub to_xml {
@@ -32,6 +38,11 @@ sub to_xml {
 
     if ($self->has_security) {
         $header->appendChild($self->security->to_xml($xml));
+    }
+    if ($self->has_message) {
+        for my $node ( $self->message->to_xml($xml) ) {
+            $header->appendChild($node);
+       }
     }
 
     return $header;
@@ -47,7 +58,7 @@ W3C::SOAP::Header - Object to create SOAP headers
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Header version 0.06.
+This documentation refers to W3C::SOAP::Header version 0.07.
 
 =head1 SYNOPSIS
 

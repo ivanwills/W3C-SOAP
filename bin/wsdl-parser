@@ -22,7 +22,7 @@ use W3C::SOAP::WSDL::Parser;
 use File::ShareDir qw/dist_dir/;
 use Template;
 
-our $VERSION = version->new('0.06');
+our $VERSION = version->new('0.07');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
@@ -193,7 +193,7 @@ sub show {
         for my $node (@{ $wsdl->bindings }) {
             print "\t", $node->name, "\n";
         }
-        print "Servicess :\n";
+        print "Services :\n";
         for my $node (@{ $wsdl->services }) {
             print "\t", $node->name, "\n";
             for my $port (@{ $node->ports }) {
@@ -202,11 +202,13 @@ sub show {
                     print "\t\t\t", $operation->name, "\n";
                     for my $dir (qw/inputs outputs faults/) {
                         print "\t\t\t\t$dir: ";
-                        if ($operation->port_type->$dir->[0]->message->element) {
-                            print $operation->port_type->$dir->[0]->message->element->type_module;
-                        }
-                        elsif ($operation->port_type->$dir->[0]->message->type) {
-                            print $operation->port_type->$dir->[0]->message->type;
+                        if (defined(my $dir_el = $operation->port_type->$dir->[0] )) {
+                           if ($dir_el->message->element) {
+                               print $dir_el->message->element->type_module;
+                           }
+                           elsif ($dir_el->message->type) {
+                              print $dir_el->message->type;
+                           }
                         }
                         print "\n";
                     }
@@ -226,7 +228,7 @@ wsdl-parser - Parses a WSDL file to generate a SOAP client
 
 =head1 VERSION
 
-This documentation refers to wsdl-parser version 0.06.
+This documentation refers to wsdl-parser version 0.07.
 
 =head1 SYNOPSIS
 

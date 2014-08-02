@@ -15,7 +15,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use LWP::UserAgent;
-use TryCatch;
+use Try::Tiny;
 use XML::LibXML;
 use W3C::SOAP::Exception;
 use W3C::SOAP::Header;
@@ -23,7 +23,7 @@ use Moose::Util::TypeConstraints qw/duck_type/;
 
 extends 'W3C::SOAP::Base';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
 has location => (
@@ -106,7 +106,7 @@ W3C::SOAP::Client - Client to talk SOAP to a server.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Client version 0.06.
+This documentation refers to W3C::SOAP::Client version 0.07.
 
 =head1 SYNOPSIS
 

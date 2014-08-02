@@ -19,47 +19,47 @@ use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION = version->new('0.06');
+our $VERSION     = version->new('0.07');
 
 has type => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_type',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has enumeration => (
     is         => 'rw',
     isa        => 'ArrayRef[Str]',
     builder    => '_enumeration',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has pattern => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_pattern',
     predicate  => 'has_pattern',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has maxLength => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
     builder    => '_maxLength',
     predicate  => 'has_minLength',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has minLength => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
     builder    => '_minLength',
     predicate  => 'has_maxLength',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has length => (
     is         => 'rw',
     isa        => 'Maybe[Int]',
     builder    => '_length',
     predicate  => 'has_length',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _type {
@@ -130,7 +130,7 @@ W3C::SOAP::XSD::Document::SimpleType - <One-line description of module's purpose
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::SimpleType version 0.06.
+This documentation refers to W3C::SOAP::XSD::Document::SimpleType version 0.07.
 
 
 =head1 SYNOPSIS
