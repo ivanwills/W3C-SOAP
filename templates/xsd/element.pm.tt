@@ -4,6 +4,7 @@
     is_array = element.max_occurs == 'unbounded'
         || ( element.max_occurs && element.max_occurs > 1 )
         || ( element.min_occurs && element.min_occurs > 1 );
+    is_nillable = element.nillable;
     type_name = simple || element.type_module;
     serialize = '';
 
@@ -22,7 +23,7 @@
 %]
 has [% element.perl_name || '' %] => (
     is              => 'rw',
-    isa             => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %] ),
+    isa             => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %][% IF is_nillable %], nillable => 1[% END %] ),
     predicate       => 'has_[% element.perl_name %]',
 [%- IF !element.nillable && 0 %]
 [%# TODO nillable should be handled by type not attribute %]
