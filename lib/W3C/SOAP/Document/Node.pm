@@ -94,7 +94,7 @@ sub _perl_name
     my ($self) = @_;
     my $name = $self->name;
 
-    if ( $name && ( $ENV{W3C_SOAP_NAME_STYLE} eq 'original' ) ) {
+    if ( $name && ( $ENV{W3C_SOAP_NAME_STYLE} ne 'original' ) ) {
 
         $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
 
