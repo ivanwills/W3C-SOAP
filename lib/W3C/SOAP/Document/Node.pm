@@ -89,30 +89,28 @@ sub _name {
     return $name;
 }
 
-sub _perl_name {
+sub _perl_name
+{
     my ($self) = @_;
     my $name = $self->name;
 
-    if ( $name ) {
+    if ( $name && ( $ENV{W3C_SOAP_NAME_STYLE} eq 'original' ) ) {
 
-        unless (  $ENV{W3C_SOAP_NAME_STYLE} eq 'original' ) {
+        $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
 
-            $name =~ s/ (?<= [^A-Z_] ) ([A-Z]) /_$1/gxms;
+        # the allowed characters in XML identifiers are not the same
+        # as those in Perl
+        $name =~ s/\W//g;
+        $name = lc $name;
 
-            # the allowed characters in XML identifiers are not the same
-            # as those in Perl
-            $name =~ s/\W//g;
-            $name = lc $name;
-
-            # horrid hack to dedupe elements Foo_Bar and Foo.Bar
-            # which are obviously stupid but allowed
-            if (defined(my $parent = $self->parent_node()) ) {
-               if ( exists $parent->perl_names()->{$name} ) {
-                  $name .= '_' .  $parent->perl_names()->{$name};
-               }
-               $parent->perl_names()->{$name}++;
+        # horrid hack to dedupe elements Foo_Bar and Foo.Bar
+        # which are obviously stupid but allowed
+        if ( defined( my $parent = $self->parent_node() ) ) {
+            if ( exists $parent->perl_names()->{$name} ) {
+                $name .= '_' . $parent->perl_names()->{$name};
             }
-         }
+            $parent->perl_names()->{$name}++;
+        }
     }
     return $name;
 }
