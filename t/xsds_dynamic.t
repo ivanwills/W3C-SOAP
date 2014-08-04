@@ -26,6 +26,7 @@ exit;
 
 sub test_xsd {
     my ($xsd) = @_;
+    note $xsd;
     my ($name) = $xsd =~ m{/([^/]+)$};
     $name = join "::", map { ucfirst lc $_ } split /[\W_]+/, $name;
 
