@@ -1,3 +1,13 @@
+libw3c-soap-perl (0.06ubuntu3) UNRELEASED; urgency=medium
+
+  [ Ivan Wills ]
+  * Removed temporary files
+  * Added missing dependency
+
+  [ ivan ]
+
+ -- Ivan Wills <ivan.wills@gmail.com>  Wed, 20 Aug 2014 19:58:39 +1000
+
 libw3c-soap-perl (0.06ubuntu2) trusty; urgency=medium
 
   [ Ivan Wills ]
