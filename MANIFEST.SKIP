@@ -1,6 +1,8 @@
+
+#!start included /usr/share/perl/5.14/ExtUtils/MANIFEST.SKIP
 # Avoid version control files.
 \bRCS\b
-\bCVS\b
+\bCVS\b/
 \bSCCS\b
 ,v$
 \B\.svn\b
@@ -31,7 +33,6 @@
 \bBuild.COM$
 \bBUILD.COM$
 \bbuild.com$
-^MANIFEST\.SKIP
 
 # Avoid temp and backup files.
 ~$
@@ -53,12 +54,24 @@
 \bcover_db\b
 \bcovered\b
 
+# Avoid Test::Kwalitee files
+Debian_CPANTS.txt
+
 # Avoid MYMETA files
 ^MYMETA\.
 #!end included /usr/share/perl/5.14/ExtUtils/MANIFEST.SKIP
 
-# Avoid Test::Kwalitee generated files
-Debian_CPANTS.txt
+# Avoid configuration metadata file
+^MYMETA\.
+
+# Avoid Module::Build generated and utility files.
+\bBuild$
+\bBuild.bat$
+\b_build
+\bBuild.COM$
+\bBUILD.COM$
+\bbuild.com$
+^MANIFEST\.SKIP
 
 # Avoid Devel::NYTProf generated files
 \bnytprof*
@@ -78,6 +91,8 @@ tags
 debian/
 
 # Other files of interest
+\..*\.tag$
+vim.sh
 errors.err
 tags
 test
