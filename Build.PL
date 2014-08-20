@@ -18,6 +18,7 @@ my $builder = Module::Build->new(
         'LWP::UserAgent'               => 0,
         'Module::Build'                => 0.3,
         'Moose'                        => 1,
+        'Moose::Meta::Method'          => 1,
         'Moose::Role'                  => 1,
         'Moose::Util::TypeConstraints' => 1,
         'MooseX::Exception::Base'      => 0,
