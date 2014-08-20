@@ -65,12 +65,6 @@ templates/xsd/element.pod.tt
 templates/xsd/pm.tt
 t/in_header.wsdl
 t/kwalitee.t
-t/lib/ElementFormDefault/Com/Example/Www/qualified/Base.pm
-t/lib/ElementFormDefault/Com/Example/Www/qualified.pm
-t/lib/ElementFormDefault/Com/Example/Www/qualified/reProcessRecordType.pm
-t/lib/ElementFormDefault/Com/Example/Www/unqualified/Base.pm
-t/lib/ElementFormDefault/Com/Example/Www/unqualified.pm
-t/lib/ElementFormDefault/Com/Example/Www/unqualified/processRecordType.pm
 t/lib/MechMock.pm
 t/other.xsd
 t/parent.xsd
