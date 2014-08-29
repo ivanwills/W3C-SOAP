@@ -3,7 +3,13 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::XML;
+BEGIN {
+    eval { require Test::XML };
+    if ($@) {
+        plan(skip_all => "Can't run with out Test::XML");
+    }
+    Test::XML->import;
+};
 use Path::Class;
 use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
