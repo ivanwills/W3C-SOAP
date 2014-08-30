@@ -15,7 +15,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION    = version->new('0.08');
+our $VERSION    = version->new('0.09');
 $ENV{W3C_SOAP_NAME_STYLE} ||= 'perl';
 
 has node => (
@@ -125,7 +125,7 @@ W3C::SOAP::Document::Node - The super class for document nodes
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Document::Node version 0.08.
+This documentation refers to W3C::SOAP::Document::Node version 0.09.
 
 =head1 SYNOPSIS
 

@@ -1,5 +1,14 @@
 Revision history for W3C-SOAP
 
+0.09   2014-08-30
+        Added skip if Test::XML isn't installed (Ivan Wills)
+        Fixed perl 5.10 dependency (Ivan Wills)
+        dch (Ivan Wills)
+        Added missing dependency (Ivan Wills)
+        Removed temporary files (Ivan Wills)
+        Updating for next release (Ivan Wills)
+        Synced manafest.skip (Ivan Wills)
+
 0.08   2014-08-20
         Synced manafest.skip (Ivan Wills)
         Added new files (Ivan Wills)
@@ -54,7 +63,6 @@ Revision history for W3C-SOAP
         Move complex type name fixup into complex_types builder (Jonathan Stowe)
         Added sufficient laziness for it to work on 5.18.1 (Jonathan Stowe)
         Revert "Merge branch 'perl5.18-fix-lazy' of github.com:jonathanstowe/W3C-SOAP into 5.18.1-fix" (Jonathan Stowe)
-        
 
 0.07   2014-06-29
         Merge pull request #5 from jonathanstowe/5.18.1-fix (Ivan Wills)

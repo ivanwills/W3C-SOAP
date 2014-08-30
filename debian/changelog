@@ -1,4 +1,4 @@
-libw3c-soap-perl (0.06ubuntu3) UNRELEASED; urgency=medium
+libw3c-soap-perl (0.06ubuntu3) trusty; urgency=medium
 
   [ Ivan Wills ]
   * Removed temporary files
@@ -6,7 +6,13 @@ libw3c-soap-perl (0.06ubuntu3) UNRELEASED; urgency=medium
 
   [ ivan ]
 
- -- Ivan Wills <ivan.wills@gmail.com>  Wed, 20 Aug 2014 19:58:39 +1000
+  [ Ivan Wills ]
+  * Fixed perl 5.10 dependency
+  * Added skip if Test::XML isn't installed
+
+  [ ivan ]
+
+ -- ivan <ivan@nyssa>  Sat, 30 Aug 2014 10:55:41 +1000
 
 libw3c-soap-perl (0.06ubuntu2) trusty; urgency=medium
 
