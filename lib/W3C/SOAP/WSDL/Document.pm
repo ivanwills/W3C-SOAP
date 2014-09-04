@@ -34,73 +34,73 @@ has message => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::WSDL::Document::Message]',
     builder    => '_message',
-    lazy_build => 1,
+    lazy       => 1,
     weak_ref   => 1,
 );
 has port_types => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::PortType]',
     builder    => '_port_types',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has port_type => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::WSDL::Document::PortType]',
     builder    => '_port_type',
-    lazy_build => 1,
+    lazy       => 1,
     weak_ref   => 1,
 );
 has bindings => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Binding]',
     builder    => '_bindings',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has binding => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::WSDL::Document::Binding]',
     builder    => '_binding',
-    lazy_build => 1,
+    lazy       => 1,
     weak_ref   => 1,
 );
 has services => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Service]',
     builder    => '_services',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has service => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::WSDL::Document::Service]',
     builder    => '_service',
-    lazy_build => 1,
+    lazy       => 1,
     weak_ref   => 1,
 );
 has policies => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Policy]',
     builder    => '_policies',
-    lazy_build => 1,
+    lazy       => 1,
     weak_ref   => 1,
 );
 has policy => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::WSDL::Document::Policy]',
     builder    => '_policy',
-    lazy_build => 1,
+    lazy       => 1,
     weak_ref   => 1,
 );
 has schemas => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::XSD::Document]',
     builder    => '_schemas',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has schema => (
     is         => 'rw',
     isa        => 'HashRef[W3C::SOAP::XSD::Document]',
     builder    => '_schema',
-    lazy_build => 1,
+    lazy       => 1,
     weak_ref   => 1,
 );
 

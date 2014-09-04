@@ -25,7 +25,7 @@ has ports => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Port]',
     builder    => '_ports',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _ports {

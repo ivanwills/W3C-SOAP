@@ -38,25 +38,25 @@ has package => (
     is     => 'rw',
     isa    => 'Str',
     builder => '_package',
-    lazy_build => 1,
+    lazy    => 1,
 );
 has max_occurs => (
     is     => 'rw',
     #isa    => 'Str',
     builder => '_max_occurs',
-    lazy_build => 1,
+    lazy    => 1,
 );
 has min_occurs => (
     is     => 'rw',
     #isa    => 'Str',
     builder => '_min_occurs',
-    lazy_build => 1,
+    lazy    => 1,
 );
 has nillable => (
     is     => 'rw',
     isa    => 'Bool',
     builder => '_nillable',
-    lazy_build => 1,
+    lazy    => 1,
 );
 has choice_group => (
     is     => 'rw',

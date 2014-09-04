@@ -31,7 +31,7 @@ has type => (
     is         => 'rw',
     isa        => 'Maybe[Str]',
     builder    => '_type',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _element {

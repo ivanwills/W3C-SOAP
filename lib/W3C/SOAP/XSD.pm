@@ -37,7 +37,7 @@ has xsd_ns_name => (
     predicate  => 'has_xsd_ns_name',
     clearer    => 'clear_xsd_ns_name',
     builder    => '_xsd_ns_name',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 {

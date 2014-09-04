@@ -25,19 +25,19 @@ has sequence => (
     is      => 'rw',
     isa     => 'ArrayRef[W3C::SOAP::XSD::Document::Element]',
     builder => '_sequence',
-    lazy_build => 1,
+    lazy    => 1,
 );
 has module => (
     is        => 'rw',
     isa       => 'Str',
     builder   => '_module',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has complex_content => (
     is        => 'rw',
     isa       => 'Str',
     builder   => '_complex_content',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has extension => (
     is        => 'rw',
