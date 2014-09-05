@@ -25,19 +25,19 @@ has style => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_style',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has transport => (
     is         => 'rw',
     isa        => 'Str',
     builder    => '_transport',
-    lazy_build => 1,
+    lazy       => 1,
 );
 has operations => (
     is         => 'rw',
     isa        => 'ArrayRef[W3C::SOAP::WSDL::Document::Operation]',
     builder    => '_operations',
-    lazy_build => 1,
+    lazy       => 1,
 );
 
 sub _style {
