@@ -66,6 +66,7 @@ sub _type {
     my ($self) = @_;
     my ($restriction) = $self->document->xpc->findnodes('xsd:restriction', $self->node);
 
+    return '' if !$restriction;
     return $restriction->getAttribute('base');
 }
 
