@@ -52,5 +52,8 @@ add_stopwords(qw/
     mech
     ua
     BaseClass
+    portType
+    simpleType
+    complexType
 /);
 all_pod_files_spelling_ok();

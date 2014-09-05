@@ -77,7 +77,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Document::Binding - Bindinds for WSDL documents
+W3C::SOAP::WSDL::Document::Binding - Bindings for WSDL documents
 
 =head1 VERSION
 
