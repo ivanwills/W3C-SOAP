@@ -19,7 +19,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION     = version->new('0.09');
+our $VERSION     = version->new('0.10');
 
 has type => (
     is         => 'rw',
@@ -131,7 +131,7 @@ W3C::SOAP::XSD::Document::SimpleType - Represents simpleType elements of XSD doc
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::SimpleType version 0.09.
+This documentation refers to W3C::SOAP::XSD::Document::SimpleType version 0.10.
 
 
 =head1 SYNOPSIS

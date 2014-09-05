@@ -22,7 +22,7 @@ use W3C::SOAP::WSDL::Document::Service;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION = version->new('0.09');
+our $VERSION = version->new('0.10');
 
 has messages => (
     is         => 'rw',
@@ -308,7 +308,7 @@ W3C::SOAP::WSDL::Document - Object to represent a WSDL Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document version 0.09.
+This documentation refers to W3C::SOAP::WSDL::Document version 0.10.
 
 =head1 SYNOPSIS
 

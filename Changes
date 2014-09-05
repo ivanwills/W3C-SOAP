@@ -1,5 +1,11 @@
 Revision history for W3C-SOAP
 
+0.10   2014-09-05
+        Lots of documentation cleaning up (Ivan Wills)
+        Fixed test to be more througher (Ivan Wills)
+        Fixed issue with restrictions with no type but enumerations (Ivan Wills)
+        Updating for release of version 0.09 (Ivan Wills)
+
 0.09   2014-08-30
         Added skip if Test::XML isn't installed (Ivan Wills)
         Fixed perl 5.10 dependency (Ivan Wills)

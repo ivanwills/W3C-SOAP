@@ -19,7 +19,7 @@ use W3C::SOAP::WSDL::Document::Operation;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.09');
+our $VERSION     = version->new('0.10');
 
 has style => (
     is         => 'rw',
@@ -81,7 +81,7 @@ W3C::SOAP::WSDL::Document::Binding - Bindings for WSDL documents
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Binding version 0.09.
+This documentation refers to W3C::SOAP::WSDL::Document::Binding version 0.10.
 
 =head1 SYNOPSIS
 

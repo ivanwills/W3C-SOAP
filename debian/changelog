@@ -1,3 +1,14 @@
+libw3c-soap-perl (0.06ubuntu4) trusty; urgency=medium
+
+  [ Ivan Wills ]
+  * Fixed issue with restrictions with no type but enumerations
+  * Fixed test to be more througher
+  * Lots of documentation cleaning up
+
+  [ ivan ]
+
+ -- ivan <ivan@nyssa>  Sat, 06 Sep 2014 09:27:25 +1000
+
 libw3c-soap-perl (0.06ubuntu3) trusty; urgency=medium
 
   [ Ivan Wills ]

@@ -32,7 +32,7 @@ use DateTime;
 use DateTime::Format::Strptime qw/strptime/;
 use Math::BigFloat;
 
-our $VERSION     = version->new('0.09');
+our $VERSION     = version->new('0.10');
 
 local $SIG{__WARN__} = sub {};
 
@@ -171,7 +171,7 @@ W3C::SOAP::XSD::Types - Moose types to support W3C::SOAP::XSD objects
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Types version 0.09.
+This documentation refers to W3C::SOAP::XSD::Types version 0.10.
 
 
 =head1 SYNOPSIS
