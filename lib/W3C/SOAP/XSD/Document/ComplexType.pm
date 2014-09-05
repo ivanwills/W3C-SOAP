@@ -124,7 +124,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Document::ComplexType - <One-line description of module's purpose>
+W3C::SOAP::XSD::Document::ComplexType - Represents complexType elements of XSD documents
 
 =head1 VERSION
 

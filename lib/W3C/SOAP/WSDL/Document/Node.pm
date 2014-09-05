@@ -25,7 +25,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Document::Node - <One-line description of module's purpose>
+W3C::SOAP::WSDL::Document::Node - Base object for tags of a WSDL document
 
 =head1 VERSION
 

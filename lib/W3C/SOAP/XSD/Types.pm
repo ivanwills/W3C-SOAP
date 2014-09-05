@@ -167,7 +167,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Types - <One-line description of module's purpose>
+W3C::SOAP::XSD::Types - Moose types to support W3C::SOAP::XSD objects
 
 =head1 VERSION
 

@@ -127,7 +127,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Document::SimpleType - <One-line description of module's purpose>
+W3C::SOAP::XSD::Document::SimpleType - Represents simpleType elements of XSD documents
 
 =head1 VERSION
 

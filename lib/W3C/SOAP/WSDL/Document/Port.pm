@@ -58,7 +58,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WSDL::Document::Port - <One-line description of module's purpose>
+W3C::SOAP::WSDL::Document::Port - Represents the ports in a WSDL document
 
 =head1 VERSION
 
@@ -76,10 +76,8 @@ This documentation refers to W3C::SOAP::WSDL::Document::Port version 0.09.
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
+A C<W3C::SOAP::WSDL::Document::Port> object represents the port tags
+in a WSDL document.
 
 =head1 SUBROUTINES/METHODS
 

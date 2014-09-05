@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 17 + 1;
+use Test::More tests => 41 + 1;
 use Test::NoWarnings;
 
 sub not_in_file_ok {
@@ -21,7 +21,7 @@ sub not_in_file_ok {
     }
 
     for my $test (keys %regex) {
-        ok !$violated{$test}, $test or diag "$test appears on lines @{$violated{$_}}";
+        ok !$violated{$test}, $test or diag "$test appears on lines @{$violated{$test}}";
     }
 }
 
@@ -90,7 +90,6 @@ module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/SimpleType.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/Type.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/Node.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/Element.pm');
-module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/List.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/ComplexType.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Parser.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Traits.pm');

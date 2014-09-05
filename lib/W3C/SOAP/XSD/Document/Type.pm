@@ -45,7 +45,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Document::Type - <One-line description of module's purpose>
+W3C::SOAP::XSD::Document::Type - Represents type elements of XSD documents
 
 =head1 VERSION
 
