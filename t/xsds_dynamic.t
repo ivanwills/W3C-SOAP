@@ -40,7 +40,8 @@ sub test_xsd {
         local $TODO = -f "$xsd/todo" ? "Fix these tests" : undef;
 
         my ($module) = eval { load_xsd("$xsd/test.xsd") };
-        ok $module, "$name - Get expected module name";
+        ok $module, "$name - Get expected module name"
+            or diag $@;
 
         # get all the data tests
         my @files = $xsd->children;
@@ -50,7 +51,7 @@ sub test_xsd {
         for my $file (@perl) {
             my $name = $file->basename;
             $name =~ s/[.].*$//;
-            $map{$name}{perl} = eval $file->slurp;
+            $map{$name}{perl} = require $file;
         }
         for my $file (@xml) {
             my $name = $file->basename;
@@ -59,7 +60,9 @@ sub test_xsd {
             $map{$name}{file} = $file;
         }
 
+        SKIP:
         for my $test (keys %map) {
+            skip "Skipping due to failure to create module", 2 if !$module;
             my $xml = XML::LibXML->load_xml(location => $map{$test}{file});
             my $from_perl = $module->new($map{$test}{perl});
             my $from_xml  = $module->new($xml);
