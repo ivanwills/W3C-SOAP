@@ -60,7 +60,7 @@ my $builder = Module::Build->new(
     },
     add_to_cleanup     => [ 'W3C-SOAP-*' ],
     create_makefile_pl => 'traditional',
-    #create_license     => 1,
+    create_license     => 1,
     meta_merge         => {
         resources => {
             repository => 'git://github.com/ivanwills/W3C-SOAP.git',
