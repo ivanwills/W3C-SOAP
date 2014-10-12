@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 41 + 1;
+use Test::More tests => 40 + 1;
 use Test::NoWarnings;
 
 sub not_in_file_ok {
@@ -58,7 +58,6 @@ subtest 'Changes' => sub {
     );
 };
 
-module_boilerplate_ok('lib/W3C/SOAP/XSD.pm');
 module_boilerplate_ok('lib/W3C/SOAP/Base.pm');
 module_boilerplate_ok('lib/W3C/SOAP/Client.pm');
 module_boilerplate_ok('lib/W3C/SOAP/Document.pm');
