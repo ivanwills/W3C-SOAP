@@ -23,7 +23,7 @@
 %]
 has [% element.perl_name || '' %] => (
     is              => 'rw',
-    isa             => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %][% IF is_nillable %], nillable => 1[% END %] ),
+    isa             => __PACKAGE__->xsd_subtype( [% simple ? 'parent' : 'module' %] => '[% type_name %]'[% IF is_array %], list => 1[% END %][% IF is_nillable %], nillable => 1[% END %][% IF simple.list %], simple_list => 1[% END %] ),
     predicate       => 'has_[% element.perl_name %]',
 [%- IF !element.nillable && 0 %]
 [%# TODO nillable should be handled by type not attribute %]

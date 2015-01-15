@@ -303,11 +303,17 @@ sub xsd_subtype {
         :                   $parent_type;
 
     my $subtype = $parent_type =~ /^xsd:\w/xms && Moose::Util::TypeConstraints::find_type_constraint($parent_type);
-    return $subtype if $subtype && !$args{list};
+    return $subtype if $subtype && !($args{list} || $args{simple_list});
 
     $subtype = subtype
         as $parent_type_name,
         message {"'$_' failed to validate as a $parent_type"};
+
+    if ($args{simple_list}) {
+        coerce $subtype =>
+            from "ArrayRef" =>
+            via { join ' ', @$_ };
+    }
 
     if ( $args{list} ) {
         if ( $args{module} ) {
@@ -349,10 +355,14 @@ sub xsd_subtype {
 
     # Propogate coercion from Any via parent's type coercion.
     my $this_type = $subtype->parent;
-    if ($this_type->has_parent) {
+    if ($this_type->has_parent && ref $this_type->parent) {
         coerce $subtype
             => from 'Any'
-            => via { !defined $_ && $args{nillable} ? undef : $this_type->parent->coerce($_) };
+            => via {
+                !defined $_ && $args{nillable} ? undef
+                : $args{nillable}              ? Moose::Util::TypeConstraints::find_type_constraint($parent_type)->coerce($_)
+                :                                $this_type->parent->coerce($_)
+            };
     }
 
     return $subtype;

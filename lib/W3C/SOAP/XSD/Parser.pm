@@ -312,6 +312,12 @@ sub simple_type_package {
         coerce $subtype->moose_type =>
             from 'XML::LibXML::Node' =>
             via { $_->textContent };
+
+        if ($subtype->list) {
+            coerce $subtype->moose_type =>
+                from 'ArrayRef' =>
+                via { join ' ', @$_ };
+        }
     }
 
     return;

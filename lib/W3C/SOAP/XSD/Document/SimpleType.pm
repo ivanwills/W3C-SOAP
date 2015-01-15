@@ -27,6 +27,12 @@ has type => (
     builder    => '_type',
     lazy       => 1,
 );
+has list => (
+    is         => 'rw',
+    isa        => 'Bool',
+    builder    => '_list',
+    lazy       => 1,
+);
 has enumeration => (
     is         => 'rw',
     isa        => 'ArrayRef[Str]',
@@ -66,8 +72,18 @@ sub _type {
     my ($self) = @_;
     my ($restriction) = $self->document->xpc->findnodes('xsd:restriction', $self->node);
 
-    return '' if !$restriction;
+    return $restriction->getAttribute('base') if $restriction;
+
+    ($restriction) = $self->document->xpc->findnodes('xsd:list/xsd:simpleType/xsd:restriction', $self->node);
+
     return $restriction->getAttribute('base');
+}
+
+sub _list {
+    my ($self) = @_;
+    my ($restriction) = $self->document->xpc->findnodes('xsd:list', $self->node);
+
+    return $restriction ? 1 : undef;
 }
 
 sub _enumeration {
