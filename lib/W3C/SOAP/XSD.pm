@@ -309,12 +309,6 @@ sub xsd_subtype {
         as $parent_type_name,
         message {"'$_' failed to validate as a $parent_type"};
 
-    if ($args{simple_list}) {
-        coerce $subtype =>
-            from "ArrayRef" =>
-            via { join ' ', @$_ };
-    }
-
     if ( $args{list} ) {
         if ( $args{module} ) {
             coerce $subtype =>
@@ -353,6 +347,11 @@ sub xsd_subtype {
             via { $_->textContent };
     }
 
+    if ($args{simple_list}) {
+        coerce $subtype =>
+            from "ArrayRef" =>
+            via { join ' ', @$_ };
+    }
     # Propogate coercion from Any via parent's type coercion.
     my $this_type = $subtype->parent;
     if ($this_type->has_parent && ref $this_type->parent) {
