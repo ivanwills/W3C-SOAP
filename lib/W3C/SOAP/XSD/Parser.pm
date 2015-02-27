@@ -136,6 +136,7 @@ sub write_modules {
                 xsd         => $xsd,
                 parents     => \@parents,
                 w3c_version => $VERSION,
+                config      => { xsd => { parent_module => $xsd->module . '::Base'}},
             },
             "$file.pm"
         );

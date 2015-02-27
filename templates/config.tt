@@ -6,6 +6,7 @@
     END;
     config = {
         xsd  => {
+            parent_module => config.xsd.parent_module || 'W3C::SOAP::XSD',
         },
         wsdl => {
             parent_module => config.wsdl.parent_module || 'W3C::SOAP::WSDL',
