@@ -40,9 +40,9 @@ my $builder = Module::Build->new(
         'Module::Build' => 0.38,
     },
     build_requires => {
-        'Test::More'       => 0,
-        'Test::NoWarnings' => 0,
-        'Test::XML'        => 0,
+        'Test::More'     => 0,
+        'Test::Warnings' => 0,
+        'Test::XML'      => 0,
     },
     recommends => {
         'MooseX::Aliases'                => 0,
