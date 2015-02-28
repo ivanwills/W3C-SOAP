@@ -18,7 +18,7 @@ use Path::Class;
 use XML::LibXML;
 use URI;
 
-our $VERSION = version->new('0.10');
+our $VERSION = version->new('0.11');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
@@ -103,7 +103,7 @@ get-resources - Get resources of XSD or WSDL document
 
 =head1 VERSION
 
-This documentation refers to get-resources version 0.10.
+This documentation refers to get-resources version 0.11.
 
 =head1 SYNOPSIS
 

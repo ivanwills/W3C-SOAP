@@ -23,7 +23,7 @@ use Moose::Util::TypeConstraints qw/duck_type/;
 
 extends 'W3C::SOAP::Base';
 
-our $VERSION     = version->new('0.10');
+our $VERSION     = version->new('0.11');
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
 has location => (
@@ -106,7 +106,7 @@ W3C::SOAP::Client - Client to talk SOAP to a server.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Client version 0.10.
+This documentation refers to W3C::SOAP::Client version 0.11.
 
 =head1 SYNOPSIS
 

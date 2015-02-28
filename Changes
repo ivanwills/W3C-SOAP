@@ -1,5 +1,27 @@
 Revision history for W3C-SOAP
 
+0.11   2015-02-28
+        Updating for release of version 0.11
+        Changed dependency (Ivan Wills)
+        Added missed test (Ivan Wills)
+        Added missing tests (Ivan Wills)
+        Updated the documentation (Ivan Wills)
+        Updated licence (Ivan Wills)
+        Updated manifest (Ivan Wills)
+        Merge pull request #13 from BrianMowrey/fix_tests (Ivan Wills)
+        2nd part of parent_module config (Brian Mowrey)
+        	-	added parent_module config entry to XSD Parser 		when creating modules.  The generated module was not extending from 		Base.pm which was causing the subtype/coercion to be missed, 		failing a test. (Brian Mowrey)
+        	-	moved simple_list coercion to after 		list coercion so list takes precedence (otherwise just ArrayRef 		gets used, instead of ArrayRef[HashRef] (Brian Mowrey)
+        Added correct file extension (Ivan Wills)
+        More tests (Ivan Wills)
+        Adding list type (Ivan Wills)
+        Added group-git tag files (Ivan Wills)
+        Turned license creation back on (Ivan Wills)
+        Removed doubled up test (Ivan Wills)
+        Made the test slightly more robust (Ivan Wills)
+        Updating for release of version 0.10 (Ivan Wills)
+        Fixed spelling test (Ivan Wills)
+
 0.10   2014-09-05
         Lots of documentation cleaning up (Ivan Wills)
         Fixed test to be more througher (Ivan Wills)

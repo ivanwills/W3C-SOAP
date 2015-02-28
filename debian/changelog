@@ -1,3 +1,29 @@
+libw3c-soap-perl (0.06ubuntu5) trusty; urgency=medium
+
+  [ Ivan Wills ]
+  * Made the test slightly more robust
+  * Removed doubled up test
+  * Turned license creation back on
+  * Added group-git tag files
+  * Adding list type
+  * More tests
+  * Added correct file extension
+
+  [ Brian Mowrey ]
+  * 	-	moved simple_list coercion to after 		list coercion so list takes precedence (otherwise just ArrayRef 		gets used, instead of ArrayRef[HashRef]
+  * 	-	added parent_module config entry to XSD Parser 		when creating modules.  The generated module was not extending from 		Base.pm which was causing the subtype/coercion to be missed, 		failing a test.
+  * 2nd part of parent_module config
+
+  [ Ivan Wills ]
+  * Updated manifest
+  * Updated licence
+  * Updated the documentation
+  * Added missing tests
+  * Added missed test
+  * Changed dependency
+
+ -- Ivan Wills <ivan@Romana>  Sat, 28 Feb 2015 17:52:14 +1100
+
 libw3c-soap-perl (0.06ubuntu4) trusty; urgency=medium
 
   [ Ivan Wills ]
