@@ -33,6 +33,7 @@ use_ok('W3C::SOAP::XSD::Document::SimpleType');
 use_ok('W3C::SOAP::XSD::Document::Type');
 use_ok('W3C::SOAP::XSD::Document::Node');
 use_ok('W3C::SOAP::XSD::Document::Element');
+use_ok('W3C::SOAP::XSD::Document::List');
 use_ok('W3C::SOAP::XSD::Document::ComplexType');
 use_ok('W3C::SOAP::XSD::Parser');
 use_ok('W3C::SOAP::XSD::Traits');

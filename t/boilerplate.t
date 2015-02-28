@@ -2,8 +2,8 @@
 
 use strict;
 use warnings;
-use Test::More tests => 40 + 1;
-use Test::NoWarnings;
+use Test::More;
+use Test::Warnings;
 
 sub not_in_file_ok {
     my ($filename, %regex) = @_;
@@ -89,6 +89,7 @@ module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/SimpleType.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/Type.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/Node.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/Element.pm');
+module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/List.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Document/ComplexType.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Parser.pm');
 module_boilerplate_ok('lib/W3C/SOAP/XSD/Traits.pm');
@@ -96,3 +97,4 @@ module_boilerplate_ok('lib/W3C/SOAP/XSD/Types.pm');
 module_boilerplate_ok('bin/get-wsdl-resources');
 module_boilerplate_ok('bin/xsd-parser');
 module_boilerplate_ok('bin/wsdl-parser');
+done_testing();
