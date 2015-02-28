@@ -23,13 +23,13 @@ our $VERSION     = version->new('0.09');
 
 has type => (
     is         => 'rw',
-    isa        => Str,
+    isa        => 'Str',
     builder    => '_type',
     lazy       => 1,
 );
 has enumeration => (
     is         => 'rw',
-    isa        => ArrayRef[Str],
+    isa        => 'ArrayRef[Str]',
     builder    => '_enumeration',
     lazy       => 1,
 );
@@ -40,21 +40,17 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Document::List - <One-line description of module's purpose>
+W3C::SOAP::XSD::Document::List - Support for XDS lists
 
 =head1 VERSION
 
 This documentation refers to W3C::SOAP::XSD::Document::List version 0.09.
 
-
 =head1 SYNOPSIS
 
    use W3C::SOAP::XSD::Document::List;
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
-
+   my $list = W3C::SOAP::XSD::Document::List->new()
 
 =head1 DESCRIPTION
 
@@ -63,11 +59,9 @@ This documentation refers to W3C::SOAP::XSD::Document::List version 0.09.
 
 =over 4
 
-=item C<moose_type ()>
+=item C<type ()>
 
-=item C<moose_base_type ()>
-
-=item C<moosex_type ()>
+=item C<enumeration ()>
 
 =back
 
