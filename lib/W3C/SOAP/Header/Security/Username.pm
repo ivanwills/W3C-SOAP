@@ -8,7 +8,6 @@ package W3C::SOAP::Header::Security::Username;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -20,7 +19,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Header::Security';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 my $id = 0;
 
 has username => (

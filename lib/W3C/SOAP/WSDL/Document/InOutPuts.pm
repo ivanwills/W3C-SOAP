@@ -8,7 +8,6 @@ package W3C::SOAP::WSDL::Document::InOutPuts;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -18,7 +17,7 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/split_ns/;
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has message => (
     is         => 'rw',

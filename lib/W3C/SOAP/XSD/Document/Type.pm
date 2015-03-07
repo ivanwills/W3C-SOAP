@@ -8,7 +8,6 @@ package W3C::SOAP::XSD::Document::Type;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -18,7 +17,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::XSD::Document::Node';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has documentation => (
     is     => 'rw',

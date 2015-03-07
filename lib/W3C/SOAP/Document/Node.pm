@@ -8,14 +8,13 @@ package W3C::SOAP::Document::Node;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION    = version->new('0.11');
+our $VERSION = 0.11;
 $ENV{W3C_SOAP_NAME_STYLE} ||= 'perl';
 
 has node => (

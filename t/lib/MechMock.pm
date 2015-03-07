@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw/LWP::UserAgent/;
 
-our $VERSION = 0.0001;
+our $VERSION = 0.11;
 
 my $content;
 sub content {
@@ -22,6 +22,8 @@ package MechResponse;
 use strict;
 use warnings;
 use parent qw/HTTP::Response/;
+
+our $VERSION = 0.11;
 
 sub new {
     my ($class, $content) = @_;

@@ -33,8 +33,6 @@ my $builder = Module::Build->new(
         'URI'                          => 0,
         'WWW::Mechanize'               => 1.6,
         'XML::LibXML'                  => 1.7,
-        'parent'                       => '0.225',
-        'version'                      => '0.88',
     },
     configure_requires => {
         'Module::Build' => 0.38,
@@ -43,6 +41,7 @@ my $builder = Module::Build->new(
         'Test::More'     => 0,
         'Test::Warnings' => 0,
         'Test::XML'      => 0,
+        'parent'         => '0.225',
     },
     recommends => {
         'MooseX::Aliases'                => 0,

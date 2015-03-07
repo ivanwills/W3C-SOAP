@@ -8,14 +8,13 @@ package W3C::SOAP::XSD::Traits;
 
 use strict;
 use warnings;
-use version;
 use Moose::Role;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 Moose::Util::meta_attribute_alias('W3C::SOAP::XSD');
 

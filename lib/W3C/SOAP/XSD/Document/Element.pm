@@ -8,7 +8,6 @@ package W3C::SOAP::XSD::Document::Element;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -19,7 +18,7 @@ use W3C::SOAP::Utils qw/split_ns xml_error/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has complex_type => (
     is     => 'rw',

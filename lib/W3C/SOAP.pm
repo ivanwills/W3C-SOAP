@@ -8,7 +8,6 @@ package W3C::SOAP;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::XSD::Parser qw/load_xsd/;
@@ -18,7 +17,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [qw/load_wsdl load_xsd/],
 );
 
-our $VERSION = version->new('0.11');
+our $VERSION = 0.11;
 
 1;
 

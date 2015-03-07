@@ -8,7 +8,6 @@ package W3C::SOAP::XSD;
 
 use Moose;
 use warnings;
-use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
@@ -25,7 +24,7 @@ use DateTime::Format::Strptime qw/strptime/;
 
 extends 'W3C::SOAP::Base';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has xsd_ns => (
     is  => 'rw',

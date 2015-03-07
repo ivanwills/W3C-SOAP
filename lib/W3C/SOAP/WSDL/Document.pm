@@ -8,7 +8,6 @@ package W3C::SOAP::WSDL::Document;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
@@ -22,7 +21,7 @@ use W3C::SOAP::WSDL::Document::Service;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION = version->new('0.11');
+our $VERSION = 0.11;
 
 has messages => (
     is         => 'rw',

@@ -11,7 +11,6 @@ package [% module %];
 use strict;
 use warnings;
 use Moose;
-use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
 use Moose::Util::TypeConstraints;
@@ -41,7 +40,7 @@ extends '[% base %]::Base', '[% node.extension %]';
 extends '[% base %]::Base';
 [%- END %]
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION = version->new('0.0.1');
 
 has '+xsd_ns' => (
     default => '[% xsd.target_namespace %]',

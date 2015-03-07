@@ -8,7 +8,6 @@ package W3C::SOAP::WSDL::Utils;
 
 use strict;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -20,7 +19,7 @@ Moose::Exporter->setup_import_methods(
     with_meta => ['operation'],
 );
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 sub operation {
     my ( $meta, $name, %options ) = @_;

@@ -8,12 +8,11 @@ package W3C::SOAP::XSD::Document::Node;
 
 use Moose;
 use warnings;
-use version;
 use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has '+parent_node' => (
     isa    => 'Maybe[W3C::SOAP::XSD::Document::Node]',

@@ -10,7 +10,6 @@ package [% module %];
 
 use Moose;
 use warnings;
-use version;
 use namespace::autoclean;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::XMLSchema qw/:all/;
@@ -24,7 +23,7 @@ use [% import.module %];
 
 extends 'W3C::SOAP::XSD';
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION = 0.11;
 [% FOREACH subtype IN xsd.simple_types %]
 [%- NEXT IF !subtype.name %]
 [% IF subtype.enumeration.size %]

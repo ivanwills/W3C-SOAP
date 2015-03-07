@@ -8,7 +8,6 @@ package W3C::SOAP::WSDL::Document::Service;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -19,7 +18,7 @@ use W3C::SOAP::WSDL::Document::Port;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has ports => (
     is         => 'rw',

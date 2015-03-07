@@ -8,7 +8,6 @@ package W3C::SOAP::Document;
 
 use Moose;
 use warnings;
-use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
@@ -20,7 +19,7 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 use W3C::SOAP::Exception;
 use XML::LibXML;
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has string => (
     is         => 'rw',

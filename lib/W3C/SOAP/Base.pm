@@ -8,14 +8,13 @@ package W3C::SOAP::Base;
 
 use Moose;
 use warnings;
-use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 our $DEBUG_REQUEST_RESPONSE = $ENV{W3C_SOAP_DEBUG_CLIENT};
 
 has w3c_built_with_version => (

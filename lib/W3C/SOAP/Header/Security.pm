@@ -8,7 +8,6 @@ package W3C::SOAP::Header::Security;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -16,7 +15,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 sub to_xml {
     my ($self, $xml) = @_;

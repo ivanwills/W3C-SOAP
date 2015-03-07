@@ -8,7 +8,6 @@ package W3C::SOAP::WSDL::Meta::Method;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -18,7 +17,7 @@ use English qw/ -no_match_vars /;
 
 extends 'Moose::Meta::Method';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 has wsdl_operation => (
     is        => 'rw',

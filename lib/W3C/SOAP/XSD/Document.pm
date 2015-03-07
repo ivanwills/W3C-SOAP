@@ -8,7 +8,6 @@ package W3C::SOAP::XSD::Document;
 
 use Moose;
 use warnings;
-use version;
 use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
@@ -28,7 +27,7 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 
 extends 'W3C::SOAP::Document';
 
-our $VERSION = version->new('0.11');
+our $VERSION = 0.11;
 
 has element_form_default => (
     is         => 'rw',

@@ -8,7 +8,6 @@ package W3C::SOAP::XSD::Parser;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -28,7 +27,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 subtype xsd_documents =>
     as 'ArrayRef[W3C::SOAP::XSD::Document]';

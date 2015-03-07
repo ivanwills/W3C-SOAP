@@ -9,7 +9,6 @@ package [% module %];
 # $Revision$, $Source$, $Date$
 
 use Moose;
-use version;
 use namespace::autoclean;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::XMLSchema qw/:all/;
@@ -23,7 +22,7 @@ use [% type.module %];
 [%- END %]
 extends '[% config.xsd.parent_module || 'W3C::SOAP::XSD' %]';
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION = 0.11;
 
 has '+w3c_built_with_version' => (
     default => sub {version->new('[% w3c_version %]')},

@@ -8,7 +8,6 @@ package W3C::SOAP::XSD::Types;
 
 use strict;
 use warnings;
-use version;
 use Carp;
 BEGIN {
     $W3C::SOAP::XSD::Types::AUTHORITY = 'cpan:IVANWILLS';
@@ -32,7 +31,7 @@ use DateTime;
 use DateTime::Format::Strptime qw/strptime/;
 use Math::BigFloat;
 
-our $VERSION     = version->new('0.11');
+our $VERSION = 0.11;
 
 local $SIG{__WARN__} = sub {};
 

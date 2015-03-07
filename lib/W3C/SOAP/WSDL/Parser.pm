@@ -8,7 +8,6 @@ package W3C::SOAP::WSDL::Parser;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
@@ -25,7 +24,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION = version->new('0.11');
+our $VERSION = 0.11;
 
 has '+document' => (
     isa      => 'W3C::SOAP::WSDL::Document',

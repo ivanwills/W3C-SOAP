@@ -9,7 +9,6 @@ package [% module %];
 
 use Moose;
 use warnings;
-use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
 use W3C::SOAP::WSDL::Utils;
@@ -23,7 +22,7 @@ use [% schema %];
 
 extends '[% config.wsdl.parent_module  || 'W3C::SOAP::WSDL' %]';
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION = version->new('0.0.1');
 
 has '+w3c_built_with_version' => (
     default => sub {version->new('[% w3c_version %]')},

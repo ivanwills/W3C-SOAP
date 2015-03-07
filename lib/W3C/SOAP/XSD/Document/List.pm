@@ -8,7 +8,6 @@ package W3C::SOAP::XSD::Document::List;
 
 use Moose;
 use warnings;
-use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
@@ -19,7 +18,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION     = version->new('0.09');
+our $VERSION = 0.11;
 
 has type => (
     is         => 'rw',
