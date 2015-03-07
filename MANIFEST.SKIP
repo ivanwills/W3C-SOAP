@@ -104,3 +104,4 @@ tmp
 vrc.yml
 t/lib/XSDs?/.*
 .travis.yml
+t/report
