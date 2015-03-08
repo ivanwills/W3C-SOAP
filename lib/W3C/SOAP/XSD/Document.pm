@@ -139,7 +139,7 @@ sub _imports {
     for my $import (@nodes) {
         next if $import->getAttribute('namespace') && $import->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
 
-        my $location = $import->getAttribute('schemaLocation');
+        my $location = $import->getAttribute('schemaLocation') || $import->getAttribute('namespace');
         if ($location) {
 
             if ( $self->location && (
@@ -180,7 +180,7 @@ sub _includes {
     for my $include (@nodes) {
         next if $include->getAttribute('namespace') && $include->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
 
-        my $location = $include->getAttribute('schemaLocation');
+        my $location = $include->getAttribute('schemaLocation') || $include->getAttribute('namespace');
         if ($location) {
 
             if ( $self->location && $self->location =~ m{^(?:https?|ftp)://}xms ) {
