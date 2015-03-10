@@ -2,6 +2,8 @@
 
 use strict;
 use warnings;
+use Getopt::Long;
+use Pod::Usage;
 use Test::More;
 use Path::Class;
 use Data::Dumper qw/Dumper/;
@@ -11,6 +13,7 @@ use W3C::SOAP qw/load_wsdl/;
 use WWW::Mechanize;
 use File::Temp qw/ tempfile tempdir /;
 use XML::LibXML;
+use Try::Tiny;
 
 #
 # This script tests W3C-SOAP against real world WSDL files gathered from the xmethods.com site.
@@ -18,8 +21,22 @@ use XML::LibXML;
 # validated only if there no problems encountered will it try to run a test
 #
 
+my %option = (
+    file => 'wsdls.txt',
+);
+Getopt::Long::Configure('bundling');
+GetOptions(
+    \%option,
+    'file|f=s',
+    'die|die-on-error',
+    'verbose|v+',
+    'man',
+    'help',
+    'VERSION!',
+) or pod2usage(2);
+
 my $dir = file($0)->parent;
-my $wsdls = $dir->file('wsdls.txt')->openr;
+my $wsdls = $dir->file($option{file})->openr;
 
 plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w $dir;
 
@@ -28,6 +45,7 @@ my $mech = WWW::Mechanize->new;
 $mech->timeout(2);
 my $count = 1;
 my $skipped = 0;
+my %state;
 
 while (my $wsdl = <$wsdls>) {
     next if $wsdl =~ /^#/;
@@ -36,16 +54,21 @@ while (my $wsdl = <$wsdls>) {
 
     chomp $wsdl;
     SKIP: {
-        eval {
+        try {
             $skipped++;
             get_dependencies($wsdl);
             test_wsdl($wsdl);
             $skipped = 0;
-        };
-        skip "The WSDL ($wsdl) can't be retreived or is not valid", 1
-            if $@;
+        }
+        catch {
+            push @{ $state{unavailable} }, $wsdl;
+            skip "The WSDL ($wsdl) can't be retreived or is not valid", 1
+                if $_;
+            die $_ if $option{die};
+        }
     };
 }
+file('result.pl')->spew(Dumper \%state);
 done_testing;
 
 sub test_wsdl {
@@ -55,8 +78,9 @@ sub test_wsdl {
     my @cmd = ( qw/perl -MW3C::SOAP=load_wsdl -e/, "load_wsdl(q{$wsdl})" );
     note join ' ', @cmd, "\n";
     my $error = system @cmd;
-    ok !$error, "Loaded $wsdl"
-        or BAIL_OUT("Error: $error");
+    ok !$error, "Loaded $wsdl";
+    push @{ $state{ $error ? 'good' : 'bad' } }, $wsdl;
+        #or BAIL_OUT("Error: $error");
     return;
 }
 
