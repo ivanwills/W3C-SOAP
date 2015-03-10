@@ -105,3 +105,4 @@ vrc.yml
 t/lib/XSDs?/.*
 .travis.yml
 t/report
+docs/
