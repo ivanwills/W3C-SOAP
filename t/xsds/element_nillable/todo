@@ -1,0 +1,6 @@
+{
+    null => {
+        perl_to_xml => 'Fix XML generation of null element',
+        xml_to_perl => 'Fix XML generation of null element'
+    }
+}

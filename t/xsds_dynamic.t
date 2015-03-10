@@ -24,7 +24,8 @@ plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w 
 my @xsds = grep {-d $_} $dir->subdir('xsds')->children;
 
 for my $xsd (@xsds) {
-    test_xsd($xsd);
+    next if @ARGV && $xsd ne "t/xsds/$ARGV[0]";
+    subtest $xsd, sub { test_xsd($xsd); };
 }
 
 done_testing();
@@ -36,10 +37,12 @@ sub test_xsd {
     my ($name) = $xsd =~ m{/([^/]+)$};
     $name = join "::", map { ucfirst lc $_ } split /[\W_]+/, $name;
 
+    my $todo = do "$xsd/todo" || {};
     TODO: {
-        local $TODO = -f "$xsd/todo" ? "Fix these tests" : undef;
+        local $TODO;
 
         my ($module) = eval { load_xsd("$xsd/test.xsd") };
+        $TODO = $todo->{name};
         ok $module, "$name - Get expected module name"
             or diag $@;
 
@@ -66,11 +69,13 @@ sub test_xsd {
             my $xml = XML::LibXML->load_xml(location => $map{$test}{file});
             my $from_perl = $module->new($map{$test}{perl});
             my $from_xml  = $module->new($xml);
-            is_deeply $from_perl->to_data, $from_xml->to_data, "$name - Generated object are the same"
+            $TODO = $todo->{$test}{xml_to_perl};
+            is_deeply $from_perl->to_data, $from_xml->to_data, "$xsd/$test $name - Generated object are the same"
                 or note Dumper $from_perl->to_data, $from_xml->to_data;
 
             my @child = $from_perl->to_xml($xml);
-            is_xml $xml->firstChild->toString, $child[0]->toString, "$name - XML matches"
+            $TODO = $todo->{$test}{perl_to_xml};
+            is_xml $xml->firstChild->toString, $child[0]->toString, "$xsd/$test $name - XML matches"
                 or note "\n", $xml->firstChild->toString, "\n", $child[0]->toString, "\n";
         }
     }
