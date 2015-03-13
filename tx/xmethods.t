@@ -62,9 +62,9 @@ while (my $wsdl = <$wsdls>) {
         }
         catch {
             push @{ $state{unavailable} }, $wsdl;
+            die $_ if $option{die};
             skip "The WSDL ($wsdl) can't be retreived or is not valid", 1
                 if $_;
-            die $_ if $option{die};
         }
     };
 }

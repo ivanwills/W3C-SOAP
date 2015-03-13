@@ -103,12 +103,13 @@ around BUILDARGS => sub {
 sub _xpc {
     my ($self) = @_;
     my $xpc = XML::LibXML::XPathContext->new($self->xml);
-    $xpc->registerNs(xs   => 'http://www.w3.org/2001/XMLSchema');
-    $xpc->registerNs(xsd  => 'http://www.w3.org/2001/XMLSchema');
-    $xpc->registerNs(wsdl => 'http://schemas.xmlsoap.org/wsdl/');
-    $xpc->registerNs(wsp  => 'http://schemas.xmlsoap.org/ws/2004/09/policy');
-    $xpc->registerNs(wssp => 'http://www.bea.com/wls90/security/policy');
-    $xpc->registerNs(soap => 'http://schemas.xmlsoap.org/wsdl/soap/');
+    $xpc->registerNs(xs     => 'http://www.w3.org/2001/XMLSchema');
+    $xpc->registerNs(xsd    => 'http://www.w3.org/2001/XMLSchema');
+    $xpc->registerNs(wsdl   => 'http://schemas.xmlsoap.org/wsdl/');
+    $xpc->registerNs(wsp    => 'http://schemas.xmlsoap.org/ws/2004/09/policy');
+    $xpc->registerNs(wssp   => 'http://www.bea.com/wls90/security/policy');
+    $xpc->registerNs(soap   => 'http://schemas.xmlsoap.org/wsdl/soap/');
+    $xpc->registerNs(soap12 => 'http://schemas.xmlsoap.org/wsdl/soap12/');
 
     return $xpc;
 }

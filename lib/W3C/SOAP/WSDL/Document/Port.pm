@@ -47,7 +47,11 @@ sub _binding {
 
 sub _address {
     my ($self) = @_;
-    my ($address) = $self->document->xpc->findnodes('soap:address', $self->node);
+    my ($address) = $self->document->xpc->findnodes('soap:address, soap12:address', $self->node);
+    if (!$address) {
+        confess "Can't find address in:\n" . $self->node->toString . "\n";
+    }
+
     return $address->getAttribute('location');
 }
 
