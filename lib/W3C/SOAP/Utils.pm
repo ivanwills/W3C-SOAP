@@ -49,7 +49,7 @@ sub ns2module {
     my $uri = URI->new($ns);
 
     # URI's which have a host an a path are converted Java style name spacing
-    if ( $uri->can('host') && $uri->can('path') ) {
+    if ( $uri->can('host') ) {
         my $module
             = join '::',
             reverse map { ucfirst $_}
@@ -80,7 +80,7 @@ sub xml_error {
     my ($node) = @_;
     my @lines  = split /\r?\n/xms, $node->toString;
     my $indent = '';
-    if ( $lines[0] !~ /^\s+/xms && $lines[-1] =~ /^(\s+)/xms ) {
+    if ( $lines[-1] =~ /^(\s+)/xms ) {
         $indent = $1;
     }
     my $error = $indent . $node->toString."\n at ";
