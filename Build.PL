@@ -38,7 +38,7 @@ my $builder = Module::Build->new(
         'Module::Build' => 0.38,
     },
     build_requires => {
-        'Test::More'     => 0,
+        'Test::More'     => '0.88',
         'Test::Warnings' => 0,
         'Test::XML'      => 0,
         'parent'         => '0.225',
