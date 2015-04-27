@@ -65,7 +65,9 @@ t/perlcriticrc
 t/pod-coverage.t
 t/pod.t
 t/spelling.t
+t/sec-username.t
 t/unusual_names.wsdl
+t/utils.t
 t/wsdl_header.t
 t/wsdl_parser.t
 t/wsdl_parser_dynamic.t
