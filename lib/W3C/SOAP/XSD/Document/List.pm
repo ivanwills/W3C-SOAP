@@ -43,7 +43,7 @@ W3C::SOAP::XSD::Document::List - Support for XDS lists
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::List version 0.09.
+This documentation refers to W3C::SOAP::XSD::Document::List version 0.11.
 
 =head1 SYNOPSIS
 
