@@ -39,7 +39,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::XSD::Document::List - Support for XDS lists
+W3C::SOAP::XSD::Document::List - Support for XSD lists
 
 =head1 VERSION
 
