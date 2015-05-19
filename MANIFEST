@@ -3,7 +3,6 @@ bin/wsdl-parser
 bin/xsd-parser
 Build.PL
 Changes
-docs/Modules.dia
 lib/W3C/SOAP.pm
 lib/W3C/SOAP/Base.pm
 lib/W3C/SOAP/Client.pm
@@ -64,8 +63,8 @@ t/parent.xsd
 t/perlcriticrc
 t/pod-coverage.t
 t/pod.t
-t/spelling.t
 t/sec-username.t
+t/spelling.t
 t/unusual_names.wsdl
 t/utils.t
 t/wsdl_header.t
@@ -80,6 +79,8 @@ templates/xsd/complex_type.pm.tt
 templates/xsd/element.pm.tt
 templates/xsd/element.pod.tt
 templates/xsd/pm.tt
+tx/builds
+tx/doesnt-load
 tx/wsdls.txt
 tx/xmethods.pl
 tx/xmethods.t
