@@ -22,7 +22,7 @@ use [% type.module %];
 [%- END %]
 extends '[% config.xsd.parent_module || 'W3C::SOAP::XSD' %]';
 
-our $VERSION = 0.11;
+our $VERSION = 0.12;
 
 has '+w3c_built_with_version' => (
     default => sub {version->new('[% w3c_version %]')},

@@ -1,3 +1,30 @@
+libw3c-soap-perl (0.06ubuntu6) trusty; urgency=medium
+
+  * fixed executable state
+  * Added ignoring test reports
+  * Added ignoring test reports
+  * Removed "version" dependency
+  * Added fallback to use namespace if schemaLocation not given for included/imported documents
+  * Current list of what works and doesn't external URLs
+  * Changed the xmethods.t to be more flexable and reusable
+  * Added skipping docs directory for deployment to CPAN
+  * Planned talk
+  * Changed test TODOs to be more specific and only mark the expected tests
+  * Moved die before the skip so it wasn't skipped
+  * Improved test coverage
+  * Fixed XPath
+  * Removed unused modules
+  * New test for security headders
+  * Added config for coveralls.io
+  * Added specific Test::More version for the features being used
+  * Removed unneeded tag
+  * Added two missing files
+  * Fixed incorrect version number
+  * Fixed typo
+  * Updated manifest
+
+ -- Ivan Wills <ivan@Romana>  Wed, 20 May 2015 16:27:59 +1000
+
 libw3c-soap-perl (0.06ubuntu5) trusty; urgency=medium
 
   [ Ivan Wills ]

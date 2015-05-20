@@ -1,5 +1,30 @@
 Revision history for W3C-SOAP
 
+0.12   2015-05-20
+        Updating for release of version 0.12
+        Updated manifest (Ivan Wills)
+        Fixed typo (Ivan Wills)
+        Fixed incorrect version number (Ivan Wills)
+        Added two missing files (Ivan Wills)
+        Removed unneeded tag (Ivan Wills)
+        Added specific Test::More version for the features being used (Ivan Wills)
+        Added config for coveralls.io (Ivan Wills)
+        New test for security headders (Ivan Wills)
+        Removed unused modules (Ivan Wills)
+        Fixed XPath (Ivan Wills)
+        Improved test coverage (Ivan Wills)
+        Moved die before the skip so it wasn't skipped (Ivan Wills)
+        Changed test TODOs to be more specific and only mark the expected tests (Ivan Wills)
+        Planned talk (Ivan Wills)
+        Added skipping docs directory for deployment to CPAN (Ivan Wills)
+        Changed the xmethods.t to be more flexable and reusable (Ivan Wills)
+        Current list of what works and doesn't external URLs (Ivan Wills)
+        Added fallback to use namespace if schemaLocation not given for included/imported documents (Ivan Wills)
+        Removed "version" dependency (Ivan Wills)
+        Added ignoring test reports (Ivan Wills)
+        Added ignoring test reports (Ivan Wills)
+        fixed executable state (Ivan Wills)
+
 0.11   2015-02-28
         Updating for release of version 0.11
         Changed dependency (Ivan Wills)

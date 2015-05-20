@@ -18,7 +18,7 @@ use W3C::SOAP::WSDL::Document::InOutPuts;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = 0.11;
+our $VERSION = 0.12;
 
 has style => (
     is         => 'rw',
@@ -154,7 +154,7 @@ W3C::SOAP::WSDL::Document::Operation - Represents the operations in a WSDL docum
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Operation version 0.11.
+This documentation refers to W3C::SOAP::WSDL::Document::Operation version 0.12.
 
 
 =head1 SYNOPSIS
