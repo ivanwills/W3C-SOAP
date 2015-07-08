@@ -16,7 +16,7 @@ use Pod::Usage;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use FindBin qw/$Bin/;
-use Path::Class;
+use Path::Tiny;
 use Template;
 use W3C::SOAP::XSD::Parser;
 use File::ShareDir qw/dist_dir/;

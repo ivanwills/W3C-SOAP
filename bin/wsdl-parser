@@ -16,7 +16,7 @@ use Pod::Usage;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use FindBin qw/$Bin/;
-use Path::Class;
+use Path::Tiny;
 use W3C::SOAP::WSDL::Parser;
 use File::ShareDir qw/dist_dir/;
 use Template;
@@ -72,7 +72,7 @@ sub main {
 
     if ( $option{ns_module_map_file} && -f $option{ns_module_map_file} ) {
         $option{ns_module_map} ||= {};
-        my $file = file $option{ns_module_map_file};
+        my $file = path($option{ns_module_map_file});
 
         for my $line ($file->slurp) {
             chomp $line;
@@ -123,14 +123,14 @@ sub main {
     if ( $option{save} ) {
         my $file = $wsdl_file;
         $file =~ s{[/:?&]}{_}g;
-        my $fh = file("$file.wsdl")->openw;
+        my $fh = path("$file.wsdl")->openw;
         print {$fh} $wsdl->document->xml->toString();
 
         for my $schema ($wsdl->get_xsd->get_schemas) {
             next if ! $schema->location;
             my $file = $schema->location;
             $file =~ s{[/:?&]}{_}g;
-            my $fh = file("$file.xsd")->openw;
+            my $fh = path("$file.xsd")->openw;
             print {$fh} $schema->xml->toString();
         }
     }
