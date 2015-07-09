@@ -5,7 +5,7 @@ use warnings;
 use Getopt::Long;
 use Pod::Usage;
 use Test::More;
-use Path::Class;
+use Path::Tiny;
 use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
@@ -35,8 +35,8 @@ GetOptions(
     'VERSION!',
 ) or pod2usage(2);
 
-my $dir = file($0)->parent;
-my $wsdls = $dir->file($option{file})->openr;
+my $dir = path($0)->parent;
+my $wsdls = $dir->child($option{file})->openr;
 
 plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w $dir;
 

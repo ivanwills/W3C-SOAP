@@ -14,7 +14,7 @@ use List::Util;
 use List::MoreUtils qw/all/;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use Path::Class;
+use Path::Tiny;
 use W3C::SOAP::XSD::Document;
 use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
@@ -63,7 +63,7 @@ sub write_modules {
         $self_module ||= $module;
         my $file   = $self->lib . '/' . $module;
         $file =~ s{::}{/}gxms;
-        $file = file $file;
+        $file = path($file);
         my $parent = $file->parent;
         my @missing;
         while ( !-d $parent ) {
@@ -89,7 +89,7 @@ sub write_modules {
             push @parents, $type_module;
             my $type_file = $self->lib . '/' . $type_module;
             $type_file =~ s{::}{/}gxms;
-            $type_file = file $type_file;
+            $type_file = path($type_file);
             mkdir $type_file->parent if !-d $type_file->parent;
 
             my %modules;

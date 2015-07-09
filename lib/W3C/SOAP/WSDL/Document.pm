@@ -11,7 +11,6 @@ use warnings;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use Path::Class;
 use XML::LibXML;
 use W3C::SOAP::XSD::Document;
 use W3C::SOAP::WSDL::Document::Binding;

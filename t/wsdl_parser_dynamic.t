@@ -3,31 +3,31 @@
 use strict;
 use warnings;
 use Test::More;
-use Path::Class;
+use Path::Tiny;
 use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::WSDL::Parser;
-use lib file($0)->parent->subdir('lib').'';
+use lib path($0)->parent->child('lib').'';
 use MechMock;
 
-my $dir = file($0)->parent;
+my $dir = path($0)->parent;
 
 plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w $dir;
 
 # set up templates
 my $template = Template->new(
-    INCLUDE_PATH => dist_dir('W3C-SOAP').':'.$dir->subdir('../templates'),
+    INCLUDE_PATH => dist_dir('W3C-SOAP').':'.$dir->child('../templates'),
     INTERPOLATE  => 0,
     EVAL_PERL    => 1,
 );
 my $ua = MechMock->new;
 # create the parser object
 my $parser = W3C::SOAP::WSDL::Parser->new(
-    location      => $dir->file('eg.wsdl').'',
+    location      => $dir->child('eg.wsdl').'',
     module        => 'MyApp::WsdlEg',
     template      => $template,
-    lib           => $dir->subdir('lib').'',
+    lib           => $dir->child('lib').'',
     ns_module_map => {},
 );
 

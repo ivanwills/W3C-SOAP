@@ -10,26 +10,26 @@ BEGIN {
     }
     Test::XML->import;
 };
-use Path::Class;
+use Path::Tiny;
 use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use XML::LibXML;
 use W3C::SOAP::XSD::Parser;
-use lib file($0)->parent->subdir('lib').'';
+use lib path($0)->parent->child('lib').'';
 
-my $dir = file($0)->parent;
+my $dir = path($0)->parent;
 
 plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w $dir;
 
 # set up templates
 my $template = Template->new(
-    INCLUDE_PATH => dist_dir('W3C-SOAP').':'.$dir->subdir('../templates'),
+    INCLUDE_PATH => dist_dir('W3C-SOAP').':'.$dir->child('../templates'),
     INTERPOLATE  => 0,
     EVAL_PERL    => 1,
 );
 
-my @xsds = grep {-d $_} $dir->subdir('xsds')->children;
+my @xsds = grep {-d $_} $dir->child('xsds')->children;
 
 for my $xsd (@xsds) {
     next if @ARGV && $xsd ne "t/xsds/$ARGV[0]";
@@ -53,9 +53,9 @@ sub test_xsd {
         # create the parser object
         my $parser = eval {
             W3C::SOAP::XSD::Parser->new(
-                location    => $xsd->file('test.xsd').'',
+                location    => $xsd->child('test.xsd').'',
                 template    => $template,
-                lib         => $dir->subdir('lib').'',
+                lib         => $dir->child('lib').'',
                 module_base => "XSDs::$name",
                 ns_module_map => {},
             )

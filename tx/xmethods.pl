@@ -2,12 +2,12 @@
 
 use strict;
 use warnings;
-use Path::Class;
+use Path::Tiny;
 use Data::Dumper qw/Dumper/;
 use WWW::Mechanize;
 
-my $dir = file($0)->parent;
-my $wsdls = $dir->file('wsdls.txt')->openw;
+my $dir = path($0)->parent;
+my $wsdls = $dir->child('wsdls.txt')->openw;
 
 my $mech = WWW::Mechanize->new;
 $mech->timeout(2);

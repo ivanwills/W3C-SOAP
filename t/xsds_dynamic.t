@@ -10,18 +10,18 @@ BEGIN {
     }
     Test::XML->import;
 };
-use Path::Class;
+use Path::Tiny;
 use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use XML::LibXML;
 use W3C::SOAP::XSD::Parser qw/load_xsd/;
-use lib file($0)->parent->subdir('lib').'';
+use lib path($0)->parent->child('lib').'';
 
-my $dir = file($0)->parent;
+my $dir = path($0)->parent;
 
 plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w $dir;
 
-my @xsds = grep {-d $_} $dir->subdir('xsds')->children;
+my @xsds = grep {-d $_} $dir->child('xsds')->children;
 
 for my $xsd (@xsds) {
     next if @ARGV && $xsd ne "t/xsds/$ARGV[0]";

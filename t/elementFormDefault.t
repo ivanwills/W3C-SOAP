@@ -3,29 +3,29 @@
 use strict;
 use warnings;
 use Test::More;
-use Path::Class;
+use Path::Tiny;
 use Data::Dumper qw/Dumper/;
 use File::ShareDir qw/dist_dir/;
 use Template;
 use W3C::SOAP::XSD::Parser;
 use XML::LibXML;
-use lib file($0)->parent->subdir('lib').'';
+use lib path($0)->parent->child('lib').'';
 
-my $dir = file($0)->parent;
+my $dir = path($0)->parent;
 
 plan( skip_all => 'Test can only be run if test directory is writable' ) if !-w $dir;
 
 # set up templates
 my $template = Template->new(
-    INCLUDE_PATH => dist_dir('W3C-SOAP').':'.$dir->subdir('../templates'),
+    INCLUDE_PATH => dist_dir('W3C-SOAP').':'.$dir->child('../templates'),
     INTERPOLATE  => 0,
     EVAL_PERL    => 1,
 );
 # create the parser object
 my $parser = W3C::SOAP::XSD::Parser->new(
-    location      => $dir->file('elementFormDefault-qualified.xsd').'',
+    location      => $dir->child('elementFormDefault-qualified.xsd').'',
     template      => $template,
-    lib           => $dir->subdir('lib').'',
+    lib           => $dir->child('lib').'',
     ns_module_map => {},
     module_base   => 'ElementFormDefault',
 );
@@ -98,17 +98,17 @@ XML
 }
 
 sub cleanup {
-    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified.pm')                   or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified.pm                  ';
-    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified/Base.pm')              or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified/Base.pm             ';
-    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified/processRecordType.pm') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified/processRecordType.pm';
-    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified.pm')                     or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified.pm                    ';
-    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified/Base.pm')                or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified/Base.pm               ';
-    unlink $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified/reProcessRecordType.pm') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified/reProcessRecordType.pm';
+    unlink $dir->child('lib/ElementFormDefault/Com/Example/Www/unqualified.pm')                   or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified.pm                  ';
+    unlink $dir->child('lib/ElementFormDefault/Com/Example/Www/unqualified/Base.pm')              or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified/Base.pm             ';
+    unlink $dir->child('lib/ElementFormDefault/Com/Example/Www/unqualified/processRecordType.pm') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified/processRecordType.pm';
+    unlink $dir->child('lib/ElementFormDefault/Com/Example/Www/qualified.pm')                     or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified.pm                    ';
+    unlink $dir->child('lib/ElementFormDefault/Com/Example/Www/qualified/Base.pm')                or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified/Base.pm               ';
+    unlink $dir->child('lib/ElementFormDefault/Com/Example/Www/qualified/reProcessRecordType.pm') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified/reProcessRecordType.pm';
 
-    rmdir  $dir->file('lib/ElementFormDefault/Com/Example/Www/unqualified') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified';
-    rmdir  $dir->file('lib/ElementFormDefault/Com/Example/Www/qualified')   or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified  ';
-    rmdir  $dir->file('lib/ElementFormDefault/Com/Example/Www')             or note 'Could not remove lib/ElementFormDefault/Com/Example/Www            ';
-    rmdir  $dir->file('lib/ElementFormDefault/Com/Example')                 or note 'Could not remove lib/ElementFormDefault/Com/Example                ';
-    rmdir  $dir->file('lib/ElementFormDefault/Com')                         or note 'Could not remove lib/ElementFormDefault/Com                        ';
-    rmdir  $dir->file('lib/ElementFormDefault')                             or note 'Could not remove lib/ElementFormDefault                            ';
+    rmdir  $dir->child('lib/ElementFormDefault/Com/Example/Www/unqualified') or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/unqualified';
+    rmdir  $dir->child('lib/ElementFormDefault/Com/Example/Www/qualified')   or note 'Could not remove lib/ElementFormDefault/Com/Example/Www/qualified  ';
+    rmdir  $dir->child('lib/ElementFormDefault/Com/Example/Www')             or note 'Could not remove lib/ElementFormDefault/Com/Example/Www            ';
+    rmdir  $dir->child('lib/ElementFormDefault/Com/Example')                 or note 'Could not remove lib/ElementFormDefault/Com/Example                ';
+    rmdir  $dir->child('lib/ElementFormDefault/Com')                         or note 'Could not remove lib/ElementFormDefault/Com                        ';
+    rmdir  $dir->child('lib/ElementFormDefault')                             or note 'Could not remove lib/ElementFormDefault                            ';
 }

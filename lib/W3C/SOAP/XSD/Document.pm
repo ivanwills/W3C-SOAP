@@ -14,7 +14,7 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use Path::Class;
+use Path::Tiny;
 use XML::LibXML;
 use WWW::Mechanize;
 use Try::Tiny;
@@ -152,7 +152,7 @@ sub _imports {
             ) {
                 my $current_location
                     = -f $self->location
-                    ? file($self->location)->absolute . ''
+                    ? path($self->location)->absolute . ''
                     : $self->location;
 
                 $location = URI->new_abs($location, $current_location)->as_string;

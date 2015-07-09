@@ -11,7 +11,7 @@ use warnings;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use Path::Class;
+use Path::Tiny;
 use W3C::SOAP::Utils qw/ns2module/;
 use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WSDL::Document;
@@ -58,7 +58,7 @@ sub write_modules {
     my $template = $self->template;
     my $file     = $self->lib . '/' . $self->module . '.pm';
     $file =~ s{::}{/}g;
-    $file = file $file;
+    $file = path($file);
     my $parent = $file->parent;
     my @missing;
     while ( !-d $parent ) {
