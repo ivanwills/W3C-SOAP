@@ -15,7 +15,7 @@ use Try::Tiny;
 
 extends 'W3C::SOAP::Client';
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 has header => (
     is        => 'rw',
@@ -196,7 +196,7 @@ W3C::SOAP::WSDL - A SOAP WSDL Client object
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL version 0.12.
+This documentation refers to W3C::SOAP::WSDL version 0.13.
 
 
 =head1 SYNOPSIS

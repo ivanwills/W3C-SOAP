@@ -19,7 +19,7 @@ use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 use W3C::SOAP::Exception;
 use XML::LibXML;
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 has string => (
     is         => 'rw',
@@ -170,7 +170,7 @@ W3C::SOAP::Document - Object to represent an XML Document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::Document version 0.12.
+This documentation refers to W3C::SOAP::Document version 0.13.
 
 =head1 SYNOPSIS
 

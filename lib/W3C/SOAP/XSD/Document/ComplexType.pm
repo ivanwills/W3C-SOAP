@@ -18,7 +18,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 has sequence => (
     is      => 'rw',
@@ -127,7 +127,7 @@ W3C::SOAP::XSD::Document::ComplexType - Represents complexType elements of XSD d
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::ComplexType version 0.12.
+This documentation refers to W3C::SOAP::XSD::Document::ComplexType version 0.13.
 
 
 =head1 SYNOPSIS

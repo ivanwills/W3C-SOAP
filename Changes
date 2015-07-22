@@ -1,5 +1,12 @@
 Revision history for W3C-SOAP
 
+0.13   2015-07-20
+        Updating for release of version 0.13
+        Converted to Path::Tiny (Ivan Wills)
+        Starting to remove Path::Class (Ivan Wills)
+        Added Perl 5.22 to list of perl versions to build with (Ivan Wills)
+        Updating for release of version 0.12 (Ivan Wills)
+
 0.12   2015-05-20
         Updating for release of version 0.12
         Updated manifest (Ivan Wills)

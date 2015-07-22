@@ -17,7 +17,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [qw/load_wsdl load_xsd/],
 );
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 1;
 
@@ -29,7 +29,7 @@ W3C::SOAP - Static and dynamic SOAP client generator from WSDL & XSD files
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP version 0.12.
+This documentation refers to W3C::SOAP version 0.13.
 
 =head1 SYNOPSIS
 

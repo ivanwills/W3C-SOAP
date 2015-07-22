@@ -12,7 +12,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 has '+parent_node' => (
     isa    => 'Maybe[W3C::SOAP::XSD::Document::Node]',
@@ -28,7 +28,7 @@ W3C::SOAP::XSD::Document::Node - Base object for tags of an XSD document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::Node version 0.12.
+This documentation refers to W3C::SOAP::XSD::Document::Node version 0.13.
 
 
 =head1 SYNOPSIS

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw/LWP::UserAgent/;
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 my $content;
 sub content {
@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use parent qw/HTTP::Response/;
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 
 sub new {
     my ($class, $content) = @_;

@@ -1,3 +1,11 @@
+libw3c-soap-perl (0.06ubuntu7) trusty; urgency=medium
+
+  * Added Perl 5.22 to list of perl versions to build with
+  * Starting to remove Path::Class
+  * Converted to Path::Tiny
+
+ -- Ivan Wills <ivan@Romana>  Mon, 20 Jul 2015 14:51:27 +1000
+
 libw3c-soap-perl (0.06ubuntu6) trusty; urgency=medium
 
   * fixed executable state

@@ -16,7 +16,7 @@ use FindBin qw/$Bin/;
 use XML::LibXML;
 use URI;
 
-our $VERSION = 0.12;
+our $VERSION = 0.13;
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
@@ -101,7 +101,7 @@ get-resources - Get resources of XSD or WSDL document
 
 =head1 VERSION
 
-This documentation refers to get-resources version 0.12.
+This documentation refers to get-resources version 0.13.
 
 =head1 SYNOPSIS
 
