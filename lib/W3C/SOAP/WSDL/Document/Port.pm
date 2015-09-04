@@ -18,7 +18,7 @@ use W3C::SOAP::Utils qw/split_ns/;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 has binding => (
     is         => 'rw',
@@ -65,7 +65,7 @@ W3C::SOAP::WSDL::Document::Port - Represents the ports in a WSDL document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Port version 0.13.
+This documentation refers to W3C::SOAP::WSDL::Document::Port version 0.14.
 
 
 =head1 SYNOPSIS

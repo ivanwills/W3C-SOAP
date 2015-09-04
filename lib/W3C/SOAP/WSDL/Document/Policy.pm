@@ -17,7 +17,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::Document::Node';
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 has sec_id => (
     is      => 'rw',
@@ -54,7 +54,7 @@ W3C::SOAP::WSDL::Document::Policy - Extracted policy information
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Document::Policy version 0.13.
+This documentation refers to W3C::SOAP::WSDL::Document::Policy version 0.14.
 
 
 =head1 SYNOPSIS

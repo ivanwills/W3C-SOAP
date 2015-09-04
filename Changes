@@ -1,5 +1,9 @@
 Revision history for W3C-SOAP
 
+0.14   2015-09-04
+        Updating for release of version 0.14
+        Removed creation of makefile (Ivan Wills)
+
 0.13   2015-07-20
         Updating for release of version 0.13
         Converted to Path::Tiny (Ivan Wills)

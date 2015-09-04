@@ -18,7 +18,7 @@ use W3C::SOAP::Utils qw/split_ns xml_error/;
 
 extends 'W3C::SOAP::XSD::Document::Type';
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 has complex_type => (
     is     => 'rw',
@@ -273,7 +273,7 @@ W3C::SOAP::XSD::Document::Element - XML Schema Element
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::XSD::Document::Element version 0.13.
+This documentation refers to W3C::SOAP::XSD::Document::Element version 0.14.
 
 
 =head1 SYNOPSIS

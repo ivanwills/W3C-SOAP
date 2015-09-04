@@ -19,7 +19,7 @@ Moose::Exporter->setup_import_methods(
     with_meta => ['operation'],
 );
 
-our $VERSION = 0.13;
+our $VERSION = 0.14;
 
 sub operation {
     my ( $meta, $name, %options ) = @_;
@@ -45,7 +45,7 @@ W3C::SOAP::WSDL::Utils - WSDL related utilities
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WSDL::Utils version 0.13
+This documentation refers to W3C::SOAP::WSDL::Utils version 0.14
 
 
 =head1 SYNOPSIS
