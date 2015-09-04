@@ -41,7 +41,6 @@ lib/W3C/SOAP/XSD/Parser.pm
 lib/W3C/SOAP/XSD/Traits.pm
 lib/W3C/SOAP/XSD/Types.pm
 LICENSE
-Makefile.PL
 MANIFEST
 META.json
 META.yml
