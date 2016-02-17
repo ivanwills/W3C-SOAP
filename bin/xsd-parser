@@ -95,7 +95,7 @@ sub show {
         my $module = $xsd->module;
         my $file   = "$option{lib}/" . $module;
         $file =~ s{::}{/}g;
-        $file = file $file;
+        $file = path $file;
         my $parent = $file->parent;
         my @missing;
         while ( !-d $parent ) {
@@ -139,7 +139,7 @@ sub show {
                 push @parents, $type_module;
                 my $type_file = "$option{lib}/" . $type_module;
                 $type_file =~ s{::}{/}g;
-                $type_file = file $type_file;
+                $type_file = path $type_file;
                 mkdir $type_file->parent if !-d $type_file->parent;
 
             }
