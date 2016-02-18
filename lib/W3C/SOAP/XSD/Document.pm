@@ -158,7 +158,7 @@ sub _imports {
                 $location = URI->new_abs($location, $current_location)->as_string;
             }
 
-            push @imports, __PACKAGE__->new(
+            push @imports, _new_cache(
                 location      => $location,
                 ns_module_map => $self->ns_module_map,
                 module_base   => $self->module_base,
@@ -187,7 +187,7 @@ sub _includes {
                 $location = URI->new_abs($location, $self->location)->as_string;
             }
 
-            push @includes, __PACKAGE__->new(
+            push @includes, _new_cache(
                 location      => $location,
                 ns_module_map => $self->ns_module_map,
                 module_base   => $self->module_base,
@@ -405,6 +405,14 @@ sub get_ns_uri {
     confess "Couldn't find the namespace '$ns_name' to map\nMap has:\n", Dumper $self->ns_map if !defined $self->ns_map->{$ns_name};
 
     return $self->ns_map->{$ns_name};
+}
+
+my %_cache;
+sub _new_cache {
+    my %keys = @_;
+    my $key = Dumper \%keys;
+
+    return $_cache{$key} || ( $_cache{$key} = __PACKAGE__->new(%keys) );
 }
 
 1;
