@@ -410,6 +410,7 @@ sub get_ns_uri {
 my %_cache;
 sub _new_cache {
     my %keys = @_;
+    local $Data::Dumper::Indent = 0;
     my $key = Dumper \%keys;
 
     return $_cache{$key} || ( $_cache{$key} = __PACKAGE__->new(%keys) );
