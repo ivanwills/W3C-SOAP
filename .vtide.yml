@@ -1,0 +1,78 @@
+---
+count: 12
+default:
+  restart: 0
+  wait: 1
+name: W3C-SOAP
+terminals:
+  2:
+    edit: base
+  3:
+    restart: 1
+    edit: bin
+  4:
+    edit: xsd
+  5:
+      edit: xsd-types
+  6:
+    edit: wsdl
+  7:
+      edit: wsdl-types
+  8:
+    edit: templ
+  9:
+    edit: test-xml
+  10:
+    edit: mocks
+  11:
+    edit: header
+editor:
+  files:
+    base:
+      - lib/W3C/SOAP.pm
+      - lib/W3C/SOAP/Client.pm
+      - lib/W3C/SOAP/Base.pm
+      - lib/W3C/SOAP/Utils.pm
+      - lib/W3C/SOAP/Exception.pm
+    header:
+      - lib/W3C/SOAP/Header.pm
+      - lib/W3C/SOAP/Header/**/*.pm
+    xsd:
+      - lib/W3C/SOAP/XSD.pm
+      - lib/W3C/SOAP/XSD/*.pm
+    xsd-types:
+      - lib/W3C/SOAP/XSD/Document/*.pm
+    wsdl:
+      - lib/W3C/SOAP/WSDL.pm
+      - lib/W3C/SOAP/WSDL/*.pm
+      - lib/W3C/SOAP/WSDL/Meta/*.pm
+    wsdl-types:
+      - lib/W3C/SOAP/WSDL/Document/*.pm
+    templ:
+      - templates/*.tt
+      - templates/xsd/*.tt
+      - templates/wsdl/*.tt
+    test-xml:
+      - t/*.wsdl
+      - t/*.xsd
+    mocks:
+      - t/*_parser*.t
+      - t/lib/MechMock.pm
+    eg:
+      - t/eg.wsdl
+      - t/eg.xsd
+      - t/parent.xsd
+      - t/other.xsd
+    parser:
+      - lib/W3C/SOAP/Parser.pm
+      - lib/W3C/SOAP/*/Parser.pm
+    docs:
+      - lib/W3C/SOAP/Document.pm
+      - lib/W3C/SOAP/*/Document.pm
+    nodes:
+      - lib/W3C/SOAP/Document/Node.pm
+      - lib/W3C/SOAP/WSDL/Document/Node.pm
+      - lib/W3C/SOAP/XSD/Document/Node.pm
+    types:
+      - lib/W3C/SOAP/WSDL/Document/InOutPuts.pm
+      - lib/W3C/SOAP/XSD/Document/ComplexType.pm

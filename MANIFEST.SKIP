@@ -106,3 +106,5 @@ t/lib/XSDs?/.*
 .travis.yml
 t/report
 docs/
+.editorconfig
+.vtide.yml
