@@ -26,6 +26,7 @@ use W3C::SOAP::XSD::Document::SimpleType;
 use W3C::SOAP::Utils qw/normalise_ns ns2module/;
 
 extends 'W3C::SOAP::Document';
+$ENV{XSD_MAX} ||= -1;
 
 our $VERSION = 0.14;
 
@@ -135,6 +136,8 @@ sub _imports {
     my ($self) = @_;
     my @imports;
     my @nodes = $self->xpc->findnodes('//xsd:import');
+    return [] if $ENV{XSD_MAX} == 0;
+    $ENV{XSD_MAX}--;
 
     for my $import (@nodes) {
         next if $import->getAttribute('namespace') && $import->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
@@ -176,6 +179,8 @@ sub _includes {
     my ($self) = @_;
     my @includes;
     my @nodes = $self->xpc->findnodes('//xsd:include');
+    return [] if $ENV{XSD_MAX} == 0;
+    $ENV{XSD_MAX}--;
 
     for my $include (@nodes) {
         next if $include->getAttribute('namespace') && $include->getAttribute('namespace') eq 'http://www.w3.org/2001/XMLSchema';
