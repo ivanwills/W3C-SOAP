@@ -3,7 +3,7 @@ count: 12
 default:
   restart: 0
   wait: 1
-name: W3C-SOAP
+name: w3c-soap
 terminals:
   2:
     edit: base
