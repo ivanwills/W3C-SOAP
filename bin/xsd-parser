@@ -124,7 +124,7 @@ sub show {
         if ( @{ $xsd->simple_types } ) {
             print "Simple Types:\n";
             for my $stype ( @{ $xsd->simple_types } ) {
-                print "\t", $stype->name, ' : ', $stype->type, '(' . @{ $stype->enumeration } . ')', "\n";
+                print "\t", $stype->name, ' : ', $stype->type, ' (' . @{ $stype->enumeration } . ')', "\n";
             }
         }
         if ( @{ $xsd->complex_types } ) {
