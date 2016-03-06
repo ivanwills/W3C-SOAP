@@ -92,19 +92,20 @@ debian/
 
 # Other files of interest
 \..*\.tag$
+.editorconfig
+.vtide.yml
+.travis.yml
+.current-env
+vrc.yml
 vim.sh
+cmds
 errors.err
 tags
 test
-cmds
 t/xsd
 t/lib/MyApp
 TODO
 tmp
-vrc.yml
 t/lib/XSDs?/.*
-.travis.yml
 t/report
 docs/
-.editorconfig
-.vtide.yml
