@@ -5,6 +5,16 @@ default:
   wait: 1
 name: w3c-soap
 terminals:
+  1a:
+    wait: 0
+    # watch is a list of files (or file groups) to watch for changes and
+    # re-run the command. This watch waits for changes in files in the
+    # lib bin and tests directories and then runs tests
+    watch:
+      - lib
+      - bin
+      - all-tests
+    command: ./Build && ./Build testcover
   2:
     edit: base
   3:
@@ -76,3 +86,8 @@ editor:
     types:
       - lib/W3C/SOAP/WSDL/Document/InOutPuts.pm
       - lib/W3C/SOAP/XSD/Document/ComplexType.pm
+    all-tests:
+      - t/**/*.t
+      - t/**/*.pl
+      - t/**/*.xml
+      - t/**/*.xsd
