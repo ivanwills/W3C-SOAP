@@ -27,7 +27,7 @@ terminals:
   6:
     edit: wsdl
   7:
-      edit: wsdl-types
+    edit: wsdl-types
   8:
     edit: templ
   9:
